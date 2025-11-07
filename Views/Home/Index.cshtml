@@ -1,15 +1,452 @@
-﻿<link rel="stylesheet" href="~/css/views/Home.Index.css" asp-append-version="true" />`n@{
-    ViewData["Title"] = "Home Page";
+﻿@{
+    ViewData["Title"] = "StudyHub - Plataforma Educativa";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    /* Home.Index.css - Estilos para la página de inicio */
+    .hero-section {
+        background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+        color: white;
+        padding: 100px 0;
+        margin-bottom: 80px;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .hero-subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+
+    .feature-card {
+        border: none;
+        border-radius: 15px;
+        padding: 2.5rem 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        background: white;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        height: 100%;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(13, 110, 253, 0.15);
+    }
+
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1.5rem;
+        background: linear-gradient(135deg, #0d6efd, #0a58ca);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: white;
+    }
+
+    .feature-title {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+    }
+
+    .feature-description {
+        color: #6c757d;
+        line-height: 1.6;
+    }
+
+    .cta-section {
+        background: #f8f9fa;
+        padding: 80px 0;
+        margin-top: 80px;
+        border-radius: 20px;
+    }
+
+    .stats-section {
+        padding: 60px 0;
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #0d6efd;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .btn-hero {
+        padding: 12px 35px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        margin: 0 10px 15px;
+    }
+
+    .btn-hero-primary {
+        background: white;
+        color: #0d6efd;
+        border: 2px solid white;
+    }
+
+    .btn-hero-primary:hover {
+        background: transparent;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .btn-hero-outline {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+    }
+
+    .btn-hero-outline:hover {
+        background: white;
+        color: #0d6efd;
+        transform: translateY(-2px);
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .section-subtitle {
+        font-size: 1.2rem;
+        color: #6c757d;
+        text-align: center;
+        margin-bottom: 3rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .animate-fade-in {
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.1rem;
+        }
+        
+        .feature-card {
+            padding: 2rem 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+        }
+    }
+
+    /* Efectos de hover para botones */
+    .btn {
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+</style>
+
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 animate-fade-in">
+                <h1 class="hero-title">Bienvenido a StudyHub</h1>
+                <p class="hero-subtitle">
+                    La plataforma educativa colaborativa que revoluciona la forma de enseñar y aprender. 
+                    Gestiona tus clases, comparte recursos y conecta con tu comunidad educativa.
+                </p>
+                <div class="mt-4">
+                    <a href="/Account/Login" class="btn btn-hero-primary btn-hero">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Comenzar Ahora
+                    </a>
+                    <a href="#features" class="btn btn-hero-outline btn-hero">
+                        <i class="bi bi-info-circle me-2"></i>Más Información
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center animate-fade-in" style="animation-delay: 0.2s;">
+                <div class="feature-icon" style="width: 120px; height: 120px; font-size: 3rem;">
+                    <i class="bi bi-mortarboard"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<script src="~/js/views/Home.Index.js" asp-append-version="true"></script>
 
+<!-- Sección de Estadísticas -->
+<div class="stats-section">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Clases Activas</div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-number">2,000+</div>
+                <div class="stat-label">Estudiantes</div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-number">150+</div>
+                <div class="stat-label">Profesores</div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Satisfacción</div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<link rel="stylesheet" href="~/css/views/Home.Index.css" asp-append-version="true" />
+<!-- Sección de Características -->
+<div id="features" class="container">
+    <h2 class="section-title">¿Por qué elegir StudyHub?</h2>
+    <p class="section-subtitle">
+        Descubre las características que hacen de StudyHub la plataforma educativa preferida 
+        por instituciones y profesionales de la educación.
+    </p>
 
-<script src="~/js/views/Home.Index.js" asp-append-version="true"></script>
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="bi bi-people"></i>
+                </div>
+                <h4 class="feature-title">Gestión de Clases</h4>
+                <p class="feature-description">
+                    Crea y gestiona tus clases de manera eficiente. Invita estudiantes, 
+                    programa sesiones y organiza el contenido educativo en un solo lugar.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="bi bi-calendar-week"></i>
+                </div>
+                <h4 class="feature-title">Calendario Integrado</h4>
+                <p class="feature-description">
+                    Programa sesiones de estudio, establece recordatorios y mantén un 
+                    control completo de tu agenda académica con nuestro calendario inteligente.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="bi bi-chat-dots"></i>
+                </div>
+                <h4 class="feature-title">Foros Colaborativos</h4>
+                <p class="feature-description">
+                    Fomenta la participación con foros de discusión moderados. 
+                    Los estudiantes pueden hacer preguntas y colaborar en tiempo real.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                </div>
+                <h4 class="feature-title">Recursos Digitales</h4>
+                <p class="feature-description">
+                    Sube y comparte materiales educativos, presentaciones, documentos 
+                    y recursos multimedia de forma segura y organizada.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="bi bi-graph-up"></i>
+                </div>
+                <h4 class="feature-title">Seguimiento de Progreso</h4>
+                <p class="feature-description">
+                    Monitorea el avance de tus estudiantes y genera reportes detallados 
+                    para identificar oportunidades de mejora.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <h4 class="feature-title">Ambiente Seguro</h4>
+                <p class="feature-description">
+                    Plataforma segura con roles de usuario, permisos granulares y 
+                    protección de datos para garantizar la privacidad de la información.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- Sección CTA -->
+<div class="cta-section">
+    <div class="container text-center">
+        <h2 class="section-title">¿Listo para transformar tu experiencia educativa?</h2>
+        <p class="section-subtitle">
+            Únete a la comunidad de StudyHub y descubre una nueva forma de enseñar y aprender
+        </p>
+        <div class="mt-4">
+            <a href="/Account/Register" class="btn btn-primary btn-lg me-3">
+                <i class="bi bi-person-plus me-2"></i>Registrarse Gratis
+            </a>
+            <a href="/Home/About" class="btn btn-outline-primary btn-lg">
+                <i class="bi bi-play-circle me-2"></i>Ver Demo
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Home.Index.js - Funcionalidad para la página de inicio
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animación de contadores para las estadísticas
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            const speed = 200; // Velocidad en milisegundos
+
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target') || counter.textContent.replace('+', '').replace('%', ''));
+                const increment = target / speed;
+                let current = 0;
+
+                const updateCounter = () => {
+                    if (current < target) {
+                        current += increment;
+                        counter.textContent = Math.ceil(current) + (counter.textContent.includes('+') ? '+' : 
+                                            counter.textContent.includes('%') ? '%' : '');
+                        setTimeout(updateCounter, 1);
+                    } else {
+                        counter.textContent = target + (counter.textContent.includes('+') ? '+' : 
+                                            counter.textContent.includes('%') ? '%' : '');
+                    }
+                };
+
+                // Iniciar animación cuando el elemento sea visible
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            updateCounter();
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                });
+
+                observer.observe(counter);
+            });
+        }
+
+        // Smooth scroll para enlaces internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Efecto parallax simple para el hero section
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero-section');
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+
+        // Inicializar animaciones cuando la página carga
+        animateCounters();
+
+        // Efecto de escritura para el título (opcional)
+        const heroTitle = document.querySelector('.hero-title');
+        if (heroTitle) {
+            const originalText = heroTitle.textContent;
+            heroTitle.textContent = '';
+            let i = 0;
+            
+            function typeWriter() {
+                if (i < originalText.length) {
+                    heroTitle.textContent += originalText.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 100);
+                }
+            }
+            
+            // Iniciar efecto de escritura después de un breve delay
+            setTimeout(typeWriter, 500);
+        }
+
+        // Mostrar alerta de bienvenida
+        setTimeout(() => {
+            if (!sessionStorage.getItem('welcomeShown')) {
+                const toast = new bootstrap.Toast(document.getElementById('welcomeToast'));
+                toast.show();
+                sessionStorage.setItem('welcomeShown', 'true');
+            }
+        }, 2000);
+    });
+
+    // Función para detectar cuando los elementos son visibles
+    function isElementInViewport(el) {
+        const rect = el.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+</script>
+
+<!-- Toast de Bienvenida -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="welcomeToast" class="toast" role="alert">
+        <div class="toast-header">
+            <i class="bi bi-emoji-smile text-primary me-2"></i>
+            <strong class="me-auto">Bienvenido a StudyHub</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body">
+            ¡Descubre una nueva forma de enseñar y aprender!
+        </div>
+    </div>
+</div>
