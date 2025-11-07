@@ -9,7 +9,7 @@
     @if (Context.Session.GetString("UsuarioRol") == "Profesor")
     {
         <p>
-            <a asp-action="Create" class="btn btn-primary">Programar Nueva SesiÃ³n</a>
+            <a asp-action="Create" class="btn btn-primary">Programar Nueva Sesión</a>
         </p>
     }
 
@@ -41,7 +41,7 @@
                             <a asp-action="Edit" asp-route-id="@sesion.Id" class="btn btn-sm btn-warning">Editar</a>
                             <form asp-action="Delete" method="post" class="d-inline">
                                 <input type="hidden" name="id" value="@sesion.Id" />
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Â¿EstÃ¡s seguro de eliminar esta sesiÃ³n?')">Eliminar</button>
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Â¿EstÃ¡s seguro de eliminar esta Sesión?')">Eliminar</button>
                             </form>
                         }
                     </div>

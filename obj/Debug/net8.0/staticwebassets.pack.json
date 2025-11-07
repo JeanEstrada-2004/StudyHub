@@ -1,0 +1,497 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\StudyHub.bundle.scp.css",
+      "PackagePath": "staticwebassets\\StudyHub.4dvftau9rg.bundle.scp.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\site.css",
+      "PackagePath": "staticwebassets\\css\\site.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Auth.Login.css",
+      "PackagePath": "staticwebassets\\css\\views\\Auth.Login.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Auth.Register.css",
+      "PackagePath": "staticwebassets\\css\\views\\Auth.Register.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Clases.Alumnos.css",
+      "PackagePath": "staticwebassets\\css\\views\\Clases.Alumnos.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Clases.Create.css",
+      "PackagePath": "staticwebassets\\css\\views\\Clases.Create.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Clases.Delete.css",
+      "PackagePath": "staticwebassets\\css\\views\\Clases.Delete.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Clases.Details.css",
+      "PackagePath": "staticwebassets\\css\\views\\Clases.Details.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Clases.Edit.css",
+      "PackagePath": "staticwebassets\\css\\views\\Clases.Edit.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Clases.Index.css",
+      "PackagePath": "staticwebassets\\css\\views\\Clases.Index.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Cursos.Alumnos.css",
+      "PackagePath": "staticwebassets\\css\\views\\Cursos.Alumnos.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Cursos.Create.css",
+      "PackagePath": "staticwebassets\\css\\views\\Cursos.Create.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Cursos.Delete.css",
+      "PackagePath": "staticwebassets\\css\\views\\Cursos.Delete.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Cursos.Details.css",
+      "PackagePath": "staticwebassets\\css\\views\\Cursos.Details.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Cursos.Edit.css",
+      "PackagePath": "staticwebassets\\css\\views\\Cursos.Edit.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Cursos.Index.css",
+      "PackagePath": "staticwebassets\\css\\views\\Cursos.Index.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Home.AccesoDenegado.css",
+      "PackagePath": "staticwebassets\\css\\views\\Home.AccesoDenegado.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Home.Dashboard.css",
+      "PackagePath": "staticwebassets\\css\\views\\Home.Dashboard.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Home.Index.css",
+      "PackagePath": "staticwebassets\\css\\views\\Home.Index.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Home.Privacy.css",
+      "PackagePath": "staticwebassets\\css\\views\\Home.Privacy.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Mensajes.Index.css",
+      "PackagePath": "staticwebassets\\css\\views\\Mensajes.Index.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Perfil.CambiarPassword.css",
+      "PackagePath": "staticwebassets\\css\\views\\Perfil.CambiarPassword.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Perfil.Edit.css",
+      "PackagePath": "staticwebassets\\css\\views\\Perfil.Edit.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Perfil.Index.css",
+      "PackagePath": "staticwebassets\\css\\views\\Perfil.Index.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Recursos.Create.css",
+      "PackagePath": "staticwebassets\\css\\views\\Recursos.Create.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Recursos.Index.css",
+      "PackagePath": "staticwebassets\\css\\views\\Recursos.Index.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Sesiones.Calendario.css",
+      "PackagePath": "staticwebassets\\css\\views\\Sesiones.Calendario.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Sesiones.Create.css",
+      "PackagePath": "staticwebassets\\css\\views\\Sesiones.Create.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Sesiones.Edit.css",
+      "PackagePath": "staticwebassets\\css\\views\\Sesiones.Edit.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\css\\views\\Shared.Error.css",
+      "PackagePath": "staticwebassets\\css\\views\\Shared.Error.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\favicon.ico",
+      "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\site.js",
+      "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Auth.Login.js",
+      "PackagePath": "staticwebassets\\js\\views\\Auth.Login.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Auth.Register.js",
+      "PackagePath": "staticwebassets\\js\\views\\Auth.Register.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Clases.Alumnos.js",
+      "PackagePath": "staticwebassets\\js\\views\\Clases.Alumnos.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Clases.Create.js",
+      "PackagePath": "staticwebassets\\js\\views\\Clases.Create.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Clases.Delete.js",
+      "PackagePath": "staticwebassets\\js\\views\\Clases.Delete.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Clases.Details.js",
+      "PackagePath": "staticwebassets\\js\\views\\Clases.Details.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Clases.Edit.js",
+      "PackagePath": "staticwebassets\\js\\views\\Clases.Edit.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Clases.Index.js",
+      "PackagePath": "staticwebassets\\js\\views\\Clases.Index.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Cursos.Alumnos.js",
+      "PackagePath": "staticwebassets\\js\\views\\Cursos.Alumnos.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Cursos.Create.js",
+      "PackagePath": "staticwebassets\\js\\views\\Cursos.Create.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Cursos.Delete.js",
+      "PackagePath": "staticwebassets\\js\\views\\Cursos.Delete.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Cursos.Details.js",
+      "PackagePath": "staticwebassets\\js\\views\\Cursos.Details.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Cursos.Edit.js",
+      "PackagePath": "staticwebassets\\js\\views\\Cursos.Edit.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Cursos.Index.js",
+      "PackagePath": "staticwebassets\\js\\views\\Cursos.Index.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Home.AccesoDenegado.js",
+      "PackagePath": "staticwebassets\\js\\views\\Home.AccesoDenegado.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Home.Dashboard.js",
+      "PackagePath": "staticwebassets\\js\\views\\Home.Dashboard.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Home.Index.js",
+      "PackagePath": "staticwebassets\\js\\views\\Home.Index.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Home.Privacy.js",
+      "PackagePath": "staticwebassets\\js\\views\\Home.Privacy.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Mensajes.Index.js",
+      "PackagePath": "staticwebassets\\js\\views\\Mensajes.Index.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Perfil.CambiarPassword.js",
+      "PackagePath": "staticwebassets\\js\\views\\Perfil.CambiarPassword.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Perfil.Edit.js",
+      "PackagePath": "staticwebassets\\js\\views\\Perfil.Edit.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Perfil.Index.js",
+      "PackagePath": "staticwebassets\\js\\views\\Perfil.Index.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Recursos.Create.js",
+      "PackagePath": "staticwebassets\\js\\views\\Recursos.Create.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Recursos.Index.js",
+      "PackagePath": "staticwebassets\\js\\views\\Recursos.Index.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Sesiones.Calendario.js",
+      "PackagePath": "staticwebassets\\js\\views\\Sesiones.Calendario.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Sesiones.Create.js",
+      "PackagePath": "staticwebassets\\js\\views\\Sesiones.Create.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Sesiones.Edit.js",
+      "PackagePath": "staticwebassets\\js\\views\\Sesiones.Edit.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\js\\views\\Shared.Error.js",
+      "PackagePath": "staticwebassets\\js\\views\\Shared.Error.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\LICENSE",
+      "PackagePath": "staticwebassets\\lib\\bootstrap"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\LICENSE.md"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.min.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.min.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\jquery\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery\\LICENSE.txt"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\jquery\\dist\\jquery.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.js"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "C:\\USMP - Jean Carlos\\Clases\\Ciclo VII\\Proyectos\\StudyHub\\wwwroot\\uploads\\d6f80753-2ee6-4df2-ba3e-ef475b0f4a40.pdf",
+      "PackagePath": "staticwebassets\\uploads\\d6f80753-2ee6-4df2-ba3e-ef475b0f4a40.pdf"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.StudyHub.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.StudyHub.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.StudyHub.props",
+      "PackagePath": "build\\StudyHub.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.StudyHub.props",
+      "PackagePath": "buildMultiTargeting\\StudyHub.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.StudyHub.props",
+      "PackagePath": "buildTransitive\\StudyHub.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

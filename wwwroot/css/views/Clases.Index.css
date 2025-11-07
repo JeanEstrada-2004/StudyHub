@@ -1,1 +1,167 @@
 /* View-specific styles for Clases/Index */
+/* Clases.Index.css - Estilos específicos para la vista de listado de clases */
+
+/* Avatar de clase */
+.class-avatar {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+/* Cards de clases */
+.class-card-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.class-card-content:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: #0d6efd;
+}
+
+/* Estados vacíos */
+.empty-state {
+    color: #6c757d;
+}
+
+.empty-state i {
+    opacity: 0.6;
+}
+
+/* Metadatos de clase */
+.class-metadata {
+    font-size: 0.875rem;
+}
+
+.class-badges .badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* Títulos de clase */
+.class-title {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.class-course {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+/* Filtros */
+#filtersCard {
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .class-avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .class-card-content .card-body {
+        padding: 1rem;
+    }
+    
+    .btn-group .dropdown-toggle {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+}
+
+/* Estados de carga */
+.loading-state {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Animaciones para filtros */
+.class-card {
+    animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mejoras para los badges */
+.badge {
+    padding: 0.5em 0.75em;
+    border-radius: 6px;
+}
+
+.bg-success {
+    background: linear-gradient(135deg, #198754, #20c997) !important;
+}
+
+/* Mejoras para los botones */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
+}
+
+/* Estilos para el dropdown de acciones */
+.dropdown-menu {
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9ecef;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    margin: 0.1rem 0.5rem;
+    width: auto;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* Mejoras para las cards en grid */
+.row {
+    margin-right: -0.75rem;
+    margin-left: -0.75rem;
+}
+
+.col-xl-4, .col-lg-6 {
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+}
