@@ -1,0 +1,66 @@
+﻿@model IEnumerable<StudyHub.Models.Sesion>
+@{
+    ViewData["Title"] = "Calendario de Sesiones";
+}
+
+<div class="container">
+    <h1>Calendario de Sesiones</h1>
+
+    @if (Context.Session.GetString("UsuarioRol") == "Profesor")
+    {
+        <p>
+            <a asp-action="Create" class="btn btn-primary">Programar Nueva SesiÃ³n</a>
+        </p>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <div class="row">
+        @foreach (var sesion in Model)
+        {
+            <div class="col-md-6 mb-3">
+                <div class="card @(sesion.FechaHora < DateTime.UtcNow ? "border-secondary" : "border-primary")">
+                    <div class="card-body">
+                        <h5 class="card-title">@sesion.Titulo</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@sesion.Clase.Titulo</h6>
+                        <p class="card-text">@sesion.Descripcion</p>
+                        <p class="card-text">
+                            <strong>Fecha:</strong> @sesion.FechaHora.ToString("dd/MM/yyyy HH:mm")<br />
+                            <strong>DuraciÃ³n:</strong> @sesion.DuracionMinutos minutos<br />
+                            <strong>UbicaciÃ³n:</strong> @sesion.Ubicacion
+                        </p>
+                        @if (!string.IsNullOrEmpty(sesion.EnlaceReunion))
+                        {
+                            <a href="@sesion.EnlaceReunion" target="_blank" class="btn btn-sm btn-success">Unirse a la reuniÃ³n</a>
+                        }
+                        @if (Context.Session.GetString("UsuarioRol") == "Profesor")
+                        {
+                            <a asp-action="Edit" asp-route-id="@sesion.Id" class="btn btn-sm btn-warning">Editar</a>
+                            <form asp-action="Delete" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@sesion.Id" />
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Â¿EstÃ¡s seguro de eliminar esta sesiÃ³n?')">Eliminar</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No hay sesiones programadas.
+        </div>
+    }
+</div>
+<script src="~/js/views/Sesiones.Calendario.js" asp-append-version="true"></script>
+
+
+<link rel="stylesheet" href="~/css/views/Sesiones.Calendario.css" asp-append-version="true" />
+
+<script src="~/js/views/Sesiones.Calendario.js" asp-append-version="true"></script>
+

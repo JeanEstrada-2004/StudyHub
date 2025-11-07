@@ -1,0 +1,111 @@
+﻿
+@model StudyHub.Models.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container">
+    <h1>Bienvenido, @Model.Usuario.Nombre!</h1>
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Acceso Rápido</h5>
+                </div>
+                <div class="card-body">
+                    <a href="@Url.Action("Calendario", "Sesiones")" class="btn btn-outline-primary me-2">Ver Calendario</a>
+                    <a href="@Url.Action("Index", "Clases")" class="btn btn-outline-success me-2">Mis Clases</a>
+                    @if (Context.Session.GetString("UsuarioRol") == "Profesor")
+                    {
+                        <a href="@Url.Action("Create", "Clases")" class="btn btn-outline-warning me-2">Crear Clase</a>
+                        <a href="@Url.Action("Index", "Cursos")" class="btn btn-outline-dark me-2">Cursos</a>
+                    }
+                    <a href="@Url.Action("Index", "Perfil")" class="btn btn-outline-info">Mi Perfil</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Mis Clases</h5>
+                    <h2 class="card-text">@Model.TotalClases</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Próximas Sesiones</h5>
+                    <h2 class="card-text">@Model.ProximasSesionesCount</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Mis Clases</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.MisClases.Any())
+                    {
+                        foreach (var clase in Model.MisClases)
+                        {
+                            <div class="mb-3 p-3 border rounded">
+                                <h6>@clase.Titulo</h6>
+                                <p class="mb-1">@clase.Curso?.Nombre</p>
+                                <small class="text-muted">Creado: @clase.FechaCreacion.ToString("dd/MM/yyyy")</small>
+                                <a href="@Url.Action("Details", "Clases", new { id = clase.Id })" class="btn btn-sm btn-outline-primary float-end">Ver</a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>No tienes clases asignadas.</p>
+                        <a href="@Url.Action("Create", "Clases")" class="btn btn-primary">Crear Mi Primera Clase</a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Próximas Sesiones</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.ProximasSesiones.Any())
+                    {
+                        foreach (var sesion in Model.ProximasSesiones)
+                        {
+                            <div class="mb-3 p-3 border rounded">
+                                <h6>@sesion.Titulo</h6>
+                                <p class="mb-1">@sesion.Clase.Titulo</p>
+                                <small class="text-muted">@sesion.FechaHora.ToString("dd/MM/yyyy HH:mm")</small>
+                                <br>
+                                <small>@sesion.Ubicacion</small>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>No hay sesiones programadas.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/views/Home.Dashboard.js" asp-append-version="true"></script>
+
+
+<link rel="stylesheet" href="~/css/views/Home.Dashboard.css" asp-append-version="true" />
+
+<script src="~/js/views/Home.Dashboard.js" asp-append-version="true"></script>
+
+

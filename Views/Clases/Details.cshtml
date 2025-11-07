@@ -1,0 +1,28 @@
+﻿@model StudyHub.Models.Clase
+@{
+    ViewData["Title"] = "Detalle de Clase";
+}
+
+<h1>@Model.Titulo</h1>
+<p class="text-muted">@Model.Curso?.Nombre</p>
+<p>@Model.Descripcion</p>
+<p><strong>Profesor:</strong> @Model.Profesor?.Nombre</p>
+
+<div class="mb-3">
+    <a class="btn btn-outline-primary" asp-controller="Recursos" asp-action="Index" asp-route-claseId="@Model.Id">Recursos</a>
+    <a class="btn btn-outline-secondary" asp-controller="Mensajes" asp-action="Index" asp-route-claseId="@Model.Id">Foro</a>
+    <a class="btn btn-outline-success" asp-controller="Sesiones" asp-action="Calendario">Calendario</a>
+    @if (Context.Session.GetString("UsuarioRol") == "Profesor" && Context.Session.GetInt32("UsuarioId") == Model.ProfesorId)
+    {
+        <a class="btn btn-outline-dark" asp-action="Alumnos" asp-route-id="@Model.Id">Gestionar Estudiantes</a>
+    }
+</div>
+
+<a class="btn btn-secondary" asp-action="Index">Volver</a>
+<script src="~/js/views/Clases.Details.js" asp-append-version="true"></script>
+
+
+<link rel="stylesheet" href="~/css/views/Clases.Details.css" asp-append-version="true" />
+
+<script src="~/js/views/Clases.Details.js" asp-append-version="true"></script>
+

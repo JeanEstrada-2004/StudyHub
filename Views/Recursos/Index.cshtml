@@ -1,0 +1,75 @@
+﻿@model IEnumerable<StudyHub.Models.Recurso>
+@{
+    ViewData["Title"] = "Recursos de " + ViewBag.Clase.Titulo;
+}
+
+<div class="container">
+    <h1>Recursos de @ViewBag.Clase.Titulo</h1>
+
+    <p>
+        <a asp-action="Create" asp-route-claseId="@ViewBag.Clase.Id" class="btn btn-primary">Agregar Recurso</a>
+        <a asp-controller="Clases" asp-action="Details" asp-route-id="@ViewBag.Clase.Id" class="btn btn-secondary">Volver a la Clase</a>
+    </p>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <div class="row">
+        @foreach (var recurso in Model)
+        {
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@recurso.Titulo</h5>
+                        <p class="card-text">@recurso.Descripcion</p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                Subido por: @recurso.Usuario.Nombre<br />
+                                Fecha: @recurso.FechaSubida.ToString("dd/MM/yyyy HH:mm")<br />
+                                Tipo: @recurso.Tipo
+                            </small>
+                        </p>
+                        
+                        @if (recurso.Tipo == "Archivo")
+                        {
+                            <a asp-action="Descargar" asp-route-id="@recurso.Id" class="btn btn-sm btn-success">Descargar</a>
+                        }
+                        else if (recurso.Tipo == "Enlace")
+                        {
+                            <a href="@recurso.Url" target="_blank" class="btn btn-sm btn-info">Abrir Enlace</a>
+                        }
+
+                        @{
+                            var isProfesor = Context.Session.GetString("UsuarioRol") == "Profesor";
+                            var sessionUserId = Context.Session.GetInt32("UsuarioId");
+                            var isOwner = sessionUserId.HasValue && recurso.UsuarioId == sessionUserId.Value;
+                        }
+                        @if (isProfesor || isOwner)
+                        {
+                            <form asp-action="Delete" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@recurso.Id" />
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Â¿EstÃ¡s seguro de eliminar este recurso?')">Eliminar</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No hay recursos compartidos en esta clase.
+        </div>
+    }
+</div>
+<script src="~/js/views/Recursos.Index.js" asp-append-version="true"></script>
+
+
+<link rel="stylesheet" href="~/css/views/Recursos.Index.css" asp-append-version="true" />
+
+<script src="~/js/views/Recursos.Index.js" asp-append-version="true"></script>
+

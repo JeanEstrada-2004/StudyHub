@@ -1,0 +1,38 @@
+@model StudyHub.Models.Curso
+@{
+    ViewData["Title"] = "Detalle del Curso";
+}
+
+<h1>@Model.Nombre (@Model.Codigo)</h1>
+<p class="text-muted">@Model.Descripcion</p>
+<p><strong>Activo:</strong> @(Model.Activo?"Sí":"No")</p>
+
+<h4 class="mt-4">Clases de este curso</h4>
+@if (!Model.Clases.Any())
+{
+    <div class="alert alert-info">No hay clases registradas para este curso.</div>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var c in Model.Clases)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>@c.Titulo</span>
+                <span>
+                    <a class="btn btn-sm btn-outline-primary" asp-controller="Clases" asp-action="Details" asp-route-id="@c.Id">Ver clase</a>
+                </span>
+            </li>
+        }
+    </ul>
+}
+
+<div class="mt-3">
+    <a class="btn btn-dark" asp-action="Alumnos" asp-route-id="@Model.Id">Gestionar Estudiantes</a>
+    <a class="btn btn-secondary" asp-action="Index">Volver</a>
+    <a class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
+  </div>
+
+<link rel="stylesheet" href="~/css/views/Cursos.Details.css" asp-append-version="true" />
+<script src="~/js/views/Cursos.Details.js" asp-append-version="true"></script>
+

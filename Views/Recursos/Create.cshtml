@@ -1,0 +1,54 @@
+﻿@model StudyHub.Models.Recurso
+@{
+    ViewData["Title"] = "Agregar Recurso a " + ViewBag.Clase.Titulo;
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="Create" enctype="multipart/form-data">
+    <input type="hidden" asp-for="ClaseId" />
+    
+    <div class="form-group">
+        <label asp-for="Titulo" class="control-label"></label>
+        <input asp-for="Titulo" class="form-control" />
+        <span asp-validation-for="Titulo" class="text-danger"></span>
+    </div>
+    
+    <div class="form-group">
+        <label asp-for="Descripcion" class="control-label"></label>
+        <textarea asp-for="Descripcion" class="form-control"></textarea>
+        <span asp-validation-for="Descripcion" class="text-danger"></span>
+    </div>
+    
+    <div class="form-group">
+        <label asp-for="Tipo" class="control-label"></label>
+        <select asp-for="Tipo" class="form-control" id="tipoSelect">
+            <option value="Archivo">Archivo</option>
+            <option value="Enlace">Enlace</option>
+        </select>
+        <span asp-validation-for="Tipo" class="text-danger"></span>
+    </div>
+    
+    <div class="form-group" id="archivoGroup">
+        <label class="control-label">Archivo</label>
+        <input type="file" name="archivo" class="form-control" />
+        @Html.ValidationMessage("archivo", new { @class = "text-danger" })
+    </div>
+    
+    <div class="form-group" id="enlaceGroup" style="display: none;">
+        <label class="control-label">URL del Enlace</label>
+        <input type="url" name="url" class="form-control" placeholder="https://..." />
+        @Html.ValidationMessage("url", new { @class = "text-danger" })
+    </div>
+    
+    <div class="form-group mt-3">
+        <input type="submit" value="Crear" class="btn btn-primary" />
+        <a asp-action="Index" asp-route-claseId="@Model.ClaseId" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+<link rel="stylesheet" href="~/css/views/Recursos.Create.css" asp-append-version="true" />
+<script src="~/js/views/Recursos.Create.js" asp-append-version="true"></script>
+

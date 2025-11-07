@@ -1,0 +1,89 @@
+﻿@model StudyHub.Models.Clase
+@{
+    ViewData["Title"] = "Nueva Clase";
+}
+
+<div class="container">
+    <h1>Nueva Clase</h1>
+
+    <!-- Mostrar errores de validación -->
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            <h5>Errores de validación:</h5>
+            <ul>
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            </ul>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="Titulo" class="form-label">Título de la Clase *</label>
+                    <input asp-for="Titulo" class="form-control" required />
+                    <span asp-validation-for="Titulo" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Curso *</label>
+                    <select asp-for="CursoId" class="form-select" asp-items="ViewBag.Cursos"></select>
+                    <span asp-validation-for="CursoId" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="MaxEstudiantes" class="form-label">Máximo de Estudiantes</label>
+                    <input asp-for="MaxEstudiantes" type="number" class="form-control" min="1" max="100" value="20" />
+                    <span asp-validation-for="MaxEstudiantes" class="text-danger"></span>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="Descripcion" class="form-label">Descripción</label>
+                    <textarea asp-for="Descripcion" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3 form-check form-switch">
+                    <input asp-for="EsPublica" class="form-check-input" type="checkbox" checked />
+                    <label asp-for="EsPublica" class="form-check-label">Clase Pública</label>
+                    <small class="form-text text-muted d-block">Los estudiantes podrán unirse sin aprobación</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Crear Clase
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Volver a Mis Clases
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<script src="~/js/views/Clases.Create.js" asp-append-version="true"></script>
+
+
+<link rel="stylesheet" href="~/css/views/Clases.Create.css" asp-append-version="true" />
+
+<script src="~/js/views/Clases.Create.js" asp-append-version="true"></script>

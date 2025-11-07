@@ -1,0 +1,92 @@
+﻿@model StudyHub.Models.Sesion
+@{
+    ViewData["Title"] = "Programar Sesión";
+}
+
+<div class="container">
+    <div asp-validation-summary="All" class="text-danger"></div>\n<h1>Programar Sesión</h1>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <form asp-action="Create" class="needs-validation" novalidate>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="Titulo" class="form-label">Título de la Sesión *</label>
+                    <input asp-for="Titulo" class="form-control" required />
+                    <span asp-validation-for="Titulo" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="FechaHora" class="form-label">Fecha y Hora *</label>
+                    <input asp-for="FechaHora" type="datetime-local" class="form-control" required />
+                    <span asp-validation-for="FechaHora" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="DuracionMinutos" class="form-label">Duración (minutos) *</label>
+                    <input asp-for="DuracionMinutos" type="number" class="form-control" min="15" max="480" value="60" required />
+                    <span asp-validation-for="DuracionMinutos" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="ClaseId" class="form-label">Clase *</label>
+                    <select asp-for="ClaseId" class="form-control" required>
+                        <option value="">-- Seleccionar Clase --</option>
+                        @if (ViewBag.Clases != null)
+                        {
+                            foreach (var item in (SelectList)ViewBag.Clases)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="ClaseId" class="text-danger"></span>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="Descripcion" class="form-label">Descripción</label>
+                    <textarea asp-for="Descripcion" class="form-control" rows="4" placeholder="Describe el contenido de esta sesión..."></textarea>
+                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="Ubicacion" class="form-label">Ubicación</label>
+                    <input asp-for="Ubicacion" class="form-control" placeholder="Ej: Aula 101, Enlace Virtual, etc." />
+                    <span asp-validation-for="Ubicacion" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="EnlaceReunion" class="form-label">Enlace de Reunión</label>
+                    <input asp-for="EnlaceReunion" type="url" class="form-control" placeholder="https://meet.google.com/..." />
+                    <span asp-validation-for="EnlaceReunion" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-calendar-plus"></i> Programar Sesión
+            </button>
+            <a asp-action="Calendario" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Volver al Calendario
+            </a>
+        </div>
+    </form>
+</div>
+
+
+    
+<link rel="stylesheet" href="~/css/views/Sesiones.Create.css" asp-append-version="true" />
+
+
+<link rel="stylesheet" href="~/css/views/Sesiones.Create.css" asp-append-version="true" />
+<script src="~/js/views/Sesiones.Create.js" asp-append-version="true"></script>

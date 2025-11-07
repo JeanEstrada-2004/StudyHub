@@ -1,0 +1,21 @@
+﻿@model StudyHub.Models.Clase
+@{
+    ViewData["Title"] = "Eliminar Clase";
+}
+
+<h1>Eliminar Clase</h1>
+<div class="alert alert-warning">Â¿Seguro que deseas eliminar la clase "@Model.Titulo"?</div>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    <a asp-controller="Home" asp-action="Dashboard" class="btn btn-link">Volver al Dashboard</a>
+</form>
+<script src="~/js/views/Clases.Delete.js" asp-append-version="true"></script>
+
+
+<link rel="stylesheet" href="~/css/views/Clases.Delete.css" asp-append-version="true" />
+
+<script src="~/js/views/Clases.Delete.js" asp-append-version="true"></script>
+

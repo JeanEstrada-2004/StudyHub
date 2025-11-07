@@ -1,0 +1,33 @@
+﻿@model StudyHub.Models.Usuario
+@{
+    ViewData["Title"] = "Mi Perfil";
+}
+
+<div class="container">
+    <h1>Mi Perfil</h1>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">InformaciÃ³n Personal</h5>
+            <p><strong>Nombre:</strong> @Model.Nombre</p>
+            <p><strong>Email:</strong> @Model.Email</p>
+            <p><strong>Rol:</strong> @Model.Rol</p>
+            <p><strong>Fecha de Registro:</strong> @Model.FechaRegistro.ToString("dd/MM/yyyy")</p>
+
+            <a asp-action="Edit" class="btn btn-primary">Editar Perfil</a>
+            <a asp-action="CambiarPassword" class="btn btn-secondary">Cambiar ContraseÃ±a</a>
+        </div>
+    </div>
+</div>
+<script src="~/js/views/Perfil.Index.js" asp-append-version="true"></script>
+
+
+<link rel="stylesheet" href="~/css/views/Perfil.Index.css" asp-append-version="true" />
+
+<script src="~/js/views/Perfil.Index.js" asp-append-version="true"></script>
+

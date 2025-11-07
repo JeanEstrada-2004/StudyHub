@@ -1,0 +1,77 @@
+@model IEnumerable<StudyHub.Models.UsuarioClase>
+@{
+    ViewData["Title"] = "Gestionar Estudiantes";
+    var clase = ViewBag.Clase as StudyHub.Models.Clase;
+}
+
+<h1>Estudiantes de @clase.Titulo</h1>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="card mb-3">
+    <div class="card-body">
+        <form asp-action="AgregarAlumno" method="post" class="row g-2">
+            <input type="hidden" name="claseId" value="@clase.Id" />
+            <div class="col-md-6">
+                <input type="email" name="email" class="form-control" placeholder="Email del estudiante" required />
+            </div>
+            <div class="col-md-3">
+                <select name="rol" class="form-select">
+                    <option value="Estudiante" selected>Estudiante</option>
+                    <option value="Ayudante">Ayudante</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary w-100">Agregar estudiante</button>
+            </div>
+        </form>
+    </div>
+  </div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var uc in Model)
+        {
+            <tr>
+                <td>@uc.Usuario?.Nombre</td>
+                <td>@uc.Usuario?.Email</td>
+                <td>
+                    <form asp-action="CambiarRol" method="post" class="d-flex gap-2">
+                        <input type="hidden" name="usuarioClaseId" value="@uc.Id" />
+                        <select name="rol" class="form-select form-select-sm" style="max-width: 160px;">
+                            <option value="Estudiante" selected="@(uc.Rol == "Estudiante")">Estudiante</option>
+                            <option value="Ayudante" selected="@(uc.Rol == "Ayudante")">Ayudante</option>
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-outline-primary">Guardar</button>
+                    </form>
+                </td>
+                <td>
+                    <form asp-action="QuitarAlumno" method="post" class="d-inline">
+                        <input type="hidden" name="usuarioClaseId" value="@uc.Id" />
+                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Quitar a este estudiante?')">Quitar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-secondary" asp-action="Details" asp-route-id="@clase.Id">Volver a la clase</a>
+
+<link rel="stylesheet" href="~/css/views/Clases.Alumnos.css" asp-append-version="true" />
+<script src="~/js/views/Clases.Alumnos.js" asp-append-version="true"></script>

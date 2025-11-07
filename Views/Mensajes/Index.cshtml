@@ -1,0 +1,75 @@
+﻿@model IEnumerable<StudyHub.Models.Mensaje>
+@{
+    ViewData["Title"] = "Foro de " + ViewBag.Clase.Titulo;
+}
+
+<div class="container">
+    <h1>Foro de @ViewBag.Clase.Titulo</h1>
+
+    <div class="row">
+        <div class="col-md-8">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">@TempData["Success"]</div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">@TempData["Error"]</div>
+            }
+
+            <form asp-action="Create" method="post">
+                <input type="hidden" name="claseId" value="@ViewBag.Clase.Id" />
+                <div class="form-group">
+                    <label for="contenido">Nuevo Mensaje:</label>
+                    <textarea name="contenido" class="form-control" rows="3" placeholder="Escribe tu mensaje..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+
+            <hr />
+
+            @foreach (var mensaje in Model)
+            {
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <p class="card-text">@mensaje.Contenido</p>
+                        <footer class="blockquote-footer">
+                            @mensaje.Usuario.Nombre 
+                            <cite title="Source Title">@mensaje.FechaEnvio.ToString("dd/MM/yyyy HH:mm")</cite>
+                        </footer>
+                        @{
+                            var isProfesor = Context.Session.GetString("UsuarioRol") == "Profesor";
+                            var sessionUserId = Context.Session.GetInt32("UsuarioId");
+                            var isOwner = sessionUserId.HasValue && mensaje.UsuarioId == sessionUserId.Value;
+                        }
+                        @if (isProfesor || isOwner)
+                        {
+                            <form asp-action="Delete" method="post" class="mt-2">
+                                <input type="hidden" name="id" value="@mensaje.Id" />
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Â¿EstÃ¡s seguro de eliminar este mensaje?')">Eliminar</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info">
+                    No hay mensajes en el foro. Â¡SÃ© el primero en publicar!
+                </div>
+            }
+        </div>
+    </div>
+
+    <div>
+        <a asp-controller="Clases" asp-action="Details" asp-route-id="@ViewBag.Clase.Id" class="btn btn-secondary">Volver a la Clase</a>
+    </div>
+</div>
+<script src="~/js/views/Mensajes.Index.js" asp-append-version="true"></script>
+
+
+<link rel="stylesheet" href="~/css/views/Mensajes.Index.css" asp-append-version="true" />
+
+<script src="~/js/views/Mensajes.Index.js" asp-append-version="true"></script>
+

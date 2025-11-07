@@ -1,0 +1,47 @@
+﻿@model IEnumerable<StudyHub.Models.Clase>
+@{
+    ViewData["Title"] = "Mis Clases";
+    var rol = Context.Session.GetString("UsuarioRol");
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Mis Clases</h1>
+    @if (rol == "Profesor")
+    {
+        <a class="btn btn-primary" asp-action="Create"><i class="bi bi-plus"></i> Nueva Clase</a>
+    }
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No tienes clases registradas.</div>
+}
+else
+{
+    <div class="row">
+        @foreach (var c in Model)
+        {
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@c.Titulo</h5>
+                        <p class="card-text">@c.Curso?.Nombre</p>
+                        <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@c.Id">Ver</a>
+                        @if (rol == "Profesor")
+                        {
+                            <a class="btn btn-sm btn-outline-warning" asp-action="Edit" asp-route-id="@c.Id">Editar</a>
+                            <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@c.Id">Eliminar</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+<a class="btn btn-secondary mt-3" asp-controller="Home" asp-action="Dashboard">Volver al Dashboard</a>
+
+<link rel="stylesheet" href="~/css/views/Clases.Index.css" asp-append-version="true" />
+
+<script src="~/js/views/Clases.Index.js" asp-append-version="true"></script>
+

@@ -1,0 +1,80 @@
+@model IEnumerable<StudyHub.Models.UsuarioClase>
+@{
+    ViewData["Title"] = "Estudiantes del Curso";
+    var curso = ViewBag.Curso as StudyHub.Models.Curso;
+}
+
+<h1>Estudiantes de @curso!.Nombre (@curso.Codigo)</h1>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="card mb-3">
+    <div class="card-body">
+        <form asp-action="InvitarAlumno" method="post" class="row g-2">
+            <input type="hidden" name="cursoId" value="@curso.Id" />
+            <div class="col-md-5">
+                <input type="email" name="email" class="form-control" placeholder="Email del estudiante" required />
+            </div>
+            <div class="col-md-3">
+                <select name="claseId" class="form-select" asp-items="ViewBag.Clases"></select>
+            </div>
+            <div class="col-md-2">
+                <select name="rol" class="form-select">
+                    <option value="Estudiante" selected>Estudiante</option>
+                    <option value="Ayudante">Ayudante</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Invitar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Clase</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var uc in Model)
+        {
+            <tr>
+                <td>@uc.Clase!.Titulo</td>
+                <td>@uc.Usuario!.Nombre</td>
+                <td>@uc.Usuario!.Email</td>
+                <td>@uc.Rol</td>
+                <td>@uc.Estado</td>
+                <td>
+                    <form asp-action="Aceptar" method="post" class="d-inline">
+                        <input type="hidden" name="usuarioClaseId" value="@uc.Id" />
+                        <button type="submit" class="btn btn-sm btn-success">Aceptar</button>
+                    </form>
+                    <form asp-action="Rechazar" method="post" class="d-inline">
+                        <input type="hidden" name="usuarioClaseId" value="@uc.Id" />
+                        <button type="submit" class="btn btn-sm btn-danger">Rechazar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-secondary" asp-action="Details" asp-route-id="@curso.Id">Volver al curso</a>
+
+<link rel="stylesheet" href="~/css/views/Cursos.Alumnos.css" asp-append-version="true" />
+<script src="~/js/views/Cursos.Alumnos.js" asp-append-version="true"></script>
+
