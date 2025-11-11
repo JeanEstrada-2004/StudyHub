@@ -51,7 +51,7 @@ namespace StudyHub.Controllers
 
             var perteneceAClase = usuarioRol == "Profesor"
                 ? clase.ProfesorId == usuarioId
-                : await _context.UsuarioClases.AnyAsync(uc => uc.UsuarioId == usuarioId && uc.ClaseId == claseId);
+                : await _context.UsuarioCursos.AnyAsync(uc => uc.UsuarioId == usuarioId && uc.CursoId == clase.CursoId && uc.Estado == "Aceptado");
 
             if (!perteneceAClase)
             {
@@ -80,7 +80,7 @@ namespace StudyHub.Controllers
                 var usuarioRol = HttpContext.Session.GetString("UsuarioRol");
                 var perteneceAClase = usuarioRol == "Profesor"
                     ? clase.ProfesorId == usuarioId
-                    : await _context.UsuarioClases.AnyAsync(uc => uc.UsuarioId == usuarioId && uc.ClaseId == recurso.ClaseId);
+                    : await _context.UsuarioCursos.AnyAsync(uc => uc.UsuarioId == usuarioId && uc.CursoId == clase.CursoId && uc.Estado == "Aceptado");
 
                 if (!perteneceAClase)
                 {
@@ -201,7 +201,7 @@ namespace StudyHub.Controllers
             var clase = await _context.Clases.FindAsync(recurso.ClaseId);
             var tieneAcceso = usuarioRol == "Profesor"
                 ? clase?.ProfesorId == usuarioId
-                : await _context.UsuarioClases.AnyAsync(uc => uc.UsuarioId == usuarioId && uc.ClaseId == recurso.ClaseId);
+                : await _context.UsuarioCursos.AnyAsync(uc => uc.UsuarioId == usuarioId && uc.CursoId == clase!.CursoId && uc.Estado == "Aceptado");
 
             if (!tieneAcceso)
             {

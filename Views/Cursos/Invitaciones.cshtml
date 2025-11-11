@@ -1,0 +1,462 @@
+@model IEnumerable<StudyHub.Models.UsuarioCurso>
+@{
+    ViewData["Title"] = "Mis Invitaciones";
+    var invitacionesPendientes = Model.Count(uc => uc.Estado == "Invitado");
+    var invitacionesAceptadas = Model.Count(uc => uc.Estado == "Aceptado");
+    var invitacionesRechazadas = Model.Count(uc => uc.Estado == "Rechazado");
+}
+
+<div class="container-fluid">
+    <!-- Header de página con breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Cursos" asp-action="Index">Cursos</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Mis Invitaciones</li>
+        </ol>
+    </nav>
+
+    <!-- Header principal -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Mis Invitaciones</h1>
+            <p class="text-muted mb-0">Gestiona las invitaciones a cursos que has recibido</p>
+        </div>
+        <a class="btn btn-outline-secondary" asp-action="Index">
+            <i class="bi bi-arrow-left me-2"></i>Volver a cursos
+        </a>
+    </div>
+
+    <!-- Alertas de feedback -->
+    <div id="alertContainer">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+    </div>
+
+    <!-- Estadísticas rápidas -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card studyhub-card stat-card">
+                <div class="card-body text-center">
+                    <div class="stat-icon text-warning">
+                        <i class="bi bi-clock-history"></i>
+                    </div>
+                    <div class="stat-number">@invitacionesPendientes</div>
+                    <div class="stat-label">Pendientes</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card studyhub-card stat-card">
+                <div class="card-body text-center">
+                    <div class="stat-icon text-success">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <div class="stat-number">@invitacionesAceptadas</div>
+                    <div class="stat-label">Aceptadas</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card studyhub-card stat-card">
+                <div class="card-body text-center">
+                    <div class="stat-icon text-danger">
+                        <i class="bi bi-x-circle"></i>
+                    </div>
+                    <div class="stat-number">@invitacionesRechazadas</div>
+                    <div class="stat-label">Rechazadas</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros y búsqueda -->
+    <div class="card studyhub-card mb-4">
+        <div class="card-body">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" class="form-control border-start-0" id="inputBusqueda" placeholder="Buscar invitaciones por nombre de curso, código...">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <select class="form-select" id="filtroEstado">
+                        <option value="todos" selected>Todos los estados</option>
+                        <option value="pendiente">Solo pendientes</option>
+                        <option value="activo">Solo aceptadas</option>
+                        <option value="rechazado">Solo rechazadas</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-outline-secondary w-100" id="btnResetFiltros">
+                        <i class="bi bi-arrow-clockwise me-2"></i>Limpiar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vista de invitaciones -->
+    <div class="card studyhub-card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-envelope me-2"></i>Invitaciones Recibidas
+                <span class="badge bg-primary ms-2" id="contadorInvitaciones">@Model.Count()</span>
+            </h5>
+            <div class="d-flex align-items-center gap-2">
+                <div class="btn-group btn-group-sm" role="group">
+                    <input type="radio" class="btn-check" name="btnViewType" id="btnViewGrid" autocomplete="off" checked>
+                    <label class="btn btn-outline-primary" for="btnViewGrid" title="Vista Grid">
+                        <i class="bi bi-grid-3x3-gap"></i>
+                    </label>
+
+                    <input type="radio" class="btn-check" name="btnViewType" id="btnViewList" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="btnViewList" title="Vista Lista">
+                        <i class="bi bi-list-ul"></i>
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-body p-0">
+            <!-- Estado de carga -->
+            <div id="loadingState" class="d-none text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando invitaciones...</span>
+                </div>
+                <p class="mt-2 text-muted">Cargando tus invitaciones...</p>
+            </div>
+
+            <!-- Estado vacío -->
+            <div id="emptyState" class="d-none text-center py-5">
+                <i class="bi bi-envelope display-1 text-muted"></i>
+                <h5 class="mt-3 text-muted">No tienes invitaciones</h5>
+                <p class="text-muted mb-4">Actualmente no tienes invitaciones pendientes de cursos.</p>
+                <div class="d-flex gap-2 justify-content-center">
+                    <a class="btn btn-primary" asp-action="Explorar">
+                        <i class="bi bi-compass me-2"></i>Explorar Cursos
+                    </a>
+                    <a class="btn btn-outline-secondary" asp-action="Index">
+                        <i class="bi bi-arrow-left me-2"></i>Volver a Cursos
+                    </a>
+                </div>
+            </div>
+
+            <!-- Vista Grid (por defecto) -->
+            <div id="vistaGrid" class="vista-activa">
+                <div class="row g-4 p-4" id="gridInvitaciones">
+                    @foreach (var invitacion in Model)
+                    {
+                        <div class="col-xl-6 col-lg-6 col-md-6">
+                            <div class="card invitacion-card h-100" data-estado="@invitacion.Estado.ToLower()" data-curso="@(invitacion.Curso?.Nombre ?? "").ToLower()" data-codigo="@(invitacion.Curso?.Codigo ?? "").ToLower()">
+                                <div class="card-header position-relative">
+                                    <div class="invitacion-header-bg @invitacion.Estado.ToLower()"></div>
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="invitacion-avatar @invitacion.Estado.ToLower()">
+                                            <i class="bi bi-envelope"></i>
+                                        </div>
+                                        <div class="invitacion-badges">
+                                            <span class="badge @GetEstadoBadgeClass(invitacion.Estado)">
+                                                @invitacion.Estado
+                                            </span>
+                                            <span class="badge @GetRolBadgeClass(invitacion.Rol)">
+                                                @invitacion.Rol
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title invitacion-titulo">@invitacion.Curso?.Nombre</h5>
+                                    <p class="card-text text-muted invitacion-codigo">
+                                        <i class="bi bi-tag me-1"></i>@invitacion.Curso?.Codigo
+                                    </p>
+                                    <p class="card-text invitacion-descripcion">
+                                        @if (invitacion.Curso != null && !string.IsNullOrEmpty(invitacion.Curso.Descripcion))
+                                        {
+                                            @(invitacion.Curso.Descripcion.Length > 120 ? invitacion.Curso.Descripcion.Substring(0, 120) + "..." : invitacion.Curso.Descripcion)
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fst-italic">Sin descripción</span>
+                                        }
+                                    </p>
+                                    <div class="invitacion-meta">
+                                        <div class="row text-center g-2">
+                                            <div class="col-4">
+                                                <div class="meta-item">
+                                                    <i class="bi bi-journals text-primary"></i>
+                                                    <small>@invitacion.Curso?.Clases?.Count ?? 0 clases</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="meta-item">
+                                                    <i class="bi bi-people text-success"></i>
+                                                    <small>@invitacion.Curso.UsuarioCursos.Count(uc => uc.Rol == "Estudiante" && uc.Estado == "Aceptado") estudiantes</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="meta-item">
+                                                    <i class="bi bi-calendar3 text-info"></i>
+                                                    <small>@invitacion.(invitacion.Curso?.Clases?.Sum(c => c.Sesiones.Count) ?? 0) sesiones</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="invitacion-info-adicional mt-3">
+                                        <small class="text-muted">
+                                            <i class="bi bi-person me-1"></i>Profesor: @invitacion.Curso?.Profesor?.Nombre ?? "�"
+                                        </small>
+                                        <br>
+                                        <small class="text-muted">
+                                            <i class="bi bi-calendar me-1"></i>Invitación: @invitacion.FechaUnion.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                                        </small>
+                                        @if (invitacion.Estado != "Invitado")
+                                        {
+                                            <br>
+                                            <small class="text-muted">
+                                                <i class="bi bi-clock me-1"></i>Respuesta: @invitacion.FechaUnion.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                                            </small>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-transparent border-top-0 pt-0">
+                                    @if (invitacion.Estado == "Invitado")
+                                    {
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <form asp-action="AceptarMiInvitacion" method="post" class="mb-0">
+                                                    <input type="hidden" name="usuarioCursoId" value="@invitacion.Id" />
+                                                    <button type="submit" class="btn btn-success w-100 btn-aceptar" data-invitacion-id="@invitacion.Id">
+                                                        <i class="bi bi-check-circle me-2"></i>Aceptar
+                                                    </button>
+                                                </form>
+                                            </div>
+                                            <div class="col-6">
+                                                <form asp-action="RechazarMiInvitacion" method="post" class="mb-0">
+                                                    <input type="hidden" name="usuarioCursoId" value="@invitacion.Id" />
+                                                    <button type="submit" class="btn btn-outline-danger w-100 btn-rechazar" data-invitacion-id="@invitacion.Id">
+                                                        <i class="bi bi-x-circle me-2"></i>Rechazar
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="d-grid">
+                                            <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@invitacion.CursoId">
+                                                <i class="bi bi-eye me-2"></i>
+                                                @if (invitacion.Estado == "Aceptado")
+                                                {
+                                                    <span>Ir al Curso</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>Ver Curso</span>
+                                                }
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Vista Lista (oculta por defecto) -->
+            <div id="vistaLista" class="vista-oculta">
+                <div class="list-group list-group-flush" id="listaInvitaciones">
+                    @foreach (var invitacion in Model)
+                    {
+                        <div class="list-group-item invitacion-list-item" data-estado="@invitacion.Estado.ToLower()" data-curso="@(invitacion.Curso?.Nombre ?? "").ToLower()" data-codigo="@(invitacion.Curso?.Codigo ?? "").ToLower()">
+                            <div class="row align-items-center">
+                                <div class="col-md-1 text-center">
+                                    <div class="invitacion-avatar-sm @invitacion.Estado.ToLower()">
+                                        <i class="bi bi-envelope"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <h6 class="mb-1">@invitacion.Curso?.Nombre</h6>
+                                    <p class="text-muted mb-1 small">
+                                        <i class="bi bi-tag me-1"></i>@invitacion.Curso?.Codigo
+                                        @if (invitacion.Curso != null && !string.IsNullOrEmpty(invitacion.Curso.Descripcion))
+                                        {
+                                            <span class="ms-2">|</span>
+                                            @(invitacion.Curso.Descripcion.Length > 80 ? invitacion.Curso.Descripcion.Substring(0, 80) + "..." : invitacion.Curso.Descripcion)
+                                        }
+                                    </p>
+                                    <div class="invitacion-meta-list">
+                                        <small class="text-muted">
+                                            <i class="bi bi-journals me-1"></i>@invitacion.Curso?.Clases?.Count ?? 0 clases |
+                                            <i class="bi bi-people me-1 ms-2"></i>@invitacion.Curso.UsuarioCursos.Count(uc => uc.Rol == "Estudiante" && uc.Estado == "Aceptado") estudiantes |
+                                            <i class="bi bi-calendar3 me-1 ms-2"></i>@invitacion.(invitacion.Curso?.Clases?.Sum(c => c.Sesiones.Count) ?? 0) sesiones
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="invitacion-badges-list">
+                                        <span class="badge @GetEstadoBadgeClass(invitacion.Estado)">
+                                            @invitacion.Estado
+                                        </span>
+                                        <span class="badge @GetRolBadgeClass(invitacion.Rol)">
+                                            @invitacion.Rol
+                                        </span>
+                                        <span class="badge bg-light text-dark">
+                                            <i class="bi bi-person-fill me-1"></i>@invitacion.Curso?.Profesor?.Nombre ?? "�"
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 text-end">
+                                    @if (invitacion.Estado == "Invitado")
+                                    {
+                                        <div class="btn-group" role="group">
+                                            <form asp-action="AceptarMiInvitacion" method="post" class="d-inline">
+                                                <input type="hidden" name="usuarioCursoId" value="@invitacion.Id" />
+                                                <button type="submit" class="btn btn-success btn-sm btn-aceptar" data-invitacion-id="@invitacion.Id">
+                                                    <i class="bi bi-check-circle me-1"></i>Aceptar
+                                                </button>
+                                            </form>
+                                            <form asp-action="RechazarMiInvitacion" method="post" class="d-inline">
+                                                <input type="hidden" name="usuarioCursoId" value="@invitacion.Id" />
+                                                <button type="submit" class="btn btn-outline-danger btn-sm btn-rechazar" data-invitacion-id="@invitacion.Id">
+                                                    <i class="bi bi-x-circle"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <a class="btn btn-outline-primary btn-sm" asp-action="Details" asp-route-id="@invitacion.CursoId">
+                                            <i class="bi bi-eye me-1"></i>
+                                            @if (invitacion.Estado == "Aceptado")
+                                            {
+                                                <span>Ir al Curso</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Ver Curso</span>
+                                            }
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer con información adicional -->
+        @if (Model.Any())
+        {
+            <div class="card-footer bg-light">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <small class="text-muted">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Mostrando <strong id="contadorVisible">@Model.Count()</strong> de <strong>@Model.Count()</strong> invitaciones
+                        </small>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <small class="text-muted">
+                            Última actualización: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+                        </small>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Información sobre invitaciones -->
+    <div class="card studyhub-card mt-4">
+        <div class="card-header bg-info text-white">
+            <h6 class="card-title mb-0">
+                <i class="bi bi-info-circle me-2"></i>Información sobre Invitaciones
+            </h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="d-flex mb-3">
+                        <i class="bi bi-clock text-warning me-3 fs-5"></i>
+                        <div>
+                            <strong>Invitaciones Pendientes</strong>
+                            <p class="small text-muted mb-0">Debes aceptar o rechazar estas invitaciones</p>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-3">
+                        <i class="bi bi-check-circle text-success me-3 fs-5"></i>
+                        <div>
+                            <strong>Invitaciones Aceptadas</strong>
+                            <p class="small text-muted mb-0">Ya formas parte de estos cursos</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex mb-3">
+                        <i class="bi bi-x-circle text-danger me-3 fs-5"></i>
+                        <div>
+                            <strong>Invitaciones Rechazadas</strong>
+                            <p class="small text-muted mb-0">Has declinado unirte a estos cursos</p>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <i class="bi bi-arrow-clockwise text-primary me-3 fs-5"></i>
+                        <div>
+                            <strong>Puedes cambiar de opinión</strong>
+                            <p class="small text-muted mb-0">Contacta al profesor si quieres unirte posteriormente</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    public string GetEstadoBadgeClass(string estado)
+    {
+        return estado switch
+        {
+            "Invitado" => "bg-warning",
+            "Aceptado" => "bg-success",
+            "Rechazado" => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+
+    public string GetRolBadgeClass(string rol)
+    {
+        return rol switch
+        {
+            "Estudiante" => "bg-primary",
+            "Ayudante" => "bg-info",
+            "Profesor" => "bg-dark",
+            _ => "bg-secondary"
+        };
+    }
+}
+
+<link rel="stylesheet" href="~/css/views/Cursos.Invitaciones.css" asp-append-version="true" />
+
+@section Scripts {
+    <script src="~/js/views/Cursos.Invitaciones.js" asp-append-version="true"></script>
+}
+
+
+

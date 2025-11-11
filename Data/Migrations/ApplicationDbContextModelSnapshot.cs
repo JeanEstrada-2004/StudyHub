@@ -44,7 +44,7 @@ namespace StudyHub.Data.Migrations
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("MaxEstudiantes")
+                    b.Property<int?>("MaxEstudiantes")
                         .HasColumnType("integer");
 
                     b.Property<int>("ProfesorId")
@@ -89,39 +89,14 @@ namespace StudyHub.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<int>("ProfesorId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Cursos");
+                    b.HasIndex("ProfesorId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Activo = true,
-                            Codigo = "MAT101",
-                            Nombre = "Matemáticas"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Activo = true,
-                            Codigo = "PRO101",
-                            Nombre = "Programación"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Activo = true,
-                            Codigo = "BD101",
-                            Nombre = "Bases de Datos"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Activo = true,
-                            Codigo = "IA101",
-                            Nombre = "Inteligencia Artificial"
-                        });
+                    b.ToTable("Cursos");
                 });
 
             modelBuilder.Entity("StudyHub.Models.Mensaje", b =>
@@ -272,7 +247,7 @@ namespace StudyHub.Data.Migrations
                     b.ToTable("Usuarios");
                 });
 
-            modelBuilder.Entity("StudyHub.Models.UsuarioClase", b =>
+            modelBuilder.Entity("StudyHub.Models.UsuarioCurso", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -280,7 +255,7 @@ namespace StudyHub.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ClaseId")
+                    b.Property<int>("CursoId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Estado")
@@ -301,11 +276,11 @@ namespace StudyHub.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClaseId");
+                    b.HasIndex("CursoId");
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("UsuarioClases");
+                    b.ToTable("UsuarioCursos");
                 });
 
             modelBuilder.Entity("StudyHub.Models.Clase", b =>
@@ -323,6 +298,17 @@ namespace StudyHub.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Curso");
+
+                    b.Navigation("Profesor");
+                });
+
+            modelBuilder.Entity("StudyHub.Models.Curso", b =>
+                {
+                    b.HasOne("StudyHub.Models.Usuario", "Profesor")
+                        .WithMany()
+                        .HasForeignKey("ProfesorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Profesor");
                 });
@@ -376,21 +362,21 @@ namespace StudyHub.Data.Migrations
                     b.Navigation("Clase");
                 });
 
-            modelBuilder.Entity("StudyHub.Models.UsuarioClase", b =>
+            modelBuilder.Entity("StudyHub.Models.UsuarioCurso", b =>
                 {
-                    b.HasOne("StudyHub.Models.Clase", "Clase")
-                        .WithMany("UsuarioClases")
-                        .HasForeignKey("ClaseId")
+                    b.HasOne("StudyHub.Models.Curso", "Curso")
+                        .WithMany("UsuarioCursos")
+                        .HasForeignKey("CursoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("StudyHub.Models.Usuario", "Usuario")
-                        .WithMany("UsuarioClases")
+                        .WithMany("UsuarioCursos")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Clase");
+                    b.Navigation("Curso");
 
                     b.Navigation("Usuario");
                 });
@@ -402,13 +388,13 @@ namespace StudyHub.Data.Migrations
                     b.Navigation("Recursos");
 
                     b.Navigation("Sesiones");
-
-                    b.Navigation("UsuarioClases");
                 });
 
             modelBuilder.Entity("StudyHub.Models.Curso", b =>
                 {
                     b.Navigation("Clases");
+
+                    b.Navigation("UsuarioCursos");
                 });
 
             modelBuilder.Entity("StudyHub.Models.Usuario", b =>
@@ -417,7 +403,7 @@ namespace StudyHub.Data.Migrations
 
                     b.Navigation("Recursos");
 
-                    b.Navigation("UsuarioClases");
+                    b.Navigation("UsuarioCursos");
                 });
 #pragma warning restore 612, 618
         }

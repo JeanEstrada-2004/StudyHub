@@ -1,1 +1,422 @@
 /* View-specific styles for Recursos/Create */
+/* Estilos específicos para Crear Recurso - StudyHub */
+
+/* Variables de colores StudyHub */
+:root {
+    --studyhub-primary: #0d6efd;
+    --studyhub-primary-light: #e8f1ff;
+    --studyhub-success: #198754;
+    --studyhub-success-light: #e8f5ee;
+    --studyhub-warning: #ffc107;
+    --studyhub-warning-light: #fff9e6;
+    --studyhub-info: #0dcaf0;
+    --studyhub-info-light: #e8f9fd;
+    --studyhub-border-radius: 8px;
+    --studyhub-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    --studyhub-transition: all 0.3s ease;
+}
+
+/* Icono principal */
+.recurso-create-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--studyhub-primary), #0b5ed7);
+    font-size: 1.75rem;
+}
+
+/* Cards */
+.card {
+    border-radius: var(--studyhub-border-radius);
+    border: 1px solid #e9ecef;
+    transition: var(--studyhub-transition);
+}
+
+.card:hover {
+    box-shadow: var(--studyhub-shadow) !important;
+}
+
+/* Selector de Tipo */
+.tipo-option {
+    border: 2px solid transparent;
+    border-radius: var(--studyhub-border-radius);
+    cursor: pointer;
+    transition: var(--studyhub-transition);
+}
+
+.tipo-option:hover {
+    border-color: var(--studyhub-primary-light);
+    transform: translateY(-2px);
+}
+
+.tipo-option.active {
+    border-color: var(--studyhub-primary);
+    background-color: var(--studyhub-primary-light);
+}
+
+.tipo-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: var(--studyhub-transition);
+}
+
+.tipo-option.active .tipo-icon {
+    transform: scale(1.1);
+}
+
+/* Ocultar radio buttons nativos */
+.tipo-option .form-check-input {
+    display: none;
+}
+
+/* Campos de formulario */
+.form-control, .form-select {
+    border-radius: var(--studyhub-border-radius);
+    border: 1px solid #dee2e6;
+    transition: var(--studyhub-transition);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--studyhub-primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Área de subida de archivos */
+.file-upload-area {
+    position: relative;
+}
+
+.file-drop-zone {
+    border: 2px dashed #dee2e6;
+    border-radius: var(--studyhub-border-radius);
+    transition: var(--studyhub-transition);
+    cursor: pointer;
+}
+
+.file-drop-zone:hover {
+    border-color: var(--studyhub-primary);
+    background-color: var(--studyhub-primary-light);
+}
+
+.file-drop-zone.dragover {
+    border-color: var(--studyhub-primary);
+    background-color: var(--studyhub-primary-light);
+    transform: scale(1.02);
+}
+
+.file-drop-content {
+    transition: var(--studyhub-transition);
+}
+
+/* Información de archivo */
+.file-info {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* Grupos de contenido */
+.recurso-content-group {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.bg-primary-light {
+    background-color: var(--studyhub-primary-light) !important;
+}
+
+.bg-success-light {
+    background-color: var(--studyhub-success-light) !important;
+}
+
+/* Vista previa de enlaces */
+.link-preview {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* Accordion personalizado */
+.accordion-button {
+    border-radius: var(--studyhub-border-radius) !important;
+    font-weight: 500;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--studyhub-primary-light);
+    color: var(--studyhub-primary);
+    box-shadow: none;
+}
+
+.accordion-button:focus {
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    border-color: var(--studyhub-primary);
+}
+
+/* Información de la clase */
+.class-info-card {
+    border-left: 4px solid var(--studyhub-primary);
+}
+
+/* Alertas personalizadas */
+.alert {
+    border-radius: var(--studyhub-border-radius);
+    border: none;
+}
+
+.alert-danger {
+    background-color: var(--studyhub-danger-light);
+    color: var(--studyhub-danger);
+    border-left: 4px solid var(--studyhub-danger);
+}
+
+/* Botones personalizados */
+.btn {
+    border-radius: 6px;
+    transition: var(--studyhub-transition);
+}
+
+.btn-primary {
+    background-color: var(--studyhub-primary);
+    border-color: var(--studyhub-primary);
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
+
+.btn-outline-secondary {
+    border-radius: 6px;
+    transition: var(--studyhub-transition);
+}
+
+.btn-outline-secondary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.2);
+}
+
+.btn-outline-warning {
+    border-radius: 6px;
+    transition: var(--studyhub-transition);
+}
+
+.btn-outline-warning:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+}
+
+/* Breadcrumb personalizado */
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+}
+
+.breadcrumb-item a {
+    color: var(--studyhub-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.breadcrumb-item a:hover {
+    color: #0b5ed7;
+    text-decoration: underline;
+}
+
+/* Estados de validación */
+.field-validation-error {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+.text-danger {
+    color: var(--studyhub-danger) !important;
+}
+
+/* Texto de ayuda */
+.text-muted {
+    color: #6c757d !important;
+}
+
+.form-text {
+    font-size: 0.875rem;
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.file-drop-zone.dragover .file-drop-content {
+    animation: pulse 1s ease-in-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .recurso-create-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .tipo-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    .card-body {
+        padding: 1.5rem !important;
+    }
+    
+    .btn-group {
+        width: 100%;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .btn-group .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .recurso-create-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    h1.h2 {
+        font-size: 1.5rem;
+    }
+    
+    .d-flex.align-items-center {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .recurso-create-icon {
+        margin-right: 0 !important;
+        margin-bottom: 1rem;
+    }
+    
+    .file-drop-content {
+        padding: 2rem 1rem !important;
+    }
+}
+
+/* Estados de carga */
+.loading-state {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading-state::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    .card,
+    .btn,
+    .form-control,
+    .form-select,
+    .tipo-option,
+    .file-drop-zone {
+        transition: none;
+    }
+    
+    .card {
+        animation: none;
+    }
+}
+
+/* Estados focus para mejor accesibilidad */
+.btn:focus,
+.form-control:focus,
+.form-select:focus,
+.accordion-button:focus,
+.tipo-option:focus {
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+    outline: none;
+}
+
+/* Efectos hover para elementos interactivos */
+.tipo-option:hover .tipo-icon {
+    transform: scale(1.05);
+}
+
+.file-info:hover {
+    transform: translateX(5px);
+}
+
+/* Custom styles para elementos específicos */
+.input-group-text {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+
+/* Scroll suave */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Contador de caracteres */
+#descripcionCount.warning {
+    color: var(--studyhub-warning);
+}
+
+#descripcionCount.danger {
+    color: var(--studyhub-danger);
+}
+
+/* Transiciones para grupos de contenido */
+.recurso-content-group {
+    transition: all 0.3s ease;
+}

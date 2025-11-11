@@ -1,0 +1,16 @@
+/* Estilos para Explorar Cursos */
+.studyhub-card { border-radius: .5rem; }
+.stat-card .stat-icon { font-size: 1.6rem; }
+.list-group-item .btn { white-space: nowrap; }
+
+/* Vistas (grid/lista) */
+.vista-oculta { display: none; }
+.vista-activa { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
+
+/* Toggle de vista activo */
+.btn-group .btn-check:checked + .btn {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: #fff;
+}

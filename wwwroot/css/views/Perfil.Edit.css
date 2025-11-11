@@ -1,1 +1,337 @@
 /* View-specific styles for Perfil/Edit */
+/* Estilos específicos para Editar Perfil - StudyHub */
+
+/* Variables de colores StudyHub */
+:root {
+    --studyhub-primary: #0d6efd;
+    --studyhub-primary-light: #e8f1ff;
+    --studyhub-success: #198754;
+    --studyhub-success-light: #e8f5ee;
+    --studyhub-warning: #ffc107;
+    --studyhub-warning-light: #fff9e6;
+    --studyhub-info: #0dcaf0;
+    --studyhub-info-light: #e8f9fd;
+    --studyhub-border-radius: 8px;
+    --studyhub-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    --studyhub-transition: all 0.3s ease;
+}
+
+/* Icono principal */
+.profile-edit-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--studyhub-primary), #0b5ed7);
+    font-size: 1.75rem;
+}
+
+/* Avatar de vista previa */
+.preview-avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+}
+
+/* Cards */
+.card {
+    border-radius: var(--studyhub-border-radius);
+    border: 1px solid #e9ecef;
+    transition: var(--studyhub-transition);
+}
+
+.card:hover {
+    box-shadow: var(--studyhub-shadow) !important;
+}
+
+/* Campos de formulario */
+.form-control, .form-select {
+    border-radius: var(--studyhub-border-radius);
+    border: 1px solid #dee2e6;
+    transition: var(--studyhub-transition);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--studyhub-primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Accordion personalizado */
+.accordion-button {
+    border-radius: var(--studyhub-border-radius) !important;
+    font-weight: 500;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--studyhub-primary-light);
+    color: var(--studyhub-primary);
+    box-shadow: none;
+}
+
+.accordion-button:focus {
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    border-color: var(--studyhub-primary);
+}
+
+/* Alertas personalizadas */
+.alert {
+    border-radius: var(--studyhub-border-radius);
+    border: none;
+}
+
+.alert-success {
+    background-color: var(--studyhub-success-light);
+    color: var(--studyhub-success);
+    border-left: 4px solid var(--studyhub-success);
+}
+
+.alert-danger {
+    background-color: var(--studyhub-danger-light);
+    color: var(--studyhub-danger);
+    border-left: 4px solid var(--studyhub-danger);
+}
+
+/* Botones personalizados */
+.btn {
+    border-radius: 6px;
+    transition: var(--studyhub-transition);
+}
+
+.btn-primary {
+    background-color: var(--studyhub-primary);
+    border-color: var(--studyhub-primary);
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
+
+.btn-outline-secondary {
+    border-radius: 6px;
+    transition: var(--studyhub-transition);
+}
+
+.btn-outline-secondary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.2);
+}
+
+.btn-outline-warning {
+    border-radius: 6px;
+    transition: var(--studyhub-transition);
+}
+
+.btn-outline-warning:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+    border-radius: 4px;
+}
+
+/* Breadcrumb personalizado */
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+}
+
+.breadcrumb-item a {
+    color: var(--studyhub-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.breadcrumb-item a:hover {
+    color: #0b5ed7;
+    text-decoration: underline;
+}
+
+/* Estados de validación */
+.field-validation-error {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+.text-danger {
+    color: var(--studyhub-danger) !important;
+}
+
+/* Texto de ayuda */
+.text-muted {
+    color: #6c757d !important;
+}
+
+.form-text {
+    font-size: 0.875rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profile-edit-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .preview-avatar {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    .card-body {
+        padding: 1.5rem !important;
+    }
+    
+    .sticky-top {
+        position: relative !important;
+        top: 0 !important;
+    }
+    
+    .btn-group {
+        width: 100%;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .btn-group .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .profile-edit-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    h1.h2 {
+        font-size: 1.5rem;
+    }
+    
+    .d-flex.align-items-center {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .profile-edit-icon {
+        margin-right: 0 !important;
+        margin-bottom: 1rem;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.sticky-top .card {
+    animation: slideIn 0.6s ease-out;
+}
+
+/* Estados de carga */
+.loading-state {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading-state::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    .card,
+    .btn,
+    .form-control,
+    .form-select {
+        transition: none;
+    }
+    
+    .card,
+    .sticky-top .card {
+        animation: none;
+    }
+}
+
+/* Estados focus para mejor accesibilidad */
+.btn:focus,
+.form-control:focus,
+.form-select:focus,
+.accordion-button:focus {
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+    outline: none;
+}
+
+/* Efectos hover para elementos interactivos */
+.btn-outline-primary:hover {
+    background-color: var(--studyhub-primary);
+    border-color: var(--studyhub-primary);
+}
+
+/* Custom styles para select de rol */
+.form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+}
+
+/* Scroll suave */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Transiciones para vista previa */
+#previewNombre, #previewEmail, #previewRol {
+    transition: all 0.3s ease;
+}

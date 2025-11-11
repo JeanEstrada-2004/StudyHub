@@ -1,38 +1,411 @@
 @model StudyHub.Models.Curso
 @{
     ViewData["Title"] = "Detalle del Curso";
+    var usuarioRol = Context.Session.GetString("UsuarioRol");
+    var esProfesor = usuarioRol == "Profesor";
+    var cantidadEstudiantes = Model.UsuarioCursos?.Count(uc => uc.Rol == "Estudiante" && uc.Estado == "Aceptado") ?? 0;
+    var cantidadAyudantes = Model.UsuarioCursos?.Count(uc => uc.Rol == "Ayudante" && uc.Estado == "Aceptado") ?? 0;
+    var cantidadClases = Model.Clases?.Count ?? 0;
+    var proximaSesion = Model.Clases?
+        .SelectMany(c => c.Sesiones ?? new List<StudyHub.Models.Sesion>())
+        .Where(s => s.FechaHora > DateTime.Now)
+        .OrderBy(s => s.FechaHora)
+        .FirstOrDefault();
 }
 
-<h1>@Model.Nombre (@Model.Codigo)</h1>
-<p class="text-muted">@Model.Descripcion</p>
-<p><strong>Activo:</strong> @(Model.Activo?"Sí":"No")</p>
+<div class="container-fluid">
+    <!-- Header de página con breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Cursos" asp-action="Index">Cursos</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Nombre</li>
+        </ol>
+    </nav>
 
-<h4 class="mt-4">Clases de este curso</h4>
-@if (!Model.Clases.Any())
-{
-    <div class="alert alert-info">No hay clases registradas para este curso.</div>
-}
-else
-{
-    <ul class="list-group">
-        @foreach (var c in Model.Clases)
-        {
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>@c.Titulo</span>
-                <span>
-                    <a class="btn btn-sm btn-outline-primary" asp-controller="Clases" asp-action="Details" asp-route-id="@c.Id">Ver clase</a>
-                </span>
-            </li>
-        }
-    </ul>
-}
+    <!-- Header principal del curso -->
+    <div class="card studyhub-card mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="curso-avatar me-3">
+                            <i class="bi bi-journal-text"></i>
+                        </div>
+                        <div>
+                            <h1 class="h3 mb-1">@Model.Nombre</h1>
+                            <p class="text-muted mb-2">Código: @Model.Codigo</p>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge @(Model.Activo ? "bg-success" : "bg-secondary")">
+                                    <i class="bi bi-power me-1"></i>@(Model.Activo ? "Activo" : "Inactivo")
+                                </span>
+                                <span class="badge bg-primary">
+                                    <i class="bi bi-person-fill me-1"></i>Profesor: @Model.Profesor.Nombre
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.Descripcion))
+                    {
+                        <div class="curso-descripcion">
+                            <p class="mb-0">@Model.Descripcion</p>
+                        </div>
+                    }
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="btn-group-vertical w-100">
+                        @if (esProfesor)
+                        {
+                            <a class="btn btn-primary mb-2" asp-controller="Clases" asp-action="Create" asp-route-cursoId="@Model.Id">
+                                <i class="bi bi-plus-circle me-2"></i>Crear Clase
+                            </a>
+                            <a class="btn btn-outline-dark mb-2" asp-action="Alumnos" asp-route-id="@Model.Id">
+                                <i class="bi bi-people me-2"></i>Gestionar Estudiantes
+                            </a>
+                            <a class="btn btn-outline-warning mb-2" asp-action="Edit" asp-route-id="@Model.Id">
+                                <i class="bi bi-pencil me-2"></i>Editar Curso
+                            </a>
+                        }
+                        <a class="btn btn-outline-info mb-2" asp-action="Calendario" asp-route-id="@Model.Id">
+                            <i class="bi bi-calendar3 me-2"></i>Ver Calendario
+                        </a>
+                        <a class="btn btn-outline-secondary" asp-action="Index">
+                            <i class="bi bi-arrow-left me-2"></i>Volver a Cursos
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div class="mt-3">
-    <a class="btn btn-dark" asp-action="Alumnos" asp-route-id="@Model.Id">Gestionar Estudiantes</a>
-    <a class="btn btn-secondary" asp-action="Index">Volver</a>
-    <a class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
-  </div>
+    <!-- Estadísticas rápidas -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card studyhub-card stat-card">
+                <div class="card-body text-center">
+                    <div class="stat-icon text-primary">
+                        <i class="bi bi-journals"></i>
+                    </div>
+                    <div class="stat-number">@cantidadClases</div>
+                    <div class="stat-label">Clases</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card studyhub-card stat-card">
+                <div class="card-body text-center">
+                    <div class="stat-icon text-success">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div class="stat-number">@cantidadEstudiantes</div>
+                    <div class="stat-label">Estudiantes</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card studyhub-card stat-card">
+                <div class="card-body text-center">
+                    <div class="stat-icon text-warning">
+                        <i class="bi bi-person-badge"></i>
+                    </div>
+                    <div class="stat-number">@cantidadAyudantes</div>
+                    <div class="stat-label">Ayudantes</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card studyhub-card stat-card">
+                <div class="card-body text-center">
+                    <div class="stat-icon text-info">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <div class="stat-number">
+                        @if (proximaSesion != null)
+                        {
+                            @proximaSesion.FechaHora.ToLocalTime().ToString("dd/MM")
+                        }
+                        else
+                        {
+                            <span class="text-muted">-</span>
+                        }
+                    </div>
+                    <div class="stat-label">Próxima Sesión</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Sección de Clases -->
+        <div class="col-lg-8">
+            <div class="card studyhub-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-journals me-2"></i>Clases del Curso
+                    </h5>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-primary">@cantidadClases clases</span>
+                        @if (esProfesor)
+                        {
+                            <a class="btn btn-sm btn-outline-primary" asp-controller="Clases" asp-action="Create" asp-route-cursoId="@Model.Id">
+                                <i class="bi bi-plus-circle me-1"></i>Nueva
+                            </a>
+                        }
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    @if (!Model.Clases.Any())
+                    {
+                        <div class="text-center py-5" id="emptyClases">
+                            <i class="bi bi-journals display-1 text-muted"></i>
+                            <h5 class="mt-3 text-muted">No hay clases registradas</h5>
+                            <p class="text-muted mb-4">Este curso aún no tiene clases creadas.</p>
+                            @if (esProfesor)
+                            {
+                                <a class="btn btn-primary" asp-controller="Clases" asp-action="Create" asp-route-cursoId="@Model.Id">
+                                    <i class="bi bi-plus-circle me-2"></i>Crear Primera Clase
+                                </a>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="list-group list-group-flush" id="listaClases">
+                            @foreach (var clase in Model.Clases.OrderBy(c => c.FechaCreacion))
+                            {
+                                <div class="list-group-item clase-item">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-8">
+                                            <h6 class="mb-1">@clase.Titulo</h6>
+                                            <p class="text-muted mb-1 small">
+                                                @if (!string.IsNullOrEmpty(clase.Descripcion))
+                                                {
+                                                    @(clase.Descripcion.Length > 120 ? clase.Descripcion.Substring(0, 120) + "..." : clase.Descripcion)
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted fst-italic">Sin descripción</span>
+                                                }
+                                            </p>
+                                            <div class="clase-meta">
+                                                <small class="text-muted">
+                                                    <i class="bi bi-clock me-1"></i>
+                                                    Creada: @clase.FechaCreacion.ToLocalTime().ToString("dd/MM/yyyy") |
+                                                    <i class="bi bi-calendar3 me-1 ms-2"></i>
+                                                    @clase.Sesiones.Count sesiones |
+                                                    <i class="bi bi-file-earmark me-1 ms-2"></i>
+                                                    @clase.Recursos.Count recursos
+                                                    @if (clase.MaxEstudiantes.HasValue)
+                                                    {
+                                                        <span>|</span>
+                                                        <i class="bi bi-people me-1 ms-2"></i>
+                                                        @clase.MaxEstudiantes
+                                                    }
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 text-end">
+                                            <div class="btn-group">
+                                                <a class="btn btn-outline-primary btn-sm" 
+                                                   asp-controller="Clases" 
+                                                   asp-action="Details" 
+                                                   asp-route-id="@clase.Id">
+                                                    <i class="bi bi-eye me-1"></i>Ver Clase
+                                                </a>
+                                                @if (esProfesor)
+                                                {
+                                                    <a class="btn btn-outline-secondary btn-sm" 
+                                                       asp-controller="Clases" 
+                                                       asp-action="Edit" 
+                                                       asp-route-id="@clase.Id">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </a>
+                                                }
+                                            </div>
+                                            <div class="mt-1">
+                                                <small class="text-muted">
+                                                    @if (clase.EsPublica)
+                                                    {
+                                                        <span class="badge bg-success">Pública</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-secondary">Privada</span>
+                                                    }
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Próximas Sesiones -->
+            @{
+                var proximasSesiones = Model.Clases?
+                    .SelectMany(c => c.Sesiones)
+                    .Where(s => s.FechaHora > DateTime.Now)
+                    .OrderBy(s => s.FechaHora)
+                    .Take(5)
+                    .ToList();
+            }
+            
+            @if (proximasSesiones?.Any() == true)
+            {
+                <div class="card studyhub-card mt-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-calendar3 me-2"></i>Próximas Sesiones
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="list-group list-group-flush">
+                            @foreach (var sesion in proximasSesiones)
+                            {
+                                <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-3">
+                                            <small class="text-primary fw-semibold">
+                                                @sesion.FechaHora.ToLocalTime().ToString("dd MMM")
+                                            </small>
+                                            <br>
+                                            <small class="text-muted">
+                                                @sesion.FechaHora.ToLocalTime().ToString("HH:mm")
+                                            </small>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6 class="mb-1 small">@sesion.Titulo</h6>
+                                            <small class="text-muted">
+                                                <i class="bi bi-journal-text me-1"></i>@sesion.Clase.Titulo
+                                                @if (!string.IsNullOrEmpty(sesion.Ubicacion))
+                                                {
+                                                    <br>
+                                                    <i class="bi bi-geo-alt me-1"></i>@sesion.Ubicacion
+                                                }
+                                            </small>
+                                        </div>
+                                        <div class="col-md-3 text-end">
+                                            <small class="text-muted me-2">@sesion.DuracionMinutos min</small>
+                                            <a class="btn btn-outline-primary btn-sm" 
+                                               asp-controller="Clases" 
+                                               asp-action="Details" 
+                                               asp-route-id="@sesion.ClaseId">
+                                                <i class="bi bi-arrow-right"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Sidebar con información adicional -->
+        <div class="col-lg-4">
+            <!-- Información del Profesor -->
+            <div class="card studyhub-card mb-4">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-person-fill me-2"></i>Profesor del Curso
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-profesor me-3">
+                            <i class="bi bi-person-circle"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-1">@Model.Profesor.Nombre</h6>
+                            <p class="text-muted mb-1 small">@Model.Profesor.Email</p>
+                            <span class="badge bg-primary">Profesor</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones Rápidas -->
+            <div class="card studyhub-card mb-4">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-lightning-fill me-2"></i>Acciones Rápidas
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-outline-primary btn-sm" asp-action="Calendario" asp-route-id="@Model.Id">
+                            <i class="bi bi-calendar3 me-2"></i>Ver Calendario Completo
+                        </a>
+                        @if (esProfesor)
+                        {
+                            <a class="btn btn-outline-success btn-sm" asp-action="Alumnos" asp-route-id="@Model.Id">
+                                <i class="bi bi-people me-2"></i>Gestionar Estudiantes
+                            </a>
+                            <a class="btn btn-outline-warning btn-sm" asp-action="Edit" asp-route-id="@Model.Id">
+                                <i class="bi bi-pencil me-2"></i>Editar Información
+                            </a>
+                        }
+                        <a class="btn btn-outline-info btn-sm" href="#" id="btnExportar">
+                            <i class="bi bi-download me-2"></i>Exportar Información
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información del Curso -->
+            <div class="card studyhub-card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-info-circle me-2"></i>Información del Curso
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-5">Código:</dt>
+                        <dd class="col-sm-7">@Model.Codigo</dd>
+
+                        <dt class="col-sm-5">Estado:</dt>
+                        <dd class="col-sm-7">
+                            <span class="badge @(Model.Activo ? "bg-success" : "bg-secondary")">
+                                @(Model.Activo ? "Activo" : "Inactivo")
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-5">Clases:</dt>
+                        <dd class="col-sm-7">@cantidadClases</dd>
+
+                        <dt class="col-sm-5">Estudiantes:</dt>
+                        <dd class="col-sm-7">@cantidadEstudiantes</dd>
+
+                        <dt class="col-sm-5">Ayudantes:</dt>
+                        <dd class="col-sm-7">@cantidadAyudantes</dd>
+
+                        @if (Model.Clases.Any())
+                        {
+                            <dt class="col-sm-5">Total Sesiones:</dt>
+                            <dd class="col-sm-7">@Model.Clases.Sum(c => c.Sesiones.Count)</dd>
+
+                            <dt class="col-sm-5">Total Recursos:</dt>
+                            <dd class="col-sm-7">@Model.Clases.Sum(c => c.Recursos.Count)</dd>
+
+                            <dt class="col-sm-5">Clases Públicas:</dt>
+                            <dd class="col-sm-7">@Model.Clases.Count(c => c.EsPublica)</dd>
+
+                            <dt class="col-sm-5">Clases Privadas:</dt>
+                            <dd class="col-sm-7">@Model.Clases.Count(c => !c.EsPublica)</dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <link rel="stylesheet" href="~/css/views/Cursos.Details.css" asp-append-version="true" />
-<script src="~/js/views/Cursos.Details.js" asp-append-version="true"></script>
 
+@section Scripts {
+    <script src="~/js/views/Cursos.Details.js" asp-append-version="true"></script>
+}

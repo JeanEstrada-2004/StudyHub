@@ -1,13 +1,461 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "Política de Privacidad";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
-<script src="~/js/views/Home.Privacy.js" asp-append-version="true"></script>
+<div class="container-fluid py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Home")">Dashboard</a></li>
+            <li class="breadcrumb-item active text-muted" aria-current="page">Política de Privacidad</li>
+        </ol>
+    </nav>
 
+    <!-- Header de la Política -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="d-flex align-items-center mb-4">
+                <div class="privacy-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <div>
+                    <h1 class="h2 mb-2">@ViewData["Title"]</h1>
+                    <p class="text-muted mb-0">
+                        <i class="bi bi-clock-history me-1"></i>
+                        Última actualización: @DateTime.Now.ToString("dd/MM/yyyy")
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Contenido Principal -->
+        <div class="col-lg-8 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-md-5">
+                    <!-- Introducción -->
+                    <section class="mb-5">
+                        <div class="d-flex align-items-start mb-4">
+                            <div class="section-icon bg-primary text-white rounded-circle flex-shrink-0 me-3">
+                                <i class="bi bi-info-circle"></i>
+                            </div>
+                            <div>
+                                <h3 class="h4 mb-3">Introducción</h3>
+                                <p class="text-muted">
+                                    En StudyHub, nos comprometemos a proteger y respetar tu privacidad. Esta política explica cómo recopilamos, 
+                                    usamos y protegemos tu información personal cuando utilizas nuestra plataforma educativa.
+                                </p>
+                                <p class="text-muted">
+                                    Al utilizar StudyHub, aceptas las prácticas descritas en esta política de privacidad.
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Información que Recopilamos -->
+                    <section class="mb-5">
+                        <div class="d-flex align-items-start mb-4">
+                            <div class="section-icon bg-success text-white rounded-circle flex-shrink-0 me-3">
+                                <i class="bi bi-collection"></i>
+                            </div>
+                            <div>
+                                <h3 class="h4 mb-3">Información que Recopilamos</h3>
+                                
+                                <div class="mb-4">
+                                    <h5 class="h6 text-primary mb-2">
+                                        <i class="bi bi-person me-2"></i>Información Personal
+                                    </h5>
+                                    <ul class="text-muted">
+                                        <li>Nombre completo y información de contacto</li>
+                                        <li>Información del perfil educativo</li>
+                                        <li>Datos de registro y autenticación</li>
+                                        <li>Información de facturación (cuando aplica)</li>
+                                    </ul>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h5 class="h6 text-primary mb-2">
+                                        <i class="bi bi-laptop me-2"></i>Información de Uso
+                                    </h5>
+                                    <ul class="text-muted">
+                                        <li>Actividad en cursos y clases</li>
+                                        <li>Interacciones con otros usuarios</li>
+                                        <li>Datos de rendimiento académico</li>
+                                        <li>Preferencias y configuraciones</li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h5 class="h6 text-primary mb-2">
+                                        <i class="bi bi-gear me-2"></i>Información Técnica
+                                    </h5>
+                                    <ul class="text-muted">
+                                        <li>Dirección IP y datos del navegador</li>
+                                        <li>Cookies y tecnologías similares</li>
+                                        <li>Registros del servidor</li>
+                                        <li>Información del dispositivo</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Uso de la Información -->
+                    <section class="mb-5">
+                        <div class="d-flex align-items-start mb-4">
+                            <div class="section-icon bg-info text-white rounded-circle flex-shrink-0 me-3">
+                                <i class="bi bi-graph-up"></i>
+                            </div>
+                            <div>
+                                <h3 class="h4 mb-3">Cómo Utilizamos tu Información</h3>
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="card bg-light border-0 h-100">
+                                            <div class="card-body">
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <i class="bi bi-mortarboard text-primary me-2"></i>
+                                                    <h6 class="mb-0">Propósitos Educativos</h6>
+                                                </div>
+                                                <p class="small text-muted mb-0">
+                                                    Gestionar tu participación en cursos, evaluar tu progreso y facilitar el aprendizaje.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card bg-light border-0 h-100">
+                                            <div class="card-body">
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <i class="bi bi-chat-dots text-success me-2"></i>
+                                                    <h6 class="mb-0">Comunicación</h6>
+                                                </div>
+                                                <p class="small text-muted mb-0">
+                                                    Enviar notificaciones importantes sobre cursos, sesiones y actualizaciones de la plataforma.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card bg-light border-0 h-100">
+                                            <div class="card-body">
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <i class="bi bi-graph-up-arrow text-info me-2"></i>
+                                                    <h6 class="mb-0">Mejora del Servicio</h6>
+                                                </div>
+                                                <p class="small text-muted mb-0">
+                                                    Analizar el uso de la plataforma para mejorar features y experiencia de usuario.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card bg-light border-0 h-100">
+                                            <div class="card-body">
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <i class="bi bi-shield-check text-warning me-2"></i>
+                                                    <h6 class="mb-0">Seguridad</h6>
+                                                </div>
+                                                <p class="small text-muted mb-0">
+                                                    Proteger la plataforma contra fraudes, abusos y actividades no autorizadas.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Compartición de Información -->
+                    <section class="mb-5">
+                        <div class="d-flex align-items-start mb-4">
+                            <div class="section-icon bg-warning text-white rounded-circle flex-shrink-0 me-3">
+                                <i class="bi bi-share"></i>
+                            </div>
+                            <div>
+                                <h3 class="h4 mb-3">Compartición de Información</h3>
+                                <p class="text-muted mb-3">
+                                    StudyHub no vende ni alquila tu información personal a terceros. Solo compartimos información en las siguientes circunstancias:
+                                </p>
+                                
+                                <div class="alert alert-light border">
+                                    <div class="d-flex">
+                                        <i class="bi bi-building text-primary me-3 mt-1"></i>
+                                        <div>
+                                            <h6 class="mb-1">Con Profesores y Compañeros</h6>
+                                            <p class="small text-muted mb-0">
+                                                Información necesaria para tu participación en cursos (nombre, progreso, contribuciones).
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-light border">
+                                    <div class="d-flex">
+                                        <i class="bi bi-hammer text-success me-3 mt-1"></i>
+                                        <div>
+                                            <h6 class="mb-1">Proveedores de Servicio</h6>
+                                            <p class="small text-muted mb-0">
+                                                Empresas que nos ayudan a operar la plataforma (hosting, análisis, soporte).
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-light border">
+                                    <div class="d-flex">
+                                        <i class="bi bi-scale text-info me-3 mt-1"></i>
+                                        <div>
+                                            <h6 class="mb-1">Requerimientos Legales</h6>
+                                            <p class="small text-muted mb-0">
+                                                Cuando es necesario por ley, regulación o proceso legal.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Tus Derechos -->
+                    <section class="mb-5">
+                        <div class="d-flex align-items-start mb-4">
+                            <div class="section-icon bg-danger text-white rounded-circle flex-shrink-0 me-3">
+                                <i class="bi bi-person-check"></i>
+                            </div>
+                            <div>
+                                <h3 class="h4 mb-3">Tus Derechos de Privacidad</h3>
+                                
+                                <div class="row g-3">
+                                    <div class="col-sm-6">
+                                        <div class="d-flex align-items-start">
+                                            <i class="bi bi-eye text-primary me-2 mt-1"></i>
+                                            <div>
+                                                <h6 class="mb-1">Derecho de Acceso</h6>
+                                                <p class="small text-muted mb-0">Puedes solicitar una copia de tu información personal.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="d-flex align-items-start">
+                                            <i class="bi bi-pencil-square text-success me-2 mt-1"></i>
+                                            <div>
+                                                <h6 class="mb-1">Derecho de Rectificación</h6>
+                                                <p class="small text-muted mb-0">Puedes corregir información inexacta.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="d-flex align-items-start">
+                                            <i class="bi bi-trash text-danger me-2 mt-1"></i>
+                                            <div>
+                                                <h6 class="mb-1">Derecho de Eliminación</h6>
+                                                <p class="small text-muted mb-0">Puedes solicitar que eliminemos tus datos.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="d-flex align-items-start">
+                                            <i class="bi bi-download text-info me-2 mt-1"></i>
+                                            <div>
+                                                <h6 class="mb-1">Portabilidad de Datos</h6>
+                                                <p class="small text-muted mb-0">Puedes obtener tus datos en formato reutilizable.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Cookies -->
+                    <section class="mb-5">
+                        <div class="d-flex align-items-start mb-4">
+                            <div class="section-icon bg-secondary text-white rounded-circle flex-shrink-0 me-3">
+                                <i class="bi bi-cookie"></i>
+                            </div>
+                            <div>
+                                <h3 class="h4 mb-3">Cookies y Tecnologías Similares</h3>
+                                <p class="text-muted mb-3">
+                                    Utilizamos cookies y tecnologías similares para mejorar tu experiencia en StudyHub:
+                                </p>
+                                
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Tipo de Cookie</th>
+                                                <th>Propósito</th>
+                                                <th>Duración</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Esenciales</td>
+                                                <td>Funcionamiento básico de la plataforma</td>
+                                                <td>Sesión</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Preferencias</td>
+                                                <td>Recordar tus configuraciones</td>
+                                                <td>1 año</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Analíticas</td>
+                                                <td>Mejorar nuestros servicios</td>
+                                                <td>2 años</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Contacto -->
+                    <section>
+                        <div class="d-flex align-items-start mb-4">
+                            <div class="section-icon bg-primary text-white rounded-circle flex-shrink-0 me-3">
+                                <i class="bi bi-envelope"></i>
+                            </div>
+                            <div>
+                                <h3 class="h4 mb-3">Contacto y Preguntas</h3>
+                                <p class="text-muted mb-4">
+                                    Si tienes preguntas sobre esta política de privacidad o cómo manejamos tu información, 
+                                    no dudes en contactarnos:
+                                </p>
+                                
+                                <div class="card bg-light border-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <i class="bi bi-envelope text-primary me-3"></i>
+                                                    <div>
+                                                        <small class="text-muted d-block">Email de Privacidad</small>
+                                                        <strong>privacy@studyhub.edu</strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <i class="bi bi-clock text-success me-3"></i>
+                                                    <div>
+                                                        <small class="text-muted d-block">Tiempo de Respuesta</small>
+                                                        <strong>24-48 horas</strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar de Navegación -->
+        <div class="col-lg-4">
+            <div class="sticky-top" style="top: 100px;">
+                <!-- Navegación Rápida -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0">
+                            <i class="bi bi-list-ul text-primary me-2"></i>
+                            Navegación Rápida
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="list-group list-group-flush">
+                            <a href="#introduccion" class="list-group-item list-group-item-action border-0">
+                                <i class="bi bi-info-circle text-primary me-2"></i>
+                                Introducción
+                            </a>
+                            <a href="#informacion-recopilada" class="list-group-item list-group-item-action border-0">
+                                <i class="bi bi-collection text-success me-2"></i>
+                                Información Recopilada
+                            </a>
+                            <a href="#uso-informacion" class="list-group-item list-group-item-action border-0">
+                                <i class="bi bi-graph-up text-info me-2"></i>
+                                Uso de la Información
+                            </a>
+                            <a href="#comparticion" class="list-group-item list-group-item-action border-0">
+                                <i class="bi bi-share text-warning me-2"></i>
+                                Compartición
+                            </a>
+                            <a href="#derechos" class="list-group-item list-group-item-action border-0">
+                                <i class="bi bi-person-check text-danger me-2"></i>
+                                Tus Derechos
+                            </a>
+                            <a href="#cookies" class="list-group-item list-group-item-action border-0">
+                                <i class="bi bi-cookie text-secondary me-2"></i>
+                                Cookies
+                            </a>
+                            <a href="#contacto" class="list-group-item list-group-item-action border-0">
+                                <i class="bi bi-envelope text-primary me-2"></i>
+                                Contacto
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumen de Puntos Clave -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0">
+                            <i class="bi bi-key text-warning me-2"></i>
+                            Puntos Clave
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-start mb-3">
+                            <i class="bi bi-shield-check text-success me-2 mt-1"></i>
+                            <small class="text-muted">Tu información educativa está protegida</small>
+                        </div>
+                        <div class="d-flex align-items-start mb-3">
+                            <i class="bi bi-eye-slash text-primary me-2 mt-1"></i>
+                            <small class="text-muted">Controlas tu visibilidad en cursos</small>
+                        </div>
+                        <div class="d-flex align-items-start mb-3">
+                            <i class="bi bi-download text-info me-2 mt-1"></i>
+                            <small class="text-muted">Puedes exportar tus datos cuando quieras</small>
+                        </div>
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-chat-dots text-warning me-2 mt-1"></i>
+                            <small class="text-muted">Respondemos consultas de privacidad rápidamente</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer de la Política -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="text-center">
+                <div class="card bg-light border-0">
+                    <div class="card-body py-4">
+                        <p class="text-muted mb-2">
+                            <i class="bi bi-clock-history me-1"></i>
+                            Esta política puede actualizarse periódicamente. Te notificaremos sobre cambios significativos.
+                        </p>
+                        <small class="text-muted">
+                            StudyHub Platform · Versión 2.1 · Última revisión: @DateTime.Now.ToString("dd/MM/yyyy")
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <link rel="stylesheet" href="~/css/views/Home.Privacy.css" asp-append-version="true" />
 
-<script src="~/js/views/Home.Privacy.js" asp-append-version="true"></script>
-
+@section Scripts {
+    <script src="~/js/views/Home.Privacy.js" asp-append-version="true"></script>
+}

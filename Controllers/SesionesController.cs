@@ -37,13 +37,13 @@ namespace StudyHub.Controllers
             }
             else
             {
-                var claseIds = await _context.UsuarioClases
-                    .Where(uc => uc.UsuarioId == usuarioId)
-                    .Select(uc => uc.ClaseId)
+                var cursoIds = await _context.UsuarioCursos
+                    .Where(uc => uc.UsuarioId == usuarioId && uc.Estado == "Aceptado")
+                    .Select(uc => uc.CursoId)
                     .ToListAsync();
 
                 sesiones = await _context.Sesiones
-                    .Where(s => claseIds.Contains(s.ClaseId))
+                    .Where(s => cursoIds.Contains(s.Clase.CursoId))
                     .Include(s => s.Clase)
                     .OrderBy(s => s.FechaHora)
                     .ToListAsync();

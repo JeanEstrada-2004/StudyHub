@@ -1,33 +1,444 @@
 ﻿@model StudyHub.Models.Usuario
 @{
     ViewData["Title"] = "Mi Perfil";
+    var usuarioRol = Context.Session.GetString("UsuarioRol");
+    var esProfesor = usuarioRol == "Profesor";
+    var tiempoEnPlatforma = DateTime.Now - Model.FechaRegistro;
+    var mesesEnPlatforma = (int)(tiempoEnPlatforma.TotalDays / 30);
 }
 
-<div class="container">
-    <h1>Mi Perfil</h1>
+<div class="container-fluid py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Home")">Dashboard</a></li>
+            <li class="breadcrumb-item active text-muted" aria-current="page">Mi Perfil</li>
+        </ol>
+    </nav>
 
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success">@TempData["Success"]</div>
-    }
+    <div class="row">
+        <!-- Columna Principal -->
+        <div class="col-lg-8">
+            <!-- Header del Perfil -->
+            <div class="d-flex align-items-center mb-5">
+                <div class="profile-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-4">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <h1 class="h2 mb-1">Mi Perfil</h1>
+                    <p class="text-muted mb-0">
+                        <i class="bi bi-@(esProfesor ? "person-gear" : "person-video") me-1"></i>
+                        @Model.Rol · StudyHub
+                    </p>
+                </div>
+                <div class="btn-group">
+                    <a asp-action="Edit" class="btn btn-primary">
+                        <i class="bi bi-pencil-square me-2"></i>Editar Perfil
+                    </a>
+                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" 
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="visually-hidden">Más opciones</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a asp-action="CambiarPassword" class="dropdown-item">
+                                <i class="bi bi-shield-lock me-2"></i>Cambiar Contraseña
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a href="#" class="dropdown-item text-muted">
+                                <i class="bi bi-download me-2"></i>Exportar Datos
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
 
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">InformaciÃ³n Personal</h5>
-            <p><strong>Nombre:</strong> @Model.Nombre</p>
-            <p><strong>Email:</strong> @Model.Email</p>
-            <p><strong>Rol:</strong> @Model.Rol</p>
-            <p><strong>Fecha de Registro:</strong> @Model.FechaRegistro.ToString("dd/MM/yyyy")</p>
+            <!-- Alertas -->
+            <div class="alert-container mb-4">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        <div>@TempData["Success"]</div>
+                        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+            </div>
 
-            <a asp-action="Edit" class="btn btn-primary">Editar Perfil</a>
-            <a asp-action="CambiarPassword" class="btn btn-secondary">Cambiar ContraseÃ±a</a>
+            <!-- Tarjetas de Información -->
+            <div class="row">
+                <!-- Información Personal -->
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-white border-0 py-3">
+                            <h5 class="mb-0">
+                                <i class="bi bi-person-lines-fill text-primary me-2"></i>
+                                Información Personal
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="profile-info">
+                                <div class="info-item d-flex align-items-center mb-3">
+                                    <div class="info-icon bg-primary text-white rounded-circle flex-shrink-0 me-3">
+                                        <i class="bi bi-person"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <small class="text-muted d-block">Nombre Completo</small>
+                                        <strong class="text-dark">@Model.Nombre</strong>
+                                    </div>
+                                </div>
+
+                                <div class="info-item d-flex align-items-center mb-3">
+                                    <div class="info-icon bg-success text-white rounded-circle flex-shrink-0 me-3">
+                                        <i class="bi bi-envelope"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <small class="text-muted d-block">Correo Electrónico</small>
+                                        <strong class="text-dark">@Model.Email</strong>
+                                    </div>
+                                </div>
+
+                                <div class="info-item d-flex align-items-center mb-3">
+                                    <div class="info-icon bg-warning text-white rounded-circle flex-shrink-0 me-3">
+                                        <i class="bi bi-person-badge"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <small class="text-muted d-block">Rol en StudyHub</small>
+                                        <div>
+                                            <span class="badge bg-primary">@Model.Rol</span>
+                                            @if (esProfesor)
+                                            {
+                                                <small class="text-muted ms-2">Puedes crear cursos y clases</small>
+                                            }
+                                            else
+                                            {
+                                                <small class="text-muted ms-2">Puedes unirte a cursos</small>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="info-item d-flex align-items-center">
+                                    <div class="info-icon bg-info text-white rounded-circle flex-shrink-0 me-3">
+                                        <i class="bi bi-calendar-check"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <small class="text-muted d-block">Miembro desde</small>
+                                        <strong class="text-dark">@Model.FechaRegistro.ToString("dd/MM/yyyy")</strong>
+                                        <small class="text-muted d-block">
+                                            (@mesesEnPlatforma @(mesesEnPlatforma == 1 ? "mes" : "meses") en StudyHub)
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estadísticas Rápidas -->
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-white border-0 py-3">
+                            <h5 class="mb-0">
+                                <i class="bi bi-graph-up text-success me-2"></i>
+                                Resumen de Actividad
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="activity-stats">
+                                @if (esProfesor)
+                                {
+                                    <div class="stat-item d-flex align-items-center justify-content-between mb-3 p-3 bg-light rounded">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stat-icon bg-primary text-white rounded-circle flex-shrink-0 me-3">
+                                                <i class="bi bi-journals"></i>
+                                            </div>
+                                            <div>
+                                                <small class="text-muted d-block">Cursos Creados</small>
+                                                <strong class="text-dark">--</strong>
+                                            </div>
+                                        </div>
+                                        <a href="@Url.Action("Index", "Cursos")" class="btn btn-sm btn-outline-primary">
+                                            Ver
+                                        </a>
+                                    </div>
+
+                                    <div class="stat-item d-flex align-items-center justify-content-between mb-3 p-3 bg-light rounded">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stat-icon bg-success text-white rounded-circle flex-shrink-0 me-3">
+                                                <i class="bi bi-people"></i>
+                                            </div>
+                                            <div>
+                                                <small class="text-muted d-block">Estudiantes</small>
+                                                <strong class="text-dark">--</strong>
+                                            </div>
+                                        </div>
+                                        <span class="text-muted small">Total</span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="stat-item d-flex align-items-center justify-content-between mb-3 p-3 bg-light rounded">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stat-icon bg-primary text-white rounded-circle flex-shrink-0 me-3">
+                                                <i class="bi bi-journals"></i>
+                                            </div>
+                                            <div>
+                                                <small class="text-muted d-block">Cursos Inscritos</small>
+                                                <strong class="text-dark">--</strong>
+                                            </div>
+                                        </div>
+                                        <a href="@Url.Action("Index", "Cursos")" class="btn btn-sm btn-outline-primary">
+                                            Ver
+                                        </a>
+                                    </div>
+
+                                    <div class="stat-item d-flex align-items-center justify-content-between mb-3 p-3 bg-light rounded">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stat-icon bg-success text-white rounded-circle flex-shrink-0 me-3">
+                                                <i class="bi bi-check-circle"></i>
+                                            </div>
+                                            <div>
+                                                <small class="text-muted d-block">Completados</small>
+                                                <strong class="text-dark">--</strong>
+                                            </div>
+                                        </div>
+                                        <span class="text-muted small">0%</span>
+                                    </div>
+                                }
+
+                                <div class="stat-item d-flex align-items-center justify-content-between p-3 bg-light rounded">
+                                    <div class="d-flex align-items-center">
+                                        <div class="stat-icon bg-info text-white rounded-circle flex-shrink-0 me-3">
+                                            <i class="bi bi-clock-history"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted d-block">Sesiones Esta Semana</small>
+                                            <strong class="text-dark">--</strong>
+                                        </div>
+                                    </div>
+                                    <a href="@Url.Action("Calendario", "Sesiones")" class="btn btn-sm btn-outline-info">
+                                        Calendario
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones Rápidas -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0 py-3">
+                            <h5 class="mb-0">
+                                <i class="bi bi-lightning-charge text-warning me-2"></i>
+                                Acciones Rápidas
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-xl-2 col-md-4 col-sm-6">
+                                    <a asp-action="Edit" class="quick-action-card text-decoration-none">
+                                        <div class="card border-0 h-100 text-center transition-all">
+                                            <div class="card-body p-3">
+                                                <div class="quick-action-icon bg-primary text-white rounded-circle mx-auto mb-3">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </div>
+                                                <h6 class="card-title mb-1">Editar Perfil</h6>
+                                                <small class="text-muted">Actualizar información</small>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="col-xl-2 col-md-4 col-sm-6">
+                                    <a asp-action="CambiarPassword" class="quick-action-card text-decoration-none">
+                                        <div class="card border-0 h-100 text-center transition-all">
+                                            <div class="card-body p-3">
+                                                <div class="quick-action-icon bg-success text-white rounded-circle mx-auto mb-3">
+                                                    <i class="bi bi-shield-lock"></i>
+                                                </div>
+                                                <h6 class="card-title mb-1">Cambiar Clave</h6>
+                                                <small class="text-muted">Seguridad</small>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="col-xl-2 col-md-4 col-sm-6">
+                                    <a href="@Url.Action("Index", "Cursos")" class="quick-action-card text-decoration-none">
+                                        <div class="card border-0 h-100 text-center transition-all">
+                                            <div class="card-body p-3">
+                                                <div class="quick-action-icon bg-info text-white rounded-circle mx-auto mb-3">
+                                                    <i class="bi bi-journals"></i>
+                                                </div>
+                                                <h6 class="card-title mb-1">Mis Cursos</h6>
+                                                <small class="text-muted">Continuar aprendiendo</small>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="col-xl-2 col-md-4 col-sm-6">
+                                    <a href="@Url.Action("Calendario", "Sesiones")" class="quick-action-card text-decoration-none">
+                                        <div class="card border-0 h-100 text-center transition-all">
+                                            <div class="card-body p-3">
+                                                <div class="quick-action-icon bg-warning text-white rounded-circle mx-auto mb-3">
+                                                    <i class="bi bi-calendar-week"></i>
+                                                </div>
+                                                <h6 class="card-title mb-1">Calendario</h6>
+                                                <small class="text-muted">Próximas sesiones</small>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                @if (esProfesor)
+                                {
+                                    <div class="col-xl-2 col-md-4 col-sm-6">
+                                        <a href="@Url.Action("Create", "Cursos")" class="quick-action-card text-decoration-none">
+                                            <div class="card border-0 h-100 text-center transition-all">
+                                                <div class="card-body p-3">
+                                                    <div class="quick-action-icon bg-dark text-white rounded-circle mx-auto mb-3">
+                                                        <i class="bi bi-plus-circle"></i>
+                                                    </div>
+                                                    <h6 class="card-title mb-1">Nuevo Curso</h6>
+                                                    <small class="text-muted">Crear contenido</small>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                }
+
+                                <div class="col-xl-2 col-md-4 col-sm-6">
+                                    <a href="#" class="quick-action-card text-decoration-none" id="helpCenterBtn">
+                                        <div class="card border-0 h-100 text-center transition-all">
+                                            <div class="card-body p-3">
+                                                <div class="quick-action-icon bg-secondary text-white rounded-circle mx-auto mb-3">
+                                                    <i class="bi bi-question-circle"></i>
+                                                </div>
+                                                <h6 class="card-title mb-1">Ayuda</h6>
+                                                <small class="text-muted">Soporte</small>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="sticky-top" style="top: 100px;">
+                <!-- Estado de la Cuenta -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0">
+                            <i class="bi bi-shield-check text-success me-2"></i>
+                            Estado de la Cuenta
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="account-status">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                <div>
+                                    <strong>Cuenta Verificada</strong>
+                                    <small class="text-muted d-block">Email confirmado</small>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-clock-history text-primary me-2"></i>
+                                <div>
+                                    <strong>Activo</strong>
+                                    <small class="text-muted d-block">Último acceso hoy</small>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-bell text-warning me-2"></i>
+                                <div>
+                                    <strong>Notificaciones</strong>
+                                    <small class="text-muted d-block">Activadas</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logros o Insignias -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0">
+                            <i class="bi bi-award text-warning me-2"></i>
+                            Logros
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="achievements">
+                            <div class="achievement-item text-center mb-3">
+                                <div class="achievement-icon bg-primary text-white rounded-circle mx-auto mb-2">
+                                    <i class="bi bi-person-check"></i>
+                                </div>
+                                <h6 class="mb-1">Perfil Completo</h6>
+                                <small class="text-muted">Información básica</small>
+                            </div>
+                            <div class="achievement-item text-center mb-3">
+                                <div class="achievement-icon bg-success text-white rounded-circle mx-auto mb-2">
+                                    <i class="bi bi-calendar-check"></i>
+                                </div>
+                                <h6 class="mb-1">Asistente Regular</h6>
+                                <small class="text-muted">+5 sesiones asistidas</small>
+                            </div>
+                            <div class="achievement-item text-center">
+                                <div class="achievement-icon bg-info text-white rounded-circle mx-auto mb-2">
+                                    <i class="bi bi-chat-dots"></i>
+                                </div>
+                                <h6 class="mb-1">Comunicador</h6>
+                                <small class="text-muted">Participación en foros</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información de Contacto -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0">
+                            <i class="bi bi-telephone text-primary me-2"></i>
+                            Soporte
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="support-info">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="bi bi-envelope text-muted me-2"></i>
+                                <small>soporte@studyhub.edu</small>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="bi bi-clock text-muted me-2"></i>
+                                <small>Lun - Vie: 9:00 - 18:00</small>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-globe text-muted me-2"></i>
+                                <small>Respuesta en 24h</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-<script src="~/js/views/Perfil.Index.js" asp-append-version="true"></script>
-
 
 <link rel="stylesheet" href="~/css/views/Perfil.Index.css" asp-append-version="true" />
 
-<script src="~/js/views/Perfil.Index.js" asp-append-version="true"></script>
-
+@section Scripts {
+    <script src="~/js/views/Perfil.Index.js" asp-append-version="true"></script>
+}

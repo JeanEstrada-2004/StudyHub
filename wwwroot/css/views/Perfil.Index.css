@@ -1,1 +1,399 @@
 /* View-specific styles for Perfil/Index */
+/* Estilos específicos para Mi Perfil - StudyHub */
+
+/* Variables de colores StudyHub */
+:root {
+    --studyhub-primary: #0d6efd;
+    --studyhub-primary-light: #e8f1ff;
+    --studyhub-success: #198754;
+    --studyhub-success-light: #e8f5ee;
+    --studyhub-warning: #ffc107;
+    --studyhub-warning-light: #fff9e6;
+    --studyhub-info: #0dcaf0;
+    --studyhub-info-light: #e8f9fd;
+    --studyhub-border-radius: 8px;
+    --studyhub-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    --studyhub-transition: all 0.3s ease;
+}
+
+/* Avatar del perfil */
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--studyhub-primary), #0b5ed7);
+    font-size: 2rem;
+}
+
+/* Iconos de información */
+.info-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+/* Iconos de estadísticas */
+.stat-icon {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+/* Acciones rápidas */
+.quick-action-card .card {
+    border-radius: var(--studyhub-border-radius);
+    border: 1px solid #f1f3f4;
+    transition: var(--studyhub-transition);
+}
+
+.quick-action-card:hover .card {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(13, 110, 253, 0.15);
+    border-color: var(--studyhub-primary);
+}
+
+.quick-action-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: var(--studyhub-transition);
+}
+
+.quick-action-card:hover .quick-action-icon {
+    transform: scale(1.1);
+}
+
+/* Logros */
+.achievement-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.achievement-item {
+    padding: 1rem;
+    border-radius: var(--studyhub-border-radius);
+    transition: var(--studyhub-transition);
+}
+
+.achievement-item:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-2px);
+}
+
+/* Cards generales */
+.card {
+    border-radius: var(--studyhub-border-radius);
+    border: 1px solid #e9ecef;
+    transition: var(--studyhub-transition);
+}
+
+.card:hover {
+    box-shadow: var(--studyhub-shadow) !important;
+}
+
+/* Estados de elementos de información */
+.info-item {
+    padding: 0.75rem;
+    border-radius: var(--studyhub-border-radius);
+    transition: var(--studyhub-transition);
+}
+
+.info-item:hover {
+    background-color: #f8f9fa;
+}
+
+.stat-item {
+    transition: var(--studyhub-transition);
+}
+
+.stat-item:hover {
+    transform: translateX(5px);
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+    border-radius: 4px;
+}
+
+/* Botones personalizados */
+.btn {
+    border-radius: 6px;
+    transition: var(--studyhub-transition);
+}
+
+.btn-primary {
+    background-color: var(--studyhub-primary);
+    border-color: var(--studyhub-primary);
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
+
+.btn-outline-primary {
+    border-radius: 6px;
+    transition: var(--studyhub-transition);
+}
+
+.btn-outline-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
+}
+
+/* Dropdown personalizado */
+.dropdown-menu {
+    border-radius: var(--studyhub-border-radius);
+    border: 1px solid #e9ecef;
+    box-shadow: var(--studyhub-shadow);
+}
+
+.dropdown-item {
+    border-radius: 4px;
+    margin: 0.125rem 0.5rem;
+    width: auto;
+}
+
+/* Alertas personalizadas */
+.alert {
+    border-radius: var(--studyhub-border-radius);
+    border: none;
+}
+
+.alert-success {
+    background-color: var(--studyhub-success-light);
+    color: var(--studyhub-success);
+    border-left: 4px solid var(--studyhub-success);
+}
+
+/* Breadcrumb personalizado */
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+}
+
+.breadcrumb-item a {
+    color: var(--studyhub-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.breadcrumb-item a:hover {
+    color: #0b5ed7;
+    text-decoration: underline;
+}
+
+/* Texto y tipografía */
+.text-muted {
+    color: #6c757d !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profile-avatar {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .info-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+    
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .quick-action-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    .achievement-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+    }
+    
+    .sticky-top {
+        position: relative !important;
+        top: 0 !important;
+    }
+    
+    .d-flex.align-items-center {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .profile-avatar {
+        margin-right: 0 !important;
+        margin-bottom: 1rem;
+    }
+    
+    .btn-group {
+        margin-top: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .profile-avatar {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    h1.h2 {
+        font-size: 1.5rem;
+    }
+    
+    .quick-action-card .card-body {
+        padding: 1rem 0.5rem !important;
+    }
+    
+    .card-body {
+        padding: 1.25rem !important;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.profile-avatar, .d-flex.align-items-center > div {
+    animation: slideInLeft 0.6s ease-out;
+}
+
+/* Estados de carga */
+.loading-state {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading-state::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    .card,
+    .btn,
+    .quick-action-card .card,
+    .info-item,
+    .stat-item,
+    .achievement-item {
+        transition: none;
+    }
+    
+    .card,
+    .profile-avatar,
+    .d-flex.align-items-center > div {
+        animation: none;
+    }
+}
+
+/* Estados focus para mejor accesibilidad */
+.btn:focus,
+.dropdown-item:focus,
+.quick-action-card:focus {
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+    outline: none;
+}
+
+/* Efectos hover para elementos interactivos */
+.info-icon, .stat-icon, .achievement-icon {
+    transition: var(--studyhub-transition);
+}
+
+.info-item:hover .info-icon,
+.stat-item:hover .stat-icon,
+.achievement-item:hover .achievement-icon {
+    transform: scale(1.1);
+}
+
+/* Transiciones globales */
+.transition-all {
+    transition: var(--studyhub-transition);
+}
+
+/* Scroll suave */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom styles para elementos específicos */
+.account-status .d-flex {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.account-status .d-flex:last-child {
+    border-bottom: none;
+}
+
+.support-info .d-flex {
+    padding: 0.25rem 0;
+}

@@ -1,21 +1,217 @@
 ﻿@model StudyHub.Models.Clase
 @{
-    ViewData["Title"] = "Eliminar Clase";
+    ViewData["Title"] = "Eliminar Clase - StudyHub";
 }
 
-<h1>Eliminar Clase</h1>
-<div class="alert alert-warning">Â¿Seguro que deseas eliminar la clase "@Model.Titulo"?</div>
+<div class="delete-class-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="delete-class-card">
+                    <!-- Header -->
+                    <div class="delete-class-header">
+                        <div class="header-icon">
+                            <i class="bi bi-exclamation-triangle"></i>
+                        </div>
+                        <div class="header-content">
+                            <h1 class="delete-class-title">Eliminar Clase</h1>
+                            <p class="delete-class-subtitle">Confirmar eliminación permanente</p>
+                        </div>
+                    </div>
 
-<form asp-action="Delete">
-    <input type="hidden" asp-for="Id" />
-    <button type="submit" class="btn btn-danger">Eliminar</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-    <a asp-controller="Home" asp-action="Dashboard" class="btn btn-link">Volver al Dashboard</a>
-</form>
-<script src="~/js/views/Clases.Delete.js" asp-append-version="true"></script>
+                    <!-- Alerta de Advertencia -->
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <div class="d-flex">
+                            <div class="alert-icon">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                            </div>
+                            <div class="alert-content">
+                                <h4 class="alert-heading">¡Atención! Esta acción no se puede deshacer</h4>
+                                <p class="mb-0">Estás a punto de eliminar permanentemente la clase <strong>"@Model.Titulo"</strong>. Todos los datos asociados se perderán.</p>
+                            </div>
+                        </div>
+                    </div>
 
+                    <!-- Información de la Clase -->
+                    <div class="class-info-section">
+                        <h3 class="section-title">
+                            <i class="bi bi-info-circle me-2"></i>Información de la Clase
+                        </h3>
+                        
+                        <div class="class-details">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="detail-item">
+                                        <label class="detail-label">Título:</label>
+                                        <span class="detail-value">@Model.Titulo</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <label class="detail-label">Curso:</label>
+                                        <span class="detail-value">@(Model.Curso?.Nombre ?? "No asignado")</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <label class="detail-label">Visibilidad:</label>
+                                        <span class="detail-value">
+                                            @if (Model.EsPublica)
+                                            {
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-globe me-1"></i>Pública
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">
+                                                    <i class="bi bi-lock me-1"></i>Privada
+                                                </span>
+                                            }
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="detail-item">
+                                        <label class="detail-label">Máximo de Estudiantes:</label>
+                                        <span class="detail-value">
+                                            @if (Model.MaxEstudiantes.HasValue)
+                                            {
+                                                @Model.MaxEstudiantes
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Ilimitado</span>
+                                            }
+                                        </span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <label class="detail-label">Descripción:</label>
+                                        <span class="detail-value">
+                                            @if (!string.IsNullOrEmpty(Model.Descripcion))
+                                            {
+                                                @Model.Descripcion
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Sin descripción</span>
+                                            }
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Consecuencias -->
+                    <div class="consequences-section">
+                        <h3 class="section-title text-danger">
+                            <i class="bi bi-x-circle me-2"></i>Consecuencias de la Eliminación
+                        </h3>
+                        <div class="consequences-list">
+                            <div class="consequence-item">
+                                <i class="bi bi-trash text-danger"></i>
+                                <span>La clase será eliminada permanentemente</span>
+                            </div>
+                            <div class="consequence-item">
+                                <i class="bi bi-calendar-x text-danger"></i>
+                                <span>Se eliminarán todas las sesiones programadas</span>
+                            </div>
+                            <div class="consequence-item">
+                                <i class="bi bi-file-earmark-x text-danger"></i>
+                                <span>Se perderán todos los recursos y materiales</span>
+                            </div>
+                            <div class="consequence-item">
+                                <i class="bi bi-chat-left-x text-danger"></i>
+                                <span>Se eliminarán los mensajes del foro de la clase</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Formulario de Confirmación -->
+                    <form asp-action="Delete" method="post" class="confirmation-form" id="deleteForm">
+                        <input type="hidden" asp-for="Id" />
+                        
+                        <!-- Confirmación de seguridad -->
+                        <div class="security-confirmation">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="confirmDelete" required>
+                                <label class="form-check-label" for="confirmDelete">
+                                    Entiendo que esta acción no se puede deshacer y acepto las consecuencias
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="action-buttons">
+                            <button type="button" class="btn btn-secondary btn-cancel" id="cancelButton">
+                                <i class="bi bi-arrow-left me-2"></i>Cancelar
+                            </button>
+                            
+                            <button type="submit" class="btn btn-danger btn-delete" id="deleteButton" disabled>
+                                <span class="btn-text">
+                                    <i class="bi bi-trash me-2"></i>Eliminar Clase
+                                </span>
+                                <div class="btn-loading d-none">
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                    Eliminando...
+                                </div>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Navegación Rápida -->
+                    <div class="quick-navigation mt-4">
+                        <div class="d-flex flex-wrap gap-2 justify-content-center">
+                            <a asp-action="Index" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-list-ul me-1"></i>Mis Clases
+                            </a>
+                            <a asp-controller="Cursos" asp-action="Index" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-journal-bookmark me-1"></i>Mis Cursos
+                            </a>
+                            <a asp-controller="Home" asp-action="Dashboard" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmación Final -->
+<div class="modal fade" id="finalConfirmationModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <div class="modal-icon">
+                    <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+                </div>
+                <h5 class="modal-title">Confirmación Final</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <h4 class="text-danger mb-3">¿Estás absolutamente seguro?</h4>
+                <p class="mb-4">
+                    Estás a punto de eliminar la clase <strong>"@Model.Titulo"</strong>. 
+                    Esta acción es <strong class="text-danger">permanente e irreversible</strong>.
+                </p>
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <strong>No podrás recuperar esta clase ni sus datos</strong>
+                </div>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-arrow-left me-2"></i>Reconsiderar
+                </button>
+                <button type="button" class="btn btn-danger" id="confirmFinalDelete">
+                    <i class="bi bi-trash me-2"></i>Sí, Eliminar Definitivamente
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <link rel="stylesheet" href="~/css/views/Clases.Delete.css" asp-append-version="true" />
 
-<script src="~/js/views/Clases.Delete.js" asp-append-version="true"></script>
-
+@section Scripts {
+    <script src="~/js/views/Clases.Delete.js" asp-append-version="true"></script>
+}

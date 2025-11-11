@@ -1,47 +1,268 @@
-﻿@model IEnumerable<StudyHub.Models.Clase>
+﻿<!-- Clases.Index.cshtml -->
+@model IEnumerable<StudyHub.Models.Clase>
 @{
     ViewData["Title"] = "Mis Clases";
     var rol = Context.Session.GetString("UsuarioRol");
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h1>Mis Clases</h1>
-    @if (rol == "Profesor")
-    {
-        <a class="btn btn-primary" asp-action="Create"><i class="bi bi-plus"></i> Nueva Clase</a>
-    }
-}
+<div class="container-fluid">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Home")">Dashboard</a></li>
+            <li class="breadcrumb-item active">Mis Clases</li>
+        </ol>
+    </nav>
 
-@if (!Model.Any())
-{
-    <div class="alert alert-info">No tienes clases registradas.</div>
-}
-else
-{
-    <div class="row">
-        @foreach (var c in Model)
-        {
-            <div class="col-md-6 mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">@c.Titulo</h5>
-                        <p class="card-text">@c.Curso?.Nombre</p>
-                        <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@c.Id">Ver</a>
-                        @if (rol == "Profesor")
-                        {
-                            <a class="btn btn-sm btn-outline-warning" asp-action="Edit" asp-route-id="@c.Id">Editar</a>
-                            <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@c.Id">Eliminar</a>
-                        }
+    <!-- Header de página -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">@ViewData["Title"]</h1>
+            <p class="text-muted mb-0">
+                @if (rol == "Profesor")
+                {
+                    <span>Gestiona y organiza todas tus clases educativas</span>
+                }
+                else
+                {
+                    <span>Consulta y accede a todas tus clases asignadas</span>
+                }
+            </p>
+        </div>
+        <div class="btn-group">
+            @if (rol == "Profesor")
+            {
+                <a class="btn btn-primary" asp-action="Create">
+                    <i class="bi bi-plus-circle me-2"></i>Nueva Clase
+                </a>
+            }
+            <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Dashboard">
+                <i class="bi bi-arrow-left me-2"></i>Volver al Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Filtros y búsqueda -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="input-group">
+                <span class="input-group-text bg-transparent border-end-0">
+                    <i class="bi bi-search text-muted"></i>
+                </span>
+                <input type="text" class="form-control border-start-0" id="searchInput" placeholder="Buscar clases...">
+                <button class="btn btn-outline-secondary" type="button" id="clearSearch">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" id="courseFilter">
+                <option value="">Todos los cursos</option>
+                @if (Model.Any())
+                {
+                    @foreach (var curso in Model.Select(c => c.Curso?.Nombre).Where(n => n != null).Distinct())
+                    {
+                        <option value="@curso">@curso</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" id="sortFilter">
+                <option value="newest">Más recientes primero</option>
+                <option value="oldest">Más antiguas primero</option>
+                <option value="title">Orden alfabético</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Contador de resultados -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <p class="text-muted mb-0" id="resultsCount">
+            @Model.Count() clase@(Model.Count() != 1 ? "s" : "") encontrada@(Model.Count() != 1 ? "s" : "")
+        </p>
+        <div class="d-flex align-items-center">
+            <div class="form-check form-switch me-3">
+                <input class="form-check-input" type="checkbox" id="gridViewToggle" checked>
+                <label class="form-check-label" for="gridViewToggle">Vista de cuadrícula</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estado vacío -->
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 empty-state">
+            <div class="empty-state-icon mb-4">
+                <i class="bi bi-journal-text" style="font-size: 4rem; color: #6c757d;"></i>
+            </div>
+            <h3 class="h4 text-muted mb-3">No tienes clases registradas</h3>
+            <p class="text-muted mb-4">
+                @if (rol == "Profesor")
+                {
+                    <span>Comienza creando tu primera clase para organizar tu contenido educativo.</span>
+                }
+                else
+                {
+                    <span>No estás inscrito en ninguna clase actualmente.</span>
+                }
+            </p>
+            @if (rol == "Profesor")
+            {
+                <a class="btn btn-primary" asp-action="Create">
+                    <i class="bi bi-plus-circle me-2"></i>Crear Primera Clase
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <!-- Vista de cuadrícula -->
+        <div class="row" id="gridView">
+            @foreach (var clase in Model)
+            {
+                <div class="col-xl-4 col-lg-6 col-md-6 mb-4 clase-card" 
+                     data-title="@clase.Titulo.ToLower()" 
+                     data-course="@clase.Curso?.Nombre?.ToLower()">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-header bg-transparent border-bottom-0 pt-3 pb-0">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-primary">@clase.Curso?.Nombre</span>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary border-0" type="button" 
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item" asp-action="Details" asp-route-id="@clase.Id">
+                                                <i class="bi bi-eye me-2"></i>Ver Detalles
+                                            </a>
+                                        </li>
+                                        @if (rol == "Profesor")
+                                        {
+                                            <li>
+                                                <a class="dropdown-item" asp-action="Edit" asp-route-id="@clase.Id">
+                                                    <i class="bi bi-pencil me-2"></i>Editar
+                                                </a>
+                                            </li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li>
+                                                <a class="dropdown-item text-danger" asp-action="Delete" asp-route-id="@clase.Id">
+                                                    <i class="bi bi-trash me-2"></i>Eliminar
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">@clase.Titulo</h5>
+                            
+                            @if (!string.IsNullOrEmpty(clase.Descripcion))
+                            {
+                                <p class="card-text text-muted small mb-3">@clase.Descripcion</p>
+                            }
+                            
+                            <div class="clase-meta mb-3">
+                                <div class="d-flex flex-wrap gap-2">
+                                    @if (clase.FechaCreacion != default(DateTime))
+                                    {
+                                        <span class="badge bg-light text-dark">
+                                            <i class="bi bi-calendar me-1"></i>@clase.FechaCreacion.ToString("dd/MM/yyyy")
+                                        </span>
+                                    }
+                                    <!-- Aquí puedes agregar más metadata si está disponible en tu modelo -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-top-0 pt-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@clase.Id">
+                                    <i class="bi bi-box-arrow-in-right me-1"></i>Acceder
+                                </a>
+                                <div class="btn-group">
+                                    @if (rol == "Profesor")
+                                    {
+                                        <a class="btn btn-outline-warning btn-sm" asp-action="Edit" asp-route-id="@clase.Id" 
+                                           title="Editar clase">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a class="btn btn-outline-danger btn-sm" asp-action="Delete" asp-route-id="@clase.Id"
+                                           title="Eliminar clase">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
-}
+            }
+        </div>
 
-<a class="btn btn-secondary mt-3" asp-controller="Home" asp-action="Dashboard">Volver al Dashboard</a>
+        <!-- Vista de tabla (oculta por defecto) -->
+        <div class="table-responsive d-none" id="tableView">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Título</th>
+                        <th>Curso</th>
+                        <th>Descripción</th>
+                        <th>Fecha de Creación</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var clase in Model)
+                    {
+                        <tr class="clase-row" data-title="@clase.Titulo.ToLower()" data-course="@clase.Curso?.Nombre?.ToLower()">
+                            <td>
+                                <strong>@clase.Titulo</strong>
+                            </td>
+                            <td>
+                                <span class="badge bg-primary">@clase.Curso?.Nombre</span>
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(clase.Descripcion))
+                                {
+                                    <span class="text-muted">@(clase.Descripcion.Length > 50 ? clase.Descripcion.Substring(0, 50) + "..." : clase.Descripcion)</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Sin descripción</span>
+                                }
+                            </td>
+                            <td>
+                                <small class="text-muted">@clase.FechaCreacion.ToString("dd/MM/yyyy")</small>
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm">
+                                    <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@clase.Id">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    @if (rol == "Profesor")
+                                    {
+                                        <a class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@clase.Id">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@clase.Id">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
 
 <link rel="stylesheet" href="~/css/views/Clases.Index.css" asp-append-version="true" />
 
-<script src="~/js/views/Clases.Index.js" asp-append-version="true"></script>
-
+@section Scripts {
+    <script src="~/js/views/Clases.Index.js" asp-append-version="true"></script>
+}

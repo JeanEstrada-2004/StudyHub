@@ -1,92 +1,309 @@
 ﻿@model StudyHub.Models.Sesion
 @{
     ViewData["Title"] = "Programar Sesión";
+    var cursoId = ViewBag.CursoId as int?;
 }
 
-<div class="container">
-    <div asp-validation-summary="All" class="text-danger"></div>\n<h1>Programar Sesión</h1>
+<div class="container-fluid">
+    <!-- Header de página con breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Cursos" asp-action="Index">Cursos</a></li>
+            @if (cursoId.HasValue)
+            {
+                <li class="breadcrumb-item"><a asp-controller="Cursos" asp-action="Details" asp-route-id="@cursoId">Curso</a></li>
+            }
+            <li class="breadcrumb-item"><a asp-action="Calendario">Calendario</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Programar Sesión</li>
+        </ol>
+    </nav>
 
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="bi bi-exclamation-triangle-fill"></i> @TempData["Error"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <!-- Header principal -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Programar Nueva Sesión</h1>
+            <p class="text-muted mb-0">Crea una nueva sesión para tu curso</p>
         </div>
-    }
+        <a class="btn btn-outline-secondary" asp-action="Calendario">
+            <i class="bi bi-arrow-left me-2"></i>Volver al Calendario
+        </a>
+    </div>
 
-    <form asp-action="Create" class="needs-validation" novalidate>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label asp-for="Titulo" class="form-label">Título de la Sesión *</label>
-                    <input asp-for="Titulo" class="form-control" required />
-                    <span asp-validation-for="Titulo" class="text-danger"></span>
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Card del formulario -->
+            <div class="card studyhub-card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-calendar-plus me-2"></i>Información de la Sesión
+                    </h5>
                 </div>
-                
-                <div class="mb-3">
-                    <label asp-for="FechaHora" class="form-label">Fecha y Hora *</label>
-                    <input asp-for="FechaHora" type="datetime-local" class="form-control" required />
-                    <span asp-validation-for="FechaHora" class="text-danger"></span>
-                </div>
-                
-                <div class="mb-3">
-                    <label asp-for="DuracionMinutos" class="form-label">Duración (minutos) *</label>
-                    <input asp-for="DuracionMinutos" type="number" class="form-control" min="15" max="480" value="60" required />
-                    <span asp-validation-for="DuracionMinutos" class="text-danger"></span>
-                </div>
-                
-                <div class="mb-3">
-                    <label asp-for="ClaseId" class="form-label">Clase *</label>
-                    <select asp-for="ClaseId" class="form-control" required>
-                        <option value="">-- Seleccionar Clase --</option>
-                        @if (ViewBag.Clases != null)
+                <div class="card-body">
+                    <!-- Alertas de validación del servidor -->
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <!-- Alertas de feedback -->
+                    <div id="alertContainer">
+                        @if (TempData["Error"] != null)
                         {
-                            foreach (var item in (SelectList)ViewBag.Clases)
-                            {
-                                <option value="@item.Value">@item.Text</option>
-                            }
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["Error"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
                         }
-                    </select>
-                    <span asp-validation-for="ClaseId" class="text-danger"></span>
-                </div>
-            </div>
-            
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label asp-for="Descripcion" class="form-label">Descripción</label>
-                    <textarea asp-for="Descripcion" class="form-control" rows="4" placeholder="Describe el contenido de esta sesión..."></textarea>
-                    <span asp-validation-for="Descripcion" class="text-danger"></span>
-                </div>
-                
-                <div class="mb-3">
-                    <label asp-for="Ubicacion" class="form-label">Ubicación</label>
-                    <input asp-for="Ubicacion" class="form-control" placeholder="Ej: Aula 101, Enlace Virtual, etc." />
-                    <span asp-validation-for="Ubicacion" class="text-danger"></span>
-                </div>
-                
-                <div class="mb-3">
-                    <label asp-for="EnlaceReunion" class="form-label">Enlace de Reunión</label>
-                    <input asp-for="EnlaceReunion" type="url" class="form-control" placeholder="https://meet.google.com/..." />
-                    <span asp-validation-for="EnlaceReunion" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
+                    </div>
 
-        <div class="mt-4">
-            <button type="submit" class="btn btn-primary">
-                <i class="bi bi-calendar-plus"></i> Programar Sesión
-            </button>
-            <a asp-action="Calendario" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Volver al Calendario
-            </a>
+                    <form asp-action="Create" method="post" id="sesionForm" class="needs-validation" novalidate>
+                        <div class="row">
+                            <!-- Columna izquierda - Información básica -->
+                            <div class="col-lg-6">
+                                <!-- Campo Título -->
+                                <div class="mb-4">
+                                    <label asp-for="Titulo" class="form-label fw-semibold">
+                                        <i class="bi bi-chat-square-text me-2"></i>Título de la Sesión *
+                                    </label>
+                                    <input asp-for="Titulo" class="form-control form-control-lg" 
+                                           placeholder="Ej: Introducción a la Programación, Taller Práctico..."
+                                           required />
+                                    <div class="form-text">Un título claro y descriptivo para la sesión</div>
+                                    <span asp-validation-for="Titulo" class="invalid-feedback"></span>
+                                    <div class="valid-feedback">
+                                        <i class="bi bi-check-circle-fill me-1"></i>Título válido
+                                    </div>
+                                </div>
+
+                                <!-- Campo Clase -->
+                                <div class="mb-4">
+                                    <label asp-for="ClaseId" class="form-label fw-semibold">
+                                        <i class="bi bi-journal-text me-2"></i>Clase Asociada *
+                                    </label>
+                                    <select asp-for="ClaseId" class="form-select" required>
+                                        <option value="">-- Seleccionar Clase --</option>
+                                        @if (ViewBag.Clases != null)
+                                        {
+                                            foreach (var item in (SelectList)ViewBag.Clases)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                    <div class="form-text">Selecciona la clase a la que pertenece esta sesión</div>
+                                    <span asp-validation-for="ClaseId" class="invalid-feedback"></span>
+                                    <div class="valid-feedback">
+                                        <i class="bi bi-check-circle-fill me-1"></i>Clase seleccionada
+                                    </div>
+                                </div>
+
+                                <!-- Fecha y Hora -->
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label asp-for="FechaHora" class="form-label fw-semibold">
+                                            <i class="bi bi-calendar-date me-2"></i>Fecha *
+                                        </label>
+                                        <input asp-for="FechaHora" type="date" class="form-control" 
+                                               min="@DateTime.Now.ToString("yyyy-MM-dd")"
+                                               required />
+                                        <span asp-validation-for="FechaHora" class="invalid-feedback"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">
+                                            <i class="bi bi-clock me-2"></i>Hora *
+                                        </label>
+                                        <input type="time" class="form-control" id="horaSesion" 
+                                               value="@DateTime.Now.ToString("HH:mm")"
+                                               required />
+                                        <span class="invalid-feedback">Por favor, selecciona una hora válida</span>
+                                    </div>
+                                    <input type="hidden" asp-for="FechaHora" id="fechaHoraCompleta" />
+                                </div>
+
+                                <!-- Duración y Ubicación -->
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label asp-for="DuracionMinutos" class="form-label fw-semibold">
+                                            <i class="bi bi-stopwatch me-2"></i>Duración *
+                                        </label>
+                                        <select asp-for="DuracionMinutos" class="form-select" required>
+                                            <option value="30">30 minutos</option>
+                                            <option value="45">45 minutos</option>
+                                            <option value="60" selected>1 hora</option>
+                                            <option value="90">1 hora 30 minutos</option>
+                                            <option value="120">2 horas</option>
+                                            <option value="180">3 horas</option>
+                                        </select>
+                                        <span asp-validation-for="DuracionMinutos" class="invalid-feedback"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label asp-for="Ubicacion" class="form-label fw-semibold">
+                                            <i class="bi bi-geo-alt me-2"></i>Ubicación
+                                        </label>
+                                        <input asp-for="Ubicacion" class="form-control" 
+                                               placeholder="Ej: Aula 101, Laboratorio B, Enlace Virtual..." />
+                                        <div class="form-text">Presencial o virtual</div>
+                                        <span asp-validation-for="Ubicacion" class="invalid-feedback"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Columna derecha - Información adicional -->
+                            <div class="col-lg-6">
+                                <!-- Campo Descripción -->
+                                <div class="mb-4">
+                                    <label asp-for="Descripcion" class="form-label fw-semibold">
+                                        <i class="bi bi-card-text me-2"></i>Descripción
+                                    </label>
+                                    <textarea asp-for="Descripcion" class="form-control" 
+                                              rows="5" 
+                                              placeholder="Describe los temas a tratar, objetivos de aprendizaje, materiales necesarios..."
+                                              maxlength="1000"></textarea>
+                                    <div class="d-flex justify-content-between align-items-center mt-1">
+                                        <div class="form-text">Descripción detallada de la sesión (máximo 1000 caracteres)</div>
+                                        <span class="badge bg-light text-muted" id="contadorDescripcion">0/1000</span>
+                                    </div>
+                                    <span asp-validation-for="Descripcion" class="invalid-feedback"></span>
+                                </div>
+
+                                <!-- Campo Enlace de Reunión -->
+                                <div class="mb-4">
+                                    <label asp-for="EnlaceReunion" class="form-label fw-semibold">
+                                        <i class="bi bi-link-45deg me-2"></i>Enlace de Reunión
+                                    </label>
+                                    <input asp-for="EnlaceReunion" type="url" class="form-control" 
+                                           placeholder="https://meet.google.com/..., https://teams.microsoft.com/..." />
+                                    <div class="form-text">Enlace para sesiones virtuales (Google Meet, Teams, Zoom, etc.)</div>
+                                    <span asp-validation-for="EnlaceReunion" class="invalid-feedback"></span>
+                                    <div class="valid-feedback">
+                                        <i class="bi bi-check-circle-fill me-1"></i>Enlace válido
+                                    </div>
+                                </div>
+
+                                <!-- Vista previa de la sesión -->
+                                <div class="card bg-light border-0 mb-4">
+                                    <div class="card-body">
+                                        <h6 class="card-title mb-3">
+                                            <i class="bi bi-eye me-2"></i>Vista Previa de la Sesión
+                                        </h6>
+                                        <div id="vistaPreviaSesion" class="small">
+                                            <div class="text-center text-muted py-3">
+                                                <i class="bi bi-calendar3 display-6"></i>
+                                                <p class="mt-2 mb-0">La información de la sesión aparecerá aquí</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Configuraciones adicionales -->
+                                <div class="accordion" id="configuracionAdicional">
+                                    <div class="accordion-item border-0">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed studyhub-accordion" type="button" 
+                                                    data-bs-toggle="collapse" 
+                                                    data-bs-target="#configuracionContent">
+                                                <i class="bi bi-gear me-2"></i>
+                                                Configuración Adicional
+                                            </button>
+                                        </h2>
+                                        <div id="configuracionContent" class="accordion-collapse collapse" 
+                                             data-bs-parent="#configuracionAdicional">
+                                            <div class="accordion-body bg-light rounded-bottom">
+                                                <div class="form-check form-switch mb-3">
+                                                    <input class="form-check-input" type="checkbox" id="recordatorioEmail">
+                                                    <label class="form-check-label fw-semibold" for="recordatorioEmail">
+                                                        Enviar recordatorio por email
+                                                    </label>
+                                                    <div class="form-text">
+                                                        Los estudiantes recibirán un recordatorio 24 horas antes de la sesión
+                                                    </div>
+                                                </div>
+                                                <div class="form-check form-switch mb-3">
+                                                    <input class="form-check-input" type="checkbox" id="sesionRecurrente">
+                                                    <label class="form-check-label fw-semibold" for="sesionRecurrente">
+                                                        Sesión recurrente
+                                                    </label>
+                                                    <div class="form-text">
+                                                        Crear sesiones similares de forma periódica
+                                                    </div>
+                                                </div>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="grabarSesion">
+                                                    <label class="form-check-label fw-semibold" for="grabarSesion">
+                                                        Grabar sesión automáticamente
+                                                    </label>
+                                                    <div class="form-text">
+                                                        Disponible solo para sesiones virtuales con enlace de reunión
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones de acción -->
+                        <div class="d-flex gap-2 justify-content-end pt-4 mt-4 border-top">
+                            <a asp-action="Calendario" class="btn btn-outline-secondary btn-lg">
+                                <i class="bi bi-x-circle me-2"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg" id="btnSubmit">
+                                <i class="bi bi-calendar-plus me-2"></i>Programar Sesión
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Información de ayuda -->
+            <div class="card studyhub-card mt-4">
+                <div class="card-header bg-light">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-lightbulb me-2 text-warning"></i>Consejos para Programar Sesiones
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex mb-3">
+                                <i class="bi bi-clock text-primary me-3 fs-5"></i>
+                                <div>
+                                    <strong>Planifica con anticipación</strong>
+                                    <p class="small text-muted mb-0">Programa las sesiones con al menos 24 horas de anticipación</p>
+                                </div>
+                            </div>
+                            <div class="d-flex mb-3">
+                                <i class="bi bi-link text-success me-3 fs-5"></i>
+                                <div>
+                                    <strong>Proporciona enlaces de reunión</strong>
+                                    <p class="small text-muted mb-0">Incluye enlaces para sesiones virtuales cuando sea necesario</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex mb-3">
+                                <i class="bi bi-card-checklist text-info me-3 fs-5"></i>
+                                <div>
+                                    <strong>Describe claramente</strong>
+                                    <p class="small text-muted mb-0">Incluye objetivos y materiales necesarios en la descripción</p>
+                                </div>
+                            </div>
+                            <div class="d-flex">
+                                <i class="bi bi-geo-alt text-warning me-3 fs-5"></i>
+                                <div>
+                                    <strong>Especifica la ubicación</strong>
+                                    <p class="small text-muted mb-0">Indica claramente si es presencial o virtual y el lugar</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </form>
+    </div>
 </div>
 
-
-    
 <link rel="stylesheet" href="~/css/views/Sesiones.Create.css" asp-append-version="true" />
 
-
-<link rel="stylesheet" href="~/css/views/Sesiones.Create.css" asp-append-version="true" />
-<script src="~/js/views/Sesiones.Create.js" asp-append-version="true"></script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/views/Sesiones.Create.js" asp-append-version="true"></script>
+}

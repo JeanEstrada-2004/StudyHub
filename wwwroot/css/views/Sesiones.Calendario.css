@@ -1,1 +1,535 @@
-/* View-specific styles for Sesiones/Calendario */
+/* Estilos específicos para Calendario de Sesiones - StudyHub */
+
+/* Variables de colores StudyHub */
+:root {
+    --studyhub-primary: #0d6efd;
+    --studyhub-primary-light: #e8f1ff;
+    --studyhub-success: #198754;
+    --studyhub-success-light: #e8f5ee;
+    --studyhub-warning: #ffc107;
+    --studyhub-warning-light: #fff9e6;
+    --studyhub-info: #0dcaf0;
+    --studyhub-info-light: #e8f9fd;
+    --studyhub-border-radius: 8px;
+    --studyhub-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    --studyhub-transition: all 0.3s ease;
+}
+
+/* Icono principal */
+.calendario-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--studyhub-primary), #0b5ed7);
+    font-size: 1.75rem;
+}
+
+/* Tarjetas de resumen */
+.summary-card {
+    border-radius: var(--studyhub-border-radius);
+    border-left: 4px solid transparent;
+    transition: var(--studyhub-transition);
+}
+
+.summary-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--studyhub-shadow) !important;
+}
+
+.summary-card:nth-child(1) {
+    border-left-color: var(--studyhub-primary);
+}
+
+.summary-card:nth-child(2) {
+    border-left-color: var(--studyhub-success);
+}
+
+.summary-card:nth-child(3) {
+    border-left-color: var(--studyhub-info);
+}
+
+.summary-card:nth-child(4) {
+    border-left-color: var(--studyhub-warning);
+}
+
+.summary-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+/* Cards de sesiones */
+.sesion-card {
+    border-radius: var(--studyhub-border-radius);
+    border-left: 4px solid transparent;
+    transition: var(--studyhub-transition);
+}
+
+.sesion-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--studyhub-shadow) !important;
+}
+
+.sesion-card[data-estado="upcoming"] {
+    border-left-color: var(--studyhub-success);
+}
+
+.sesion-card[data-estado="past"] {
+    border-left-color: #6c757d;
+    opacity: 0.8;
+}
+
+.sesion-card[data-hoy="today"] {
+    border-left-color: var(--studyhub-info);
+}
+
+/* Sesión próxima destacada */
+.bg-success-light {
+    background-color: var(--studyhub-success-light) !important;
+}
+
+.next-session-indicator {
+    width: 12px;
+    height: 12px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Contador regresivo */
+.countdown-timer {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: var(--studyhub-border-radius);
+    padding: 1rem;
+}
+
+.countdown-item {
+    flex: 1;
+    min-width: 60px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.countdown-value {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+/* Fecha de sesión */
+.sesion-fecha {
+    padding: 1rem;
+    border-radius: var(--studyhub-border-radius);
+    background-color: #f8f9fa;
+}
+
+.sesion-dia {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.sesion-mes {
+    font-size: 0.875rem;
+    margin: 0.25rem 0;
+}
+
+.sesion-hora {
+    font-size: 1.125rem;
+}
+
+/* Estados vacíos */
+.empty-state-icon {
+    opacity: 0.7;
+}
+
+/* Indicadores de eventos */
+.event-indicator {
+    width: 8px;
+    height: 8px;
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+    border-radius: 4px;
+}
+
+/* Botones personalizados */
+.btn {
+    border-radius: 6px;
+    transition: var(--studyhub-transition);
+}
+
+.btn-primary {
+    background-color: var(--studyhub-primary);
+    border-color: var(--studyhub-primary);
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
+
+.btn-outline-secondary {
+    border-radius: 6px;
+    transition: var(--studyhub-transition);
+}
+
+.btn-outline-secondary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.2);
+}
+
+.btn-success {
+    background-color: var(--studyhub-success);
+    border-color: var(--studyhub-success);
+}
+
+.btn-success:hover {
+    background-color: #157347;
+    border-color: #146c43;
+    transform: translateY(-1px);
+}
+
+.btn-outline-warning {
+    border-radius: 6px;
+    transition: var(--studyhub-transition);
+}
+
+.btn-outline-warning:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+}
+
+.btn-outline-danger {
+    border-radius: 6px;
+    transition: var(--studyhub-transition);
+}
+
+.btn-outline-danger:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
+}
+
+/* Dropdown personalizado */
+.dropdown-menu {
+    border-radius: var(--studyhub-border-radius);
+    border: 1px solid #e9ecef;
+    box-shadow: var(--studyhub-shadow);
+}
+
+.dropdown-item {
+    border-radius: 4px;
+    margin: 0.125rem 0.5rem;
+    width: auto;
+}
+
+.dropdown-item.active {
+    background-color: var(--studyhub-primary);
+}
+
+/* Alertas personalizadas */
+.alert {
+    border-radius: var(--studyhub-border-radius);
+    border: none;
+}
+
+.alert-success {
+    background-color: var(--studyhub-success-light);
+    color: var(--studyhub-success);
+    border-left: 4px solid var(--studyhub-success);
+}
+
+/* Breadcrumb personalizado */
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+}
+
+.breadcrumb-item a {
+    color: var(--studyhub-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.breadcrumb-item a:hover {
+    color: #0b5ed7;
+    text-decoration: underline;
+}
+
+/* Barra de búsqueda */
+.input-group {
+    border-radius: 6px;
+}
+
+.input-group .form-control:focus {
+    z-index: 3;
+}
+
+/* Estados de las sesiones */
+.sesion-item {
+    transition: var(--studyhub-transition);
+}
+
+.sesion-item.hidden {
+    display: none;
+}
+
+/* Texto y tipografía */
+.text-muted {
+    color: #6c757d !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .calendario-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .summary-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .sesion-fecha {
+        padding: 0.75rem;
+    }
+    
+    .sesion-dia {
+        font-size: 1.5rem;
+    }
+    
+    .sesion-hora {
+        font-size: 1rem;
+    }
+    
+    .countdown-item {
+        min-width: 50px;
+    }
+    
+    .countdown-value {
+        font-size: 1.25rem;
+    }
+    
+    .sticky-top {
+        position: relative !important;
+        top: 0 !important;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .btn-group .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .calendario-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    h1.h2 {
+        font-size: 1.5rem;
+    }
+    
+    .d-flex.align-items-center {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .calendario-icon {
+        margin-right: 0 !important;
+        margin-bottom: 1rem;
+    }
+    
+    .sesion-card .card-body {
+        padding: 1rem !important;
+    }
+    
+    .countdown-timer {
+        padding: 0.75rem;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.sesion-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.summary-card {
+    animation: slideInLeft 0.6s ease-out;
+}
+
+/* Estados de carga */
+.loading-state {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading-state::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    .summary-card,
+    .sesion-card,
+    .btn {
+        transition: none;
+    }
+    
+    .summary-card,
+    .sesion-card {
+        animation: none;
+    }
+    
+    .next-session-indicator {
+        animation: none;
+    }
+}
+
+/* Estados focus para mejor accesibilidad */
+.btn:focus,
+.dropdown-item:focus,
+.form-control:focus {
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+    outline: none;
+}
+
+/* Efectos hover para elementos interactivos */
+.sesion-actions .btn:hover {
+    transform: translateY(-1px);
+}
+
+.dropdown-item:hover {
+    background-color: var(--studyhub-primary-light);
+}
+
+/* Transiciones para filtros y búsqueda */
+#sesionesList {
+    transition: all 0.3s ease;
+}
+
+/* Scroll suave */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom styles para elementos específicos */
+.sesion-meta {
+    margin-top: 0.5rem;
+}
+
+.bg-success-light {
+    border-left: 4px solid var(--studyhub-success) !important;
+}
+
+/* Mini calendario */
+#miniCalendario {
+    font-size: 0.875rem;
+}
+
+#miniCalendario .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+#miniCalendario .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+#miniCalendario .calendar-day {
+    text-align: center;
+    padding: 0.25rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#miniCalendario .calendar-day:hover {
+    background-color: var(--studyhub-primary-light);
+}
+
+#miniCalendario .calendar-day.today {
+    background-color: var(--studyhub-primary);
+    color: white;
+}
+
+#miniCalendario .calendar-day.has-events::after {
+    content: "";
+    display: block;
+    width: 4px;
+    height: 4px;
+    background-color: var(--studyhub-success);
+    border-radius: 50%;
+    margin: 2px auto 0;
+}

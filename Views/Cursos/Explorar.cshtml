@@ -1,0 +1,388 @@
+@model IEnumerable<StudyHub.Models.Curso>
+@{
+    ViewData["Title"] = "Explorar Cursos";
+    var usuarioRol = Context.Session.GetString("UsuarioRol");
+    var esEstudiante = usuarioRol == "Estudiante";
+}
+
+<div class="container-fluid">
+    <!-- Header de página con breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Cursos" asp-action="Index">Cursos</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Explorar Cursos</li>
+        </ol>
+    </nav>
+
+    <!-- Header principal -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Explorar Cursos</h1>
+            <p class="text-muted mb-0">Descubre y solicita unirte a cursos disponibles</p>
+        </div>
+        <a class="btn btn-outline-secondary" asp-action="Index">
+            <i class="bi bi-arrow-left me-2"></i>Volver a mis cursos
+        </a>
+    </div>
+
+    <!-- Alertas de feedback -->
+    <div id="alertContainer">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+    </div>
+
+    <!-- Filtros y búsqueda -->
+    <div class="card studyhub-card mb-4">
+        <div class="card-body">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" class="form-control border-start-0" id="inputBusqueda" placeholder="Buscar cursos por nombre, código o descripción...">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="filtroEstado">
+                        <option value="todos" selected>Todos los estados</option>
+                        <option value="activo">Solo activos</option>
+                        <option value="inactivo">Solo inactivos</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-secondary w-100" id="btnResetFiltros">
+                            <i class="bi bi-arrow-clockwise me-2"></i>Limpiar
+                        </button>
+                        <button class="btn btn-outline-primary" id="btnFiltrosAvanzados" title="Filtros avanzados">
+                            <i class="bi bi-funnel"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estadísticas rápidas -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card studyhub-card stat-card">
+                <div class="card-body text-center">
+                    <div class="stat-icon text-primary">
+                        <i class="bi bi-journals"></i>
+                    </div>
+                    <div class="stat-number">@Model.Count()</div>
+                    <div class="stat-label">Cursos Totales</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card studyhub-card stat-card">
+                <div class="card-body text-center">
+                    <div class="stat-icon text-success">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <div class="stat-number">@Model.Count(c => c.Activo)</div>
+                    <div class="stat-label">Cursos Activos</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card studyhub-card stat-card">
+                <div class="card-body text-center">
+                    <div class="stat-icon text-info">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <div class="stat-number">@Model.Sum(c => c.Clases.Count)</div>
+                    <div class="stat-label">Total Clases</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card studyhub-card stat-card">
+                <div class="card-body text-center">
+                    <div class="stat-icon text-warning">
+                        <i class="bi bi-person-check"></i>
+                    </div>
+                    <div class="stat-number">@Model.Sum(c => c.UsuarioCursos.Count(uc => uc.Rol == "Estudiante"))</div>
+                    <div class="stat-label">Estudiantes Totales</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vista de cursos -->
+    <div class="card studyhub-card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-compass me-2"></i>Cursos Disponibles
+                <span class="badge bg-primary ms-2" id="contadorCursos">@Model.Count()</span>
+            </h5>
+            <div class="d-flex align-items-center gap-2">
+                <div class="btn-group btn-group-sm" role="group">
+                    <input type="radio" class="btn-check" name="btnViewType" id="btnViewGrid" autocomplete="off" checked>
+                    <label class="btn btn-outline-primary" for="btnViewGrid" title="Vista Grid">
+                        <i class="bi bi-grid-3x3-gap"></i>
+                    </label>
+
+                    <input type="radio" class="btn-check" name="btnViewType" id="btnViewList" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="btnViewList" title="Vista Lista">
+                        <i class="bi bi-list-ul"></i>
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-body p-0">
+            <!-- Estado de carga -->
+            <div id="loadingState" class="d-none text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando cursos...</span>
+                </div>
+                <p class="mt-2 text-muted">Buscando cursos disponibles...</p>
+            </div>
+
+            <!-- Estado vacío -->
+            <div id="emptyState" class="d-none text-center py-5">
+                <i class="bi bi-compass display-1 text-muted"></i>
+                <h5 class="mt-3 text-muted">No se encontraron cursos</h5>
+                <p class="text-muted mb-4">No hay cursos disponibles que coincidan con tu búsqueda.</p>
+                <button class="btn btn-primary" id="btnResetBusqueda">
+                    <i class="bi bi-arrow-clockwise me-2"></i>Mostrar todos los cursos
+                </button>
+            </div>
+
+            <!-- Vista Grid (por defecto) -->
+            <div id="vistaGrid" class="vista-activa">
+                <div class="row g-4 p-4" id="gridCursos">
+                    @foreach (var curso in Model)
+                    {
+                        <div class="col-xl-4 col-lg-6 col-md-6">
+                            <div class="card curso-card h-100" data-estado="@(curso.Activo ? "activo" : "inactivo")">
+                                <div class="card-header position-relative">
+                                    <div class="curso-header-bg"></div>
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="curso-avatar">
+                                            <i class="bi bi-journal-text"></i>
+                                        </div>
+                                        <div class="curso-badges">
+                                            <span class="badge @(curso.Activo ? "bg-success" : "bg-secondary")">
+                                                @(curso.Activo ? "Activo" : "Inactivo")
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title curso-titulo">@curso.Nombre</h5>
+                                    <p class="card-text text-muted curso-codigo">
+                                        <i class="bi bi-tag me-1"></i>@curso.Codigo
+                                    </p>
+                                    <p class="card-text curso-descripcion">
+                                        @if (!string.IsNullOrEmpty(curso.Descripcion))
+                                        {
+                                            @(curso.Descripcion.Length > 120 ? curso.Descripcion.Substring(0, 120) + "..." : curso.Descripcion)
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fst-italic">Sin descripción</span>
+                                        }
+                                    </p>
+                                    <div class="curso-meta">
+                                        <div class="row text-center g-2">
+                                            <div class="col-4">
+                                                <div class="meta-item">
+                                                    <i class="bi bi-journals text-primary"></i>
+                                                    <small>@curso.Clases.Count clases</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="meta-item">
+                                                    <i class="bi bi-people text-success"></i>
+                                                    <small>@curso.UsuarioCursos.Count(uc => uc.Rol == "Estudiante") estudiantes</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="meta-item">
+                                                    <i class="bi bi-person-badge text-warning"></i>
+                                                    <small>@curso.UsuarioCursos.Count(uc => uc.Rol == "Ayudante") ayudantes</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-transparent border-top-0">
+                                    <div class="d-grid gap-2">
+                                        @if (esEstudiante)
+                                        {
+                                            <form asp-action="SolicitarUnirse" method="post" class="mb-0">
+                                                <input type="hidden" name="cursoId" value="@curso.Id" />
+                                                <button type="submit" class="btn btn-primary w-100 btn-solicitar" data-curso-id="@curso.Id">
+                                                    <i class="bi bi-person-plus me-2"></i>Solicitar Unirse
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-outline-secondary w-100" disabled>
+                                                <i class="bi bi-eye me-2"></i>Ver Detalles
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Vista Lista (oculta por defecto) -->
+            <div id="vistaLista" class="vista-oculta">
+                <div class="list-group list-group-flush" id="listaCursos">
+                    @foreach (var curso in Model)
+                    {
+                        <div class="list-group-item curso-list-item" data-estado="@(curso.Activo ? "activo" : "inactivo")">
+                            <div class="row align-items-center">
+                                <div class="col-md-1 text-center">
+                                    <div class="curso-avatar-sm">
+                                        <i class="bi bi-journal-text"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="mb-1">@curso.Nombre</h6>
+                                    <p class="text-muted mb-1 small">
+                                        <i class="bi bi-tag me-1"></i>@curso.Codigo
+                                        @if (!string.IsNullOrEmpty(curso.Descripcion))
+                                        {
+                                            <span class="ms-2">|</span>
+                                            @(curso.Descripcion.Length > 80 ? curso.Descripcion.Substring(0, 80) + "..." : curso.Descripcion)
+                                        }
+                                    </p>
+                                    <div class="curso-meta-list">
+                                        <small class="text-muted">
+                                            <i class="bi bi-journals me-1"></i>@curso.Clases.Count clases |
+                                            <i class="bi bi-people me-1 ms-2"></i>@curso.UsuarioCursos.Count(uc => uc.Rol == "Estudiante") estudiantes |
+                                            <i class="bi bi-person-badge me-1 ms-2"></i>@curso.UsuarioCursos.Count(uc => uc.Rol == "Ayudante") ayudantes
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="curso-badges-list">
+                                        <span class="badge @(curso.Activo ? "bg-success" : "bg-secondary")">
+                                            @(curso.Activo ? "Activo" : "Inactivo")
+                                        </span>
+                                        <span class="badge bg-light text-dark">
+                                            <i class="bi bi-person-fill me-1"></i>@curso.Profesor.Nombre
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 text-end">
+                                    @if (esEstudiante)
+                                    {
+                                        <form asp-action="SolicitarUnirse" method="post" class="d-inline">
+                                            <input type="hidden" name="cursoId" value="@curso.Id" />
+                                            <button type="submit" class="btn btn-outline-primary btn-sm btn-solicitar" data-curso-id="@curso.Id">
+                                                <i class="bi bi-person-plus me-1"></i>Solicitar
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-outline-secondary btn-sm" disabled>
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Paginación -->
+        @if (Model.Count() > 9)
+        {
+            <div class="card-footer bg-light">
+                <nav aria-label="Navegación de cursos">
+                    <ul class="pagination justify-content-center mb-0">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Anterior</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Siguiente</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        }
+    </div>
+
+    <!-- Información para estudiantes -->
+    @if (esEstudiante)
+    {
+        <div class="card studyhub-card mt-4">
+            <div class="card-header bg-info text-white">
+                <h6 class="card-title mb-0">
+                    <i class="bi bi-info-circle me-2"></i>Información para Estudiantes
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex mb-3">
+                            <i class="bi bi-send-check text-success me-3 fs-5"></i>
+                            <div>
+                                <strong>Solicita unirte a cursos</strong>
+                                <p class="small text-muted mb-0">Envía solicitudes a los cursos que te interesen</p>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-3">
+                            <i class="bi bi-clock text-warning me-3 fs-5"></i>
+                            <div>
+                                <strong>Espera aprobación</strong>
+                                <p class="small text-muted mb-0">El profesor debe aprobar tu solicitud</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex mb-3">
+                            <i class="bi bi-journals text-primary me-3 fs-5"></i>
+                            <div>
+                                <strong>Accede al contenido</strong>
+                                <p class="small text-muted mb-0">Una vez aprobado, tendrás acceso a todas las clases</p>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <i class="bi bi-people text-info me-3 fs-5"></i>
+                            <div>
+                                <strong>Interactúa con compañeros</strong>
+                                <p class="small text-muted mb-0">Participa en discusiones y actividades</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<link rel="stylesheet" href="~/css/views/Cursos.Explorar.css" asp-append-version="true" />
+@section Scripts {
+    <script src="~/js/views/Cursos.Explorar.js" asp-append-version="true"></script>
+}

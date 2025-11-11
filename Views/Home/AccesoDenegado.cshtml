@@ -2,29 +2,69 @@
     ViewData["Title"] = "Acceso Denegado";
 }
 
-<div class="container text-center mt-5">
+<div class="container-fluid py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Home")">Dashboard</a></li>
+            <li class="breadcrumb-item active text-muted" aria-current="page">Acceso Denegado</li>
+        </ol>
+    </nav>
+
+    <!-- Contenido Principal -->
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <i class="bi bi-shield-exclamation text-danger" style="font-size: 4rem;"></i>
-            <h1 class="text-danger mt-3">Acceso Denegado</h1>
-            <p class="lead">No tienes permisos para acceder a esta página.</p>
-            <p class="text-muted">Si crees que esto es un error, contacta al administrador.</p>
-            
-            <div class="mt-4">
-                <a href="@Url.Action("Dashboard", "Home")" class="btn btn-primary">
-                    <i class="bi bi-house"></i> Volver al Dashboard
-                </a>
-                <a href="javascript:history.back()" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Volver Atrás
-                </a>
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card acceso-denegado-card shadow-sm border-0">
+                <div class="card-body text-center p-5">
+                    <!-- Icono Principal -->
+                    <div class="acceso-denegado-icon mb-4">
+                        <i class="bi bi-shield-lock text-danger"></i>
+                    </div>
+                    
+                    <!-- Títulos y Mensaje -->
+                    <h1 class="h2 text-danger fw-bold mb-3">Acceso Denegado</h1>
+                    <p class="lead text-muted mb-3">
+                        No tienes los permisos necesarios para acceder a esta página del curso.
+                    </p>
+                    <p class="text-muted small mb-4">
+                        Si crees que deberías tener acceso a este contenido, contacta al administrador del curso o al soporte de StudyHub.
+                    </p>
+
+                    <!-- Acciones -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                        <a href="@Url.Action("Dashboard", "Home")" class="btn btn-primary btn-lg px-4">
+                            <i class="bi bi-house me-2"></i>Volver al Dashboard
+                        </a>
+                        <button onclick="history.back()" class="btn btn-outline-secondary btn-lg px-4">
+                            <i class="bi bi-arrow-left me-2"></i>Volver Atrás
+                        </button>
+                    </div>
+
+                    <!-- Información Adicional -->
+                    <div class="mt-5 pt-4 border-top">
+                        <div class="row">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-book text-primary me-2"></i>
+                                    <small class="text-muted">Contenido restringido del curso</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-shield-check text-primary me-2"></i>
+                                    <small class="text-muted">Sistema de permisos StudyHub</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<script src="~/js/views/Home.AccesoDenegado.js" asp-append-version="true"></script>
-
 
 <link rel="stylesheet" href="~/css/views/Home.AccesoDenegado.css" asp-append-version="true" />
 
-<script src="~/js/views/Home.AccesoDenegado.js" asp-append-version="true"></script>
-
+@section Scripts {
+    <script src="~/js/views/Home.AccesoDenegado.js" asp-append-version="true"></script>
+}

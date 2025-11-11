@@ -1,0 +1,5 @@
+/* Estilos mínimos para Calendario de Curso */
+.calendario-grid { min-height: 240px; }
+.vista-oculta { display: none; }
+.vista-activa { display: block; }
+

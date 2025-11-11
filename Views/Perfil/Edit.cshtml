@@ -1,39 +1,265 @@
 ﻿@model StudyHub.Models.Usuario
 @{
     ViewData["Title"] = "Editar Perfil";
+    var usuarioRol = Context.Session.GetString("UsuarioRol");
+    var esProfesor = usuarioRol == "Profesor";
 }
 
-<h1>Editar Perfil</h1>
+<div class="container-fluid py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Home")">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Perfil")">Mi Perfil</a></li>
+            <li class="breadcrumb-item active text-muted" aria-current="page">Editar Perfil</li>
+        </ol>
+    </nav>
 
-<form asp-action="Edit">
-    <input type="hidden" asp-for="Id" />
-    <div class="form-group">
-        <label asp-for="Nombre" class="control-label"></label>
-        <input asp-for="Nombre" class="form-control" />
-        <span asp-validation-for="Nombre" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Email" class="control-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Rol" class="control-label"></label>
-        <select asp-for="Rol" class="form-control">
-            <option value="Estudiante">Estudiante</option>
-            <option value="Profesor">Profesor</option>
-        </select>
-        <span asp-validation-for="Rol" class="text-danger"></span>
-    </div>
-    <div class="form-group mt-3">
-        <input type="submit" value="Guardar" class="btn btn-primary" />
-        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-    </div>
-</form>
-<script src="~/js/views/Perfil.Edit.js" asp-append-version="true"></script>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <!-- Header -->
+            <div class="d-flex align-items-center mb-5">
+                <div class="profile-edit-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3">
+                    <i class="bi bi-person-gear"></i>
+                </div>
+                <div>
+                    <h1 class="h2 mb-1">Editar Perfil</h1>
+                    <p class="text-muted mb-0">
+                        Actualiza tu información personal en StudyHub
+                    </p>
+                </div>
+            </div>
 
+            <div class="row">
+                <!-- Formulario Principal -->
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white border-0 py-3">
+                            <h5 class="mb-0">
+                                <i class="bi bi-person-lines-fill text-primary me-2"></i>
+                                Información Personal
+                            </h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <form asp-action="Edit" id="editProfileForm">
+                                <input type="hidden" asp-for="Id" />
+                                
+                                <!-- Alertas -->
+                                <div class="alert-container mb-4">
+                                    @if (ViewData["Success"] != null)
+                                    {
+                                        <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
+                                            <i class="bi bi-check-circle-fill me-2"></i>
+                                            <div>@ViewData["Success"]</div>
+                                            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+                                        </div>
+                                    }
+                                    @if (ViewData["Error"] != null)
+                                    {
+                                        <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+                                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                            <div>@ViewData["Error"]</div>
+                                            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+                                        </div>
+                                    }
+                                </div>
+
+                                <!-- Nombre -->
+                                <div class="form-group mb-4">
+                                    <label asp-for="Nombre" class="form-label fw-semibold">
+                                        <i class="bi bi-person me-2"></i>Nombre Completo
+                                    </label>
+                                    <input asp-for="Nombre" class="form-control" 
+                                           placeholder="Ingresa tu nombre completo" />
+                                    <span asp-validation-for="Nombre" class="text-danger small mt-2 d-block"></span>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="form-group mb-4">
+                                    <label asp-for="Email" class="form-label fw-semibold">
+                                        <i class="bi bi-envelope me-2"></i>Correo Electrónico
+                                    </label>
+                                    <input asp-for="Email" class="form-control" 
+                                           placeholder="tu.email@ejemplo.com" />
+                                    <span asp-validation-for="Email" class="text-danger small mt-2 d-block"></span>
+                                    <div class="form-text text-muted small">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Utilizaremos este email para notificaciones importantes del curso
+                                    </div>
+                                </div>
+
+                                <!-- Rol -->
+                                <div class="form-group mb-4">
+                                    <label asp-for="Rol" class="form-label fw-semibold">
+                                        <i class="bi bi-person-badge me-2"></i>Rol en la Plataforma
+                                    </label>
+                                    <select asp-for="Rol" class="form-select">
+                                        <option value="Estudiante">Estudiante</option>
+                                        <option value="Profesor">Profesor</option>
+                                    </select>
+                                    <span asp-validation-for="Rol" class="text-danger small mt-2 d-block"></span>
+                                    <div class="form-text text-muted small">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Tu rol determina las funcionalidades disponibles en StudyHub
+                                    </div>
+                                </div>
+
+                                <!-- Información Adicional (Placeholder para futuras expansiones) -->
+                                <div class="additional-fields">
+                                    <div class="accordion" id="additionalFieldsAccordion">
+                                        <div class="accordion-item border-0">
+                                            <h2 class="accordion-header" id="headingAdditional">
+                                                <button class="accordion-button collapsed bg-light" type="button" 
+                                                        data-bs-toggle="collapse" data-bs-target="#collapseAdditional" 
+                                                        aria-expanded="false" aria-controls="collapseAdditional">
+                                                    <i class="bi bi-plus-circle me-2"></i>
+                                                    Información Adicional (Opcional)
+                                                </button>
+                                            </h2>
+                                            <div id="collapseAdditional" class="accordion-collapse collapse" 
+                                                 aria-labelledby="headingAdditional" data-bs-parent="#additionalFieldsAccordion">
+                                                <div class="accordion-body pt-3">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group mb-3">
+                                                                <label class="form-label small fw-semibold">Teléfono</label>
+                                                                <input type="tel" class="form-control form-control-sm" 
+                                                                       placeholder="+1 (555) 123-4567" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group mb-3">
+                                                                <label class="form-label small fw-semibold">Institución</label>
+                                                                <input type="text" class="form-control form-control-sm" 
+                                                                       placeholder="Nombre de tu institución" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label small fw-semibold">Biografía</label>
+                                                        <textarea class="form-control form-control-sm" rows="3" 
+                                                                  placeholder="Comparte algo sobre ti..."></textarea>
+                                                    </div>
+                                                    <small class="text-muted">
+                                                        <i class="bi bi-lock me-1"></i>
+                                                        Esta información es opcional y solo visible para los administradores del curso
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Acciones -->
+                                <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                                    <a asp-action="Index" class="btn btn-outline-secondary">
+                                        <i class="bi bi-arrow-left me-2"></i>Cancelar
+                                    </a>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-warning" id="resetFormBtn">
+                                            <i class="bi bi-arrow-clockwise me-2"></i>Restablecer
+                                        </button>
+                                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                                            <i class="bi bi-check-lg me-2"></i>Guardar Cambios
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar de Ayuda -->
+                <div class="col-lg-4">
+                    <div class="sticky-top" style="top: 100px;">
+                        <!-- Resumen de Cambios -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-white border-0 py-3">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-eye text-primary me-2"></i>
+                                    Vista Previa
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center mb-3">
+                                    <div class="preview-avatar bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2">
+                                        <i class="bi bi-person"></i>
+                                    </div>
+                                    <h6 id="previewNombre" class="mb-1">@Model.Nombre</h6>
+                                    <span class="badge bg-primary" id="previewRol">@Model.Rol</span>
+                                </div>
+                                <div class="small text-muted">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Email:</span>
+                                        <span id="previewEmail">@Model.Email</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Estado:</span>
+                                        <span class="text-success">Activo</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Miembro desde:</span>
+                                        <span>@DateTime.Now.ToString("MMM yyyy")</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Consejos Rápidos -->
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white border-0 py-3">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-lightbulb text-warning me-2"></i>
+                                    Consejos
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex align-items-start mb-3">
+                                    <i class="bi bi-check-circle text-success me-2 mt-1"></i>
+                                    <small class="text-muted">Usa tu nombre real para facilitar la comunicación en cursos</small>
+                                </div>
+                                <div class="d-flex align-items-start mb-3">
+                                    <i class="bi bi-check-circle text-success me-2 mt-1"></i>
+                                    <small class="text-muted">Mantén tu email actualizado para recibir notificaciones</small>
+                                </div>
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-check-circle text-success me-2 mt-1"></i>
+                                    <small class="text-muted">Selecciona el rol que mejor describa tu función principal</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Acciones Rápidas -->
+                        <div class="card border-0 shadow-sm mt-4">
+                            <div class="card-header bg-white border-0 py-3">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-lightning text-info me-2"></i>
+                                    Acciones Rápidas
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-grid gap-2">
+                                    <a href="@Url.Action("CambiarPassword", "Perfil")" class="btn btn-outline-primary btn-sm text-start">
+                                        <i class="bi bi-shield-lock me-2"></i>Cambiar Contraseña
+                                    </a>
+                                    <a href="@Url.Action("Index", "Perfil")" class="btn btn-outline-secondary btn-sm text-start">
+                                        <i class="bi bi-eye me-2"></i>Ver Perfil
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <link rel="stylesheet" href="~/css/views/Perfil.Edit.css" asp-append-version="true" />
 
-<script src="~/js/views/Perfil.Edit.js" asp-append-version="true"></script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/views/Perfil.Edit.js" asp-append-version="true"></script>
+}
+
 

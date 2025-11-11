@@ -3,33 +3,251 @@
     ViewData["Title"] = "Editar Curso";
 }
 
-<h1>Editar Curso</h1>
+<div class="container-fluid">
+    <!-- Header de página con breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Cursos" asp-action="Index">Cursos</a></li>
+            <li class="breadcrumb-item"><a asp-action="Details" asp-route-id="@Model.Id">@Model.Nombre</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Editar</li>
+        </ol>
+    </nav>
 
-<form asp-action="Edit">
-    <input type="hidden" asp-for="Id" />
-    <div class="mb-3">
-        <label asp-for="Nombre" class="form-label"></label>
-        <input asp-for="Nombre" class="form-control" />
-        <span asp-validation-for="Nombre" class="text-danger"></span>
+    <!-- Header principal -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Editar Curso</h1>
+            <p class="text-muted mb-0">Actualice la información del curso @Model.Nombre</p>
+        </div>
+        <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@Model.Id">
+            <i class="bi bi-arrow-left me-2"></i>Volver al curso
+        </a>
     </div>
-    <div class="mb-3">
-        <label asp-for="Codigo" class="form-label"></label>
-        <input asp-for="Codigo" class="form-control" />
-        <span asp-validation-for="Codigo" class="text-danger"></span>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Card del formulario -->
+            <div class="card studyhub-card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-pencil-square me-2"></i>Información del Curso
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post" id="cursoForm" class="needs-validation" novalidate>
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="ProfesorId" />
+
+                        <!-- Alertas de validación del servidor -->
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <!-- Campo Nombre -->
+                        <div class="mb-4">
+                            <label asp-for="Nombre" class="form-label fw-semibold">
+                                <i class="bi bi-journal-text me-2"></i>Nombre del Curso
+                            </label>
+                            <input asp-for="Nombre" class="form-control form-control-lg" 
+                                   placeholder="Ej: Introducción a la Programación" 
+                                   required />
+                            <div class="form-text">El nombre completo y descriptivo del curso</div>
+                            <span asp-validation-for="Nombre" class="invalid-feedback"></span>
+                            <div class="valid-feedback">
+                                <i class="bi bi-check-circle-fill me-1"></i>Nombre válido
+                            </div>
+                        </div>
+
+                        <!-- Campo Código -->
+                        <div class="mb-4">
+                            <label asp-for="Codigo" class="form-label fw-semibold">
+                                <i class="bi bi-tag me-2"></i>Código del Curso
+                            </label>
+                            <input asp-for="Codigo" class="form-control" 
+                                   placeholder="Ej: PROG101, MATH202" 
+                                   pattern="[A-Za-z0-9]{3,10}" 
+                                   required />
+                            <div class="form-text">Código único identificador (3-10 caracteres alfanuméricos)</div>
+                            <span asp-validation-for="Codigo" class="invalid-feedback"></span>
+                            <div class="valid-feedback">
+                                <i class="bi bi-check-circle-fill me-1"></i>Código válido
+                            </div>
+                        </div>
+
+                        <!-- Campo Descripción -->
+                        <div class="mb-4">
+                            <label asp-for="Descripcion" class="form-label fw-semibold">
+                                <i class="bi bi-card-text me-2"></i>Descripción
+                            </label>
+                            <textarea asp-for="Descripcion" class="form-control" 
+                                      rows="4" 
+                                      placeholder="Describa los objetivos, contenido y requisitos del curso..."
+                                      maxlength="500"></textarea>
+                            <div class="d-flex justify-content-between align-items-center mt-1">
+                                <div class="form-text">Descripción detallada del curso (máximo 500 caracteres)</div>
+                                <span class="badge bg-light text-muted" id="contadorDescripcion">@(Model.Descripcion?.Length ?? 0)/500</span>
+                            </div>
+                            <span asp-validation-for="Descripcion" class="invalid-feedback"></span>
+                        </div>
+
+                        <!-- Configuración del curso -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-check form-switch">
+                                    <input asp-for="Activo" class="form-check-input" type="checkbox" role="switch" />
+                                    <label asp-for="Activo" class="form-check-label fw-semibold">
+                                        <i class="bi bi-power me-2"></i>Curso Activo
+                                    </label>
+                                </div>
+                                <div class="form-text">
+                                    Los cursos inactivos no son visibles para los estudiantes pero mantienen todo su contenido
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-light border-0 h-100">
+                                    <div class="card-body py-3">
+                                        <small class="text-muted">
+                                            <i class="bi bi-info-circle me-1"></i>
+                                            <strong>Información del sistema:</strong><br>
+                                            Profesor: @Model.Profesor.Nombre<br>
+                                            Clases: @Model.Clases.Count | Estudiantes: @Model.UsuarioCursos.Count(uc => uc.Rol == "Estudiante")
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sección de configuración avanzada (acordeón) -->
+                        <div class="accordion mb-4" id="configuracionAvanzada">
+                            <div class="accordion-item border-0">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed studyhub-accordion" type="button" 
+                                            data-bs-toggle="collapse" 
+                                            data-bs-target="#configuracionContent">
+                                        <i class="bi bi-gear me-2"></i>
+                                        Configuración Avanzada (Opcional)
+                                    </button>
+                                </h2>
+                                <div id="configuracionContent" class="accordion-collapse collapse" 
+                                     data-bs-parent="#configuracionAvanzada">
+                                    <div class="accordion-body bg-light rounded-bottom">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold">Color del Curso</label>
+                                                <div class="color-picker">
+                                                    <div class="color-options">
+                                                        <input type="radio" name="colorCurso" value="#0d6efd" id="colorAzul" checked>
+                                                        <label for="colorAzul" class="color-option" style="background-color: #0d6efd;" title="Azul StudyHub"></label>
+                                                        
+                                                        <input type="radio" name="colorCurso" value="#198754" id="colorVerde">
+                                                        <label for="colorVerde" class="color-option" style="background-color: #198754;" title="Verde"></label>
+                                                        
+                                                        <input type="radio" name="colorCurso" value="#6f42c1" id="colorPurpura">
+                                                        <label for="colorPurpura" class="color-option" style="background-color: #6f42c1;" title="Púrpura"></label>
+                                                        
+                                                        <input type="radio" name="colorCurso" value="#fd7e14" id="colorNaranja">
+                                                        <label for="colorNaranja" class="color-option" style="background-color: #fd7e14;" title="Naranja"></label>
+                                                        
+                                                        <input type="radio" name="colorCurso" value="#dc3545" id="colorRojo">
+                                                        <label for="colorRojo" class="color-option" style="background-color: #dc3545;" title="Rojo"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-text">Color identificativo para el curso</div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold">Imagen del Curso</label>
+                                                <div class="image-upload-placeholder">
+                                                    @if (ViewBag.ImagenCurso != null)
+                                                    {
+                                                        <img src="@ViewBag.ImagenCurso" class="img-fluid rounded" style="max-height: 120px;" alt="Imagen actual del curso">
+                                                        <p class="small text-muted mt-2">Haga clic para cambiar la imagen</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="bi bi-image display-4 text-muted"></i>
+                                                        <p class="small text-muted mt-2">Haga clic para subir una imagen</p>
+                                                    }
+                                                    <input type="file" class="d-none" accept="image/*" id="imagenCurso" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones de acción -->
+                        <div class="d-flex gap-2 justify-content-end pt-3 border-top">
+                            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-lg">
+                                <i class="bi bi-x-circle me-2"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg" id="btnSubmit">
+                                <i class="bi bi-check-circle me-2"></i>Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Card de cambios recientes -->
+            <div class="card studyhub-card mt-4">
+                <div class="card-header bg-light">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-clock-history me-2 text-primary"></i>Historial de Cambios
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-badge bg-primary">
+                                <i class="bi bi-plus-circle"></i>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-badge bg-success">
+                                <i class="bi bi-pencil"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <strong>Última modificación</strong>
+                                <small class="text-muted d-block">@DateTime.Now.ToString("dd/MM/yyyy HH:mm") (ahora)</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card de impacto de cambios -->
+            <div class="card studyhub-card mt-4 border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-megaphone me-2"></i>Impacto de los Cambios
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-4 impact-stat">
+                            <div class="stat-number text-primary">@Model.Clases.Count</div>
+                            <div class="stat-label">Clases</div>
+                        </div>
+                        <div class="col-md-4 impact-stat">
+                            <div class="stat-number text-success">@Model.UsuarioCursos.Count(uc => uc.Rol == "Estudiante" && uc.Estado == "Activo")</div>
+                            <div class="stat-label">Estudiantes Activos</div>
+                        </div>
+                        <div class="col-md-4 impact-stat">
+                            <div class="stat-number text-info">@Model.UsuarioCursos.Count(uc => uc.Rol == "Ayudante" && uc.Estado == "Activo")</div>
+                            <div class="stat-label">Ayudantes</div>
+                        </div>
+                    </div>
+                    <p class="text-center text-muted mt-3 mb-0">
+                        <small>Estos usuarios verán los cambios realizados en el curso</small>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        <label asp-for="Descripcion" class="form-label"></label>
-        <textarea asp-for="Descripcion" class="form-control"></textarea>
-        <span asp-validation-for="Descripcion" class="text-danger"></span>
-    </div>
-    <div class="form-check form-switch mb-3">
-        <input asp-for="Activo" class="form-check-input" />
-        <label asp-for="Activo" class="form-check-label">Activo</label>
-    </div>
-    <button class="btn btn-primary" type="submit">Guardar</button>
-    <a asp-action="Index" class="btn btn-secondary">Volver</a>
-</form>
+</div>
 
 <link rel="stylesheet" href="~/css/views/Cursos.Edit.css" asp-append-version="true" />
-<script src="~/js/views/Cursos.Edit.js" asp-append-version="true"></script>
 
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/views/Cursos.Edit.js" asp-append-version="true"></script>
+}

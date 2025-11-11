@@ -1,28 +1,304 @@
 ﻿@model StudyHub.Models.Clase
 @{
-    ViewData["Title"] = "Detalle de Clase";
+    ViewData["Title"] = "Detalle de Clase - StudyHub";
 }
 
-<h1>@Model.Titulo</h1>
-<p class="text-muted">@Model.Curso?.Nombre</p>
-<p>@Model.Descripcion</p>
-<p><strong>Profesor:</strong> @Model.Profesor?.Nombre</p>
+<div class="class-details-container">
+    <div class="container">
+        <!-- Header de la Clase -->
+        <div class="class-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <nav aria-label="breadcrumb" class="mb-3">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a asp-controller="Cursos" asp-action="Index">Mis Cursos</a></li>
+                            <li class="breadcrumb-item"><a asp-controller="Cursos" asp-action="Details" asp-route-id="@Model.CursoId">@Model.Curso?.Nombre</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">@Model.Titulo</li>
+                        </ol>
+                    </nav>
+                    
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="class-icon">
+                            <i class="bi bi-journal-text"></i>
+                        </div>
+                        <div class="class-title-content">
+                            <h1 class="class-title">@Model.Titulo</h1>
+                            <p class="class-subtitle">Clase del curso <strong>@Model.Curso?.Nombre</strong></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="class-actions">
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Volver a Clases
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<div class="mb-3">
-    <a class="btn btn-outline-primary" asp-controller="Recursos" asp-action="Index" asp-route-claseId="@Model.Id">Recursos</a>
-    <a class="btn btn-outline-secondary" asp-controller="Mensajes" asp-action="Index" asp-route-claseId="@Model.Id">Foro</a>
-    <a class="btn btn-outline-success" asp-controller="Sesiones" asp-action="Calendario">Calendario</a>
-    @if (Context.Session.GetString("UsuarioRol") == "Profesor" && Context.Session.GetInt32("UsuarioId") == Model.ProfesorId)
-    {
-        <a class="btn btn-outline-dark" asp-action="Alumnos" asp-route-id="@Model.Id">Gestionar Estudiantes</a>
-    }
+        <div class="row">
+            <!-- Columna Principal -->
+            <div class="col-lg-8">
+                <!-- Información de la Clase -->
+                <div class="class-info-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="bi bi-info-circle me-2"></i>Información de la Clase
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="class-description">
+                            <h4 class="section-label">Descripción</h4>
+                            @if (!string.IsNullOrEmpty(Model.Descripcion))
+                            {
+                                <p class="description-text">@Model.Descripcion</p>
+                            }
+                            else
+                            {
+                                <p class="text-muted">No hay descripción disponible para esta clase.</p>
+                            }
+                        </div>
+
+                        <div class="class-details-grid">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="detail-item">
+                                        <div class="detail-icon">
+                                            <i class="bi bi-person-badge"></i>
+                                        </div>
+                                        <div class="detail-content">
+                                            <label class="detail-label">Profesor</label>
+                                            <span class="detail-value">@Model.Profesor?.Nombre</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="detail-item">
+                                        <div class="detail-icon">
+                                            <i class="bi bi-people"></i>
+                                        </div>
+                                        <div class="detail-content">
+                                            <label class="detail-label">Límite de Estudiantes</label>
+                                            <span class="detail-value">
+                                                @if (Model.MaxEstudiantes.HasValue)
+                                                {
+                                                    @Model.MaxEstudiantes
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">Ilimitado</span>
+                                                }
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="detail-item">
+                                        <div class="detail-icon">
+                                            <i class="bi bi-eye"></i>
+                                        </div>
+                                        <div class="detail-content">
+                                            <label class="detail-label">Visibilidad</label>
+                                            <span class="detail-value">
+                                                @if (Model.EsPublica)
+                                                {
+                                                    <span class="badge bg-success">
+                                                        <i class="bi bi-globe me-1"></i>Pública
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">
+                                                        <i class="bi bi-lock me-1"></i>Privada
+                                                    </span>
+                                                }
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="detail-item">
+                                        <div class="detail-icon">
+                                            <i class="bi bi-journal-bookmark"></i>
+                                        </div>
+                                        <div class="detail-content">
+                                            <label class="detail-label">Curso</label>
+                                            <span class="detail-value">@Model.Curso?.Nombre</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acciones Rápidas -->
+                <div class="quick-actions-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="bi bi-lightning me-2"></i>Acciones Rápidas
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <a class="btn btn-action-card w-100 h-100" asp-controller="Recursos" asp-action="Index" asp-route-claseId="@Model.Id">
+                                    <div class="action-icon">
+                                        <i class="bi bi-file-earmark-text"></i>
+                                    </div>
+                                    <div class="action-content">
+                                        <h4>Recursos</h4>
+                                        <p>Materiales y archivos de la clase</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <a class="btn btn-action-card w-100 h-100" asp-controller="Mensajes" asp-action="Index" asp-route-claseId="@Model.Id">
+                                    <div class="action-icon">
+                                        <i class="bi bi-chat-dots"></i>
+                                    </div>
+                                    <div class="action-content">
+                                        <h4>Foro de Discusión</h4>
+                                        <p>Participa en las conversaciones</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <a class="btn btn-action-card w-100 h-100" asp-controller="Sesiones" asp-action="Calendario">
+                                    <div class="action-icon">
+                                        <i class="bi bi-calendar-event"></i>
+                                    </div>
+                                    <div class="action-content">
+                                        <h4>Calendario</h4>
+                                        <p>Ver sesiones programadas</p>
+                                    </div>
+                                </a>
+                            </div>
+                            @if (Context.Session.GetString("UsuarioRol") == "Profesor" && Context.Session.GetInt32("UsuarioId") == Model.ProfesorId)
+                            {
+                                <div class="col-md-6">
+                                    <a class="btn btn-action-card w-100 h-100" asp-action="Alumnos" asp-route-id="@Model.Id">
+                                        <div class="action-icon">
+                                            <i class="bi bi-people-fill"></i>
+                                        </div>
+                                        <div class="action-content">
+                                            <h4>Gestionar Estudiantes</h4>
+                                            <p>Administrar participantes</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Información del Curso -->
+                <div class="course-info-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="bi bi-journal-bookmark me-2"></i>Información del Curso
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="course-details">
+                            <div class="course-item">
+                                <label class="course-label">Curso:</label>
+                                <span class="course-value">@Model.Curso?.Nombre</span>
+                            </div>
+                            <div class="course-item">
+                                <label class="course-label">Profesor:</label>
+                                <span class="course-value">@Model.Profesor?.Nombre</span>
+                            </div>
+                            <div class="course-item">
+                                <label class="course-label">Código:</label>
+                                <span class="course-value">@Model.Curso?.Codigo</span>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <a asp-controller="Cursos" asp-action="Details" asp-route-id="@Model.CursoId" class="btn btn-outline-primary w-100">
+                                <i class="bi bi-arrow-right me-2"></i>Ir al Curso
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estadísticas Rápidas -->
+                <div class="stats-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="bi bi-graph-up me-2"></i>Estadísticas
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-number" id="resourcesCount">0</div>
+                                <div class="stat-label">Recursos</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="messagesCount">0</div>
+                                <div class="stat-label">Mensajes</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="studentsCount">0</div>
+                                <div class="stat-label">Estudiantes</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acciones del Profesor -->
+                @if (Context.Session.GetString("UsuarioRol") == "Profesor" && Context.Session.GetInt32("UsuarioId") == Model.ProfesorId)
+                {
+                    <div class="teacher-actions-card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="bi bi-gear me-2"></i>Gestión de Clase
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">
+                                    <i class="bi bi-pencil me-2"></i>Editar Clase
+                                </a>
+                                <a asp-action="Alumnos" asp-route-id="@Model.Id" class="btn btn-outline-success">
+                                    <i class="bi bi-people me-2"></i>Gestionar Estudiantes
+                                </a>
+                                <a asp-controller="Recursos" asp-action="Create" asp-route-claseId="@Model.Id" class="btn btn-outline-info">
+                                    <i class="bi bi-plus-circle me-2"></i>Agregar Recurso
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">
+                                    <i class="bi bi-trash me-2"></i>Eliminar Clase
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 </div>
 
-<a class="btn btn-secondary" asp-action="Index">Volver</a>
-<script src="~/js/views/Clases.Details.js" asp-append-version="true"></script>
-
+<!-- Toast para mensajes -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="classDetailsToast" class="toast" role="alert">
+        <div class="toast-header">
+            <i class="bi bi-info-circle text-primary me-2"></i>
+            <strong class="me-auto">StudyHub</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body" id="toastMessage">
+            <!-- Mensaje dinámico -->
+        </div>
+    </div>
+</div>
 
 <link rel="stylesheet" href="~/css/views/Clases.Details.css" asp-append-version="true" />
 
-<script src="~/js/views/Clases.Details.js" asp-append-version="true"></script>
-
+@section Scripts {
+    <script src="~/js/views/Clases.Details.js" asp-append-version="true"></script>
+}

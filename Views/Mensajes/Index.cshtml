@@ -1,75 +1,297 @@
 ﻿@model IEnumerable<StudyHub.Models.Mensaje>
 @{
     ViewData["Title"] = "Foro de " + ViewBag.Clase.Titulo;
+    var usuarioRol = Context.Session.GetString("UsuarioRol");
+    var sessionUserId = Context.Session.GetInt32("UsuarioId");
+    var esProfesor = usuarioRol == "Profesor";
 }
 
-<div class="container">
-    <h1>Foro de @ViewBag.Clase.Titulo</h1>
+<div class="container-fluid py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Home")">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Cursos")">Mis Cursos</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Details", "Clases", new { id = ViewBag.Clase.Id })">@ViewBag.Clase.Titulo</a></li>
+            <li class="breadcrumb-item active text-muted" aria-current="page">Foro</li>
+        </ol>
+    </nav>
 
-    <div class="row">
+    <!-- Header del Foro -->
+    <div class="row align-items-end mb-4">
         <div class="col-md-8">
-            @if (TempData["Success"] != null)
-            {
-                <div class="alert alert-success">@TempData["Success"]</div>
-            }
-            @if (TempData["Error"] != null)
-            {
-                <div class="alert alert-danger">@TempData["Error"]</div>
-            }
-
-            <form asp-action="Create" method="post">
-                <input type="hidden" name="claseId" value="@ViewBag.Clase.Id" />
-                <div class="form-group">
-                    <label for="contenido">Nuevo Mensaje:</label>
-                    <textarea name="contenido" class="form-control" rows="3" placeholder="Escribe tu mensaje..."></textarea>
+            <div class="d-flex align-items-center">
+                <div class="foro-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3">
+                    <i class="bi bi-chat-dots"></i>
                 </div>
-                <button type="submit" class="btn btn-primary">Enviar</button>
-            </form>
-
-            <hr />
-
-            @foreach (var mensaje in Model)
-            {
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <p class="card-text">@mensaje.Contenido</p>
-                        <footer class="blockquote-footer">
-                            @mensaje.Usuario.Nombre 
-                            <cite title="Source Title">@mensaje.FechaEnvio.ToString("dd/MM/yyyy HH:mm")</cite>
-                        </footer>
-                        @{
-                            var isProfesor = Context.Session.GetString("UsuarioRol") == "Profesor";
-                            var sessionUserId = Context.Session.GetInt32("UsuarioId");
-                            var isOwner = sessionUserId.HasValue && mensaje.UsuarioId == sessionUserId.Value;
-                        }
-                        @if (isProfesor || isOwner)
-                        {
-                            <form asp-action="Delete" method="post" class="mt-2">
-                                <input type="hidden" name="id" value="@mensaje.Id" />
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Â¿EstÃ¡s seguro de eliminar este mensaje?')">Eliminar</button>
-                            </form>
-                        }
-                    </div>
+                <div>
+                    <h1 class="h2 mb-1">Foro de la Clase</h1>
+                    <p class="text-muted mb-0">
+                        <i class="bi bi-journal-text me-1"></i>
+                        @ViewBag.Clase.Titulo · 
+                        <span class="badge bg-primary">@Model.Count() mensajes</span>
+                    </p>
                 </div>
-            }
-
-            @if (!Model.Any())
-            {
-                <div class="alert alert-info">
-                    No hay mensajes en el foro. Â¡SÃ© el primero en publicar!
-                </div>
-            }
+            </div>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <a href="@Url.Action("Details", "Clases", new { id = ViewBag.Clase.Id })" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Volver a la Clase
+            </a>
         </div>
     </div>
 
-    <div>
-        <a asp-controller="Clases" asp-action="Details" asp-route-id="@ViewBag.Clase.Id" class="btn btn-secondary">Volver a la Clase</a>
+    <div class="row">
+        <!-- Panel Principal del Foro -->
+        <div class="col-lg-8">
+            <!-- Alertas -->
+            <div class="alert-container mb-4">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        <div>@TempData["Success"]</div>
+                        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <div>@TempData["Error"]</div>
+                        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+            </div>
+
+            <!-- Formulario de Nuevo Mensaje -->
+            <div class="card border-0 shadow-sm mb-5">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">
+                        <i class="bi bi-pencil-square text-primary me-2"></i>
+                        Nuevo Mensaje
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post" id="mensajeForm">
+                        <input type="hidden" name="claseId" value="@ViewBag.Clase.Id" />
+                        <div class="form-group mb-3">
+                            <label for="contenido" class="form-label fw-semibold">Tu mensaje:</label>
+                            <textarea name="contenido" class="form-control" rows="4" 
+                                      placeholder="Comparte tus ideas, preguntas o comentarios con la clase..." 
+                                      maxlength="1000" id="contenido"></textarea>
+                            <div class="form-text d-flex justify-content-between mt-2">
+                                <span class="text-muted small">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Los mensajes son visibles para todos los participantes de la clase
+                                </span>
+                                <span class="small text-muted">
+                                    <span id="charCount">0</span>/1000 caracteres
+                                </span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button type="submit" class="btn btn-primary px-4" id="submitBtn">
+                                <i class="bi bi-send me-2"></i>Publicar Mensaje
+                            </button>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="notificaciones" checked>
+                                <label class="form-check-label small text-muted" for="notificaciones">
+                                    Recibir respuestas
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Lista de Mensajes -->
+            <div class="mensajes-container">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="mb-0">
+                        <i class="bi bi-chat-quote text-muted me-2"></i>
+                        Mensajes del Foro
+                    </h4>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" 
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-sort-down me-1"></i>Ordenar
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item active" href="#" data-sort="newest">Más recientes primero</a></li>
+                            <li><a class="dropdown-item" href="#" data-sort="oldest">Más antiguos primero</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                @if (Model.Any())
+                {
+                    <div class="mensajes-list" id="mensajesList">
+                        @foreach (var mensaje in Model)
+                        {
+                            var isOwner = sessionUserId.HasValue && mensaje.UsuarioId == sessionUserId.Value;
+                            var puedeEliminar = esProfesor || isOwner;
+                            
+                            <div class="card mensaje-card border-0 shadow-sm mb-4" data-mensaje-id="@mensaje.Id" data-timestamp="@mensaje.FechaEnvio.Ticks">
+                                <div class="card-body">
+                                    <!-- Header del Mensaje -->
+                                    <div class="d-flex align-items-start mb-3">
+                                        <div class="mensaje-avatar bg-primary text-white rounded-circle flex-shrink-0 me-3">
+                                            @mensaje.Usuario.Nombre.Substring(0, 1).ToUpper()
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <h6 class="mb-1 fw-semibold">@mensaje.Usuario.Nombre</h6>
+                                                    <div class="d-flex align-items-center text-muted small">
+                                                        <i class="bi bi-clock me-1"></i>
+                                                        <span class="me-3">@mensaje.FechaEnvio.ToString("dd/MM/yyyy 'a las' HH:mm")</span>
+                                                        @if (esProfesor)
+                                                        {
+                                                            <span class="badge bg-light text-dark">
+                                                                <i class="bi bi-person-gear me-1"></i>Profesor
+                                                            </span>
+                                                        }
+                                                        else if (isOwner)
+                                                        {
+                                                            <span class="badge bg-light text-dark">
+                                                                <i class="bi bi-person me-1"></i>Tú
+                                                            </span>
+                                                        }
+                                                    </div>
+                                                </div>
+                                                @if (puedeEliminar)
+                                                {
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-sm btn-outline-secondary border-0" 
+                                                                type="button" data-bs-toggle="dropdown">
+                                                            <i class="bi bi-three-dots"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            <li>
+                                                                <form asp-action="Delete" method="post" class="d-inline">
+                                                                    <input type="hidden" name="id" value="@mensaje.Id" />
+                                                                    <button type="submit" class="dropdown-item text-danger" 
+                                                                            onclick="return confirm('¿Estás seguro de eliminar este mensaje?')">
+                                                                        <i class="bi bi-trash me-2"></i>Eliminar
+                                                                    </button>
+                                                                </form>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Contenido del Mensaje -->
+                                    <div class="mensaje-contenido">
+                                        <p class="mb-0 text-dark">@mensaje.Contenido</p>
+                                    </div>
+
+                                    <!-- Acciones del Mensaje -->
+                                    <div class="mensaje-acciones mt-3 pt-3 border-top">
+                                        <div class="d-flex align-items-center">
+                                            <button class="btn btn-sm btn-outline-secondary me-2 like-btn" data-mensaje-id="@mensaje.Id">
+                                                <i class="bi bi-hand-thumbs-up"></i>
+                                                <span class="ms-1">0</span>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary me-2 reply-btn" data-mensaje-id="@mensaje.Id">
+                                                <i class="bi bi-reply"></i> Responder
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary report-btn" data-mensaje-id="@mensaje.Id">
+                                                <i class="bi bi-flag"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <!-- Estado Vacío -->
+                    <div class="card border-0 shadow-sm text-center py-5">
+                        <div class="card-body">
+                            <div class="empty-state-icon mb-4">
+                                <i class="bi bi-chat-square-text text-muted" style="font-size: 4rem;"></i>
+                            </div>
+                            <h4 class="text-muted mb-3">No hay mensajes en el foro</h4>
+                            <p class="text-muted mb-4">
+                                Sé el primero en iniciar la conversación. Comparte tus ideas, preguntas o comentarios con la clase.
+                            </p>
+                            <button class="btn btn-primary" onclick="document.getElementById('contenido').focus()">
+                                <i class="bi bi-pencil-square me-2"></i>Escribir Primer Mensaje
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Sidebar Informativo -->
+        <div class="col-lg-4">
+            <div class="sticky-top" style="top: 100px;">
+                <!-- Información de la Clase -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0">
+                            <i class="bi bi-info-circle text-primary me-2"></i>
+                            Información del Foro
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <h6 class="text-primary mb-2">Normas de la Comunidad</h6>
+                            <ul class="small text-muted ps-3 mb-0">
+                                <li>Sé respetuoso con todos los participantes</li>
+                                <li>Mantén los mensajes relevantes al curso</li>
+                                <li>No compartir información personal sensible</li>
+                                <li>Reporta contenido inapropiado</li>
+                            </ul>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between align-items-center small text-muted">
+                            <span>Total de mensajes:</span>
+                            <span class="fw-semibold">@Model.Count()</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center small text-muted">
+                            <span>Tu rol:</span>
+                            <span class="badge bg-primary">@usuarioRol</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acciones Rápidas -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0">
+                            <i class="bi bi-lightning text-warning me-2"></i>
+                            Acciones Rápidas
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary btn-sm text-start" onclick="scrollToTop()">
+                                <i class="bi bi-arrow-up me-2"></i>Ir al principio
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm text-start" onclick="scrollToBottom()">
+                                <i class="bi bi-arrow-down me-2"></i>Ir al final
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm text-start" id="refreshForo">
+                                <i class="bi bi-arrow-clockwise me-2"></i>Actualizar foro
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<script src="~/js/views/Mensajes.Index.js" asp-append-version="true"></script>
-
 
 <link rel="stylesheet" href="~/css/views/Mensajes.Index.css" asp-append-version="true" />
 
-<script src="~/js/views/Mensajes.Index.js" asp-append-version="true"></script>
-
+@section Scripts {
+    <script src="~/js/views/Mensajes.Index.js" asp-append-version="true"></script>
+}

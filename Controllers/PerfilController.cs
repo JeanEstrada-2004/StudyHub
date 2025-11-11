@@ -109,15 +109,15 @@ namespace StudyHub.Controllers
 
             if (string.IsNullOrWhiteSpace(nuevaPassword) || nuevaPassword.Length < 6)
             {
-                ModelState.AddModelError("NuevaPassword", "La nueva contraseÃ±a debe tener al menos 6 caracteres.");
-                ViewData["ErrorNuevaPassword"] = "La nueva contraseÃ±a debe tener al menos 6 caracteres.";
+                ModelState.AddModelError("NuevaPassword", "La nueva Contraseña debe tener al menos 6 caracteres.");
+                ViewData["ErrorNuevaPassword"] = "La nueva Contraseña debe tener al menos 6 caracteres.";
                 return View();
             }
 
             if (!VerifyPassword(passwordActual, usuario.PasswordHash))
             {
-                ModelState.AddModelError("PasswordActual", "La contraseÃ±a actual es incorrecta.");
-                ViewData["ErrorPasswordActual"] = "La contraseÃ±a actual es incorrecta.";
+                ModelState.AddModelError("PasswordActual", "La Contraseña actual es incorrecta.");
+                ViewData["ErrorPasswordActual"] = "La Contraseña actual es incorrecta.";
                 return View();
             }
 
@@ -125,7 +125,7 @@ namespace StudyHub.Controllers
             _context.Update(usuario);
             await _context.SaveChangesAsync();
 
-            TempData["Success"] = "ContraseÃ±a cambiada exitosamente.";
+            TempData["Success"] = "Contraseña cambiada exitosamente.";
             return RedirectToAction(nameof(Index));
         }
 

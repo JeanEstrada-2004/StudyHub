@@ -3,15 +3,228 @@
     ViewData["Title"] = "Eliminar Curso";
 }
 
-<h1>Eliminar Curso</h1>
-<div class="alert alert-warning">¿Seguro que deseas eliminar el curso "@Model.Nombre" (@Model.Codigo)?</div>
+<div class="container-fluid">
+    <!-- Header de página con breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Cursos" asp-action="Index">Cursos</a></li>
+            <li class="breadcrumb-item"><a asp-action="Details" asp-route-id="@Model.Id">@Model.Nombre</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Eliminar Curso</li>
+        </ol>
+    </nav>
 
-<form asp-action="Delete">
-    <input type="hidden" asp-for="Id" />
-    <button class="btn btn-danger" type="submit">Eliminar</button>
-    <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
-</form>
+    <!-- Header principal -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 text-danger">
+                <i class="bi bi-exclamation-triangle me-2"></i>Eliminar Curso
+            </h1>
+            <p class="text-muted mb-0">Acción irreversible - Confirme cuidadosamente</p>
+        </div>
+        <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@Model.Id">
+            <i class="bi bi-arrow-left me-2"></i>Volver al curso
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Card de advertencia principal -->
+            <div class="card studyhub-card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-trash3 me-2"></i>Confirmar Eliminación
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <!-- Icono de advertencia -->
+                    <div class="text-center mb-4">
+                        <div class="warning-icon mx-auto">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                        </div>
+                    </div>
+
+                    <!-- Información del curso a eliminar -->
+                    <div class="course-info-card mb-4">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h6 class="fw-bold text-danger mb-2">Curso a eliminar:</h6>
+                                <h4 class="mb-1">@Model.Nombre</h4>
+                                <p class="text-muted mb-2">Código: @Model.Codigo</p>
+                                @if (!string.IsNullOrEmpty(Model.Descripcion))
+                                {
+                                    <p class="mb-0">@(Model.Descripcion.Length > 150 ? Model.Descripcion.Substring(0, 150) + "..." : Model.Descripcion)</p>
+                                }
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="status-badge mb-2">
+                                    <span class="badge @(Model.Activo ? "bg-success" : "bg-secondary")">
+                                        @(Model.Activo ? "Activo" : "Inactivo")
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alertas de advertencia -->
+                    <div class="alert alert-warning border-warning">
+                        <div class="d-flex">
+                            <i class="bi bi-exclamation-triangle-fill me-3 fs-4 text-warning"></i>
+                            <div>
+                                <h6 class="alert-heading mb-2">¡Atención! Esta acción no se puede deshacer</h6>
+                                <p class="mb-2">Al eliminar el curso, se perderán permanentemente todos los datos asociados:</p>
+                                <ul class="mb-0 ps-3">
+                                    <li>Todas las clases y su contenido</li>
+                                    <li>Sesiones programadas y calendario</li>
+                                    <li>Recursos y materiales compartidos</li>
+                                    <li>Historial de estudiantes y progreso</li>
+                                    <li>Calificaciones y evaluaciones</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Verificación de seguridad -->
+                    <div class="security-verification mb-4">
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="confirmUnderstanding">
+                            <label class="form-check-label fw-semibold" for="confirmUnderstanding">
+                                Comprendo que esta acción es irreversible y eliminará permanentemente todos los datos del curso
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="confirmBackup">
+                            <label class="form-check-label fw-semibold" for="confirmBackup">
+                                He realizado una copia de seguridad de la información importante si es necesario
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="confirmResponsibility">
+                            <label class="form-check-label fw-semibold" for="confirmResponsibility">
+                                Acepto la responsabilidad completa por esta eliminación
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Formulario de eliminación -->
+                    <form asp-action="Delete" method="post" id="deleteForm">
+                        <input type="hidden" asp-for="Id" />
+                        
+                        <!-- Campo de confirmación por texto -->
+                        <div class="mb-4">
+                            <label for="confirmationText" class="form-label fw-semibold">
+                                Escriba "ELIMINAR @Model.Codigo" para confirmar:
+                            </label>
+                            <input type="text" class="form-control" id="confirmationText" 
+                                   placeholder='Escriba "ELIMINAR @Model.Codigo"' 
+                                   autocomplete="off"
+                                   data-expected="ELIMINAR @Model.Codigo">
+                            <div class="form-text text-danger">
+                                <i class="bi bi-shield-exclamation me-1"></i>
+                                Medida de seguridad adicional para prevenir eliminaciones accidentales
+                            </div>
+                        </div>
+
+                        <!-- Botones de acción -->
+                        <div class="d-flex gap-2 justify-content-end pt-3 border-top">
+                            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-lg">
+                                <i class="bi bi-x-circle me-2"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-danger btn-lg" id="btnDelete" disabled>
+                                <i class="bi bi-trash3 me-2"></i>Eliminar Curso Permanentemente
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Card de alternativas -->
+            <div class="card studyhub-card mt-4">
+                <div class="card-header bg-light">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-lightbulb me-2 text-warning"></i>¿Está seguro? Considere estas alternativas
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex mb-3">
+                                <i class="bi bi-power text-success me-3 fs-5"></i>
+                                <div>
+                                    <strong>Desactivar el curso</strong>
+                                    <p class="small text-muted mb-0">El curso se ocultará pero conservará todos los datos</p>
+                                    <a href="#" class="small text-primary">Configurar como inactivo</a>
+                                </div>
+                            </div>
+                            <div class="d-flex mb-3">
+                                <i class="bi bi-archive text-info me-3 fs-5"></i>
+                                <div>
+                                    <strong>Archivar el curso</strong>
+                                    <p class="small text-muted mb-0">Mantenga el historial sin mostrarlo en listas activas</p>
+                                    <a href="#" class="small text-primary">Solicitar archivado</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex mb-3">
+                                <i class="bi bi-download text-primary me-3 fs-5"></i>
+                                <div>
+                                    <strong>Exportar datos</strong>
+                                    <p class="small text-muted mb-0">Guarde toda la información antes de proceder</p>
+                                    <a href="#" class="small text-primary">Exportar curso completo</a>
+                                </div>
+                            </div>
+                            <div class="d-flex">
+                                <i class="bi bi-people text-warning me-3 fs-5"></i>
+                                <div>
+                                    <strong>Transferir responsabilidad</strong>
+                                    <p class="small text-muted mb-0">Asigne el curso a otro profesor si ya no lo gestionará</p>
+                                    <a href="#" class="small text-primary">Transferir propiedad</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información de impacto -->
+            <div class="card studyhub-card mt-4 border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-graph-down me-2"></i>Impacto de la Eliminación
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="impact-stats">
+                        <div class="row text-center">
+                            <div class="col-md-3 impact-stat">
+                                <div class="stat-number text-danger">@(ViewBag.CantidadClases ?? "0")</div>
+                                <div class="stat-label">Clases</div>
+                            </div>
+                            <div class="col-md-3 impact-stat">
+                                <div class="stat-number text-danger">@(ViewBag.CantidadEstudiantes ?? "0")</div>
+                                <div class="stat-label">Estudiantes</div>
+                            </div>
+                            <div class="col-md-3 impact-stat">
+                                <div class="stat-number text-danger">@(ViewBag.CantidadSesiones ?? "0")</div>
+                                <div class="stat-label">Sesiones</div>
+                            </div>
+                            <div class="col-md-3 impact-stat">
+                                <div class="stat-number text-danger">@(ViewBag.CantidadRecursos ?? "0")</div>
+                                <div class="stat-label">Recursos</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center text-muted mt-3 mb-0">
+                        <small>Estos elementos se eliminarán permanentemente junto con el curso</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <link rel="stylesheet" href="~/css/views/Cursos.Delete.css" asp-append-version="true" />
-<script src="~/js/views/Cursos.Delete.js" asp-append-version="true"></script>
 
+@section Scripts {
+    <script src="~/js/views/Cursos.Delete.js" asp-append-version="true"></script>
+}

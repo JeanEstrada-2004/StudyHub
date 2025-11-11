@@ -1,75 +1,400 @@
 ﻿@model IEnumerable<StudyHub.Models.Recurso>
 @{
     ViewData["Title"] = "Recursos de " + ViewBag.Clase.Titulo;
+    var usuarioRol = Context.Session.GetString("UsuarioRol");
+    var sessionUserId = Context.Session.GetInt32("UsuarioId");
+    var esProfesor = usuarioRol == "Profesor";
+    var totalRecursos = Model.Count();
+    var recursosArchivos = Model.Count(r => r.Tipo == "Archivo");
+    var recursosEnlaces = Model.Count(r => r.Tipo == "Enlace");
 }
 
-<div class="container">
-    <h1>Recursos de @ViewBag.Clase.Titulo</h1>
+<div class="container-fluid py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Home")">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Cursos")">Mis Cursos</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Details", "Clases", new { id = ViewBag.Clase.Id })">@ViewBag.Clase.Titulo</a></li>
+            <li class="breadcrumb-item active text-muted" aria-current="page">Recursos</li>
+        </ol>
+    </nav>
 
-    <p>
-        <a asp-action="Create" asp-route-claseId="@ViewBag.Clase.Id" class="btn btn-primary">Agregar Recurso</a>
-        <a asp-controller="Clases" asp-action="Details" asp-route-id="@ViewBag.Clase.Id" class="btn btn-secondary">Volver a la Clase</a>
-    </p>
-
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success">@TempData["Success"]</div>
-    }
-
-    <div class="row">
-        @foreach (var recurso in Model)
-        {
-            <div class="col-md-6 mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">@recurso.Titulo</h5>
-                        <p class="card-text">@recurso.Descripcion</p>
-                        <p class="card-text">
-                            <small class="text-muted">
-                                Subido por: @recurso.Usuario.Nombre<br />
-                                Fecha: @recurso.FechaSubida.ToString("dd/MM/yyyy HH:mm")<br />
-                                Tipo: @recurso.Tipo
-                            </small>
-                        </p>
-                        
-                        @if (recurso.Tipo == "Archivo")
-                        {
-                            <a asp-action="Descargar" asp-route-id="@recurso.Id" class="btn btn-sm btn-success">Descargar</a>
-                        }
-                        else if (recurso.Tipo == "Enlace")
-                        {
-                            <a href="@recurso.Url" target="_blank" class="btn btn-sm btn-info">Abrir Enlace</a>
-                        }
-
-                        @{
-                            var isProfesor = Context.Session.GetString("UsuarioRol") == "Profesor";
-                            var sessionUserId = Context.Session.GetInt32("UsuarioId");
-                            var isOwner = sessionUserId.HasValue && recurso.UsuarioId == sessionUserId.Value;
-                        }
-                        @if (isProfesor || isOwner)
-                        {
-                            <form asp-action="Delete" method="post" class="d-inline">
-                                <input type="hidden" name="id" value="@recurso.Id" />
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Â¿EstÃ¡s seguro de eliminar este recurso?')">Eliminar</button>
-                            </form>
-                        }
-                    </div>
+    <!-- Header -->
+    <div class="row align-items-end mb-4">
+        <div class="col-md-8">
+            <div class="d-flex align-items-center">
+                <div class="recursos-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3">
+                    <i class="bi bi-folder2-open"></i>
                 </div>
+                <div>
+                    <h1 class="h2 mb-1">Recursos de la Clase</h1>
+                    <p class="text-muted mb-0">
+                        <i class="bi bi-journal-text me-1"></i>
+                        @ViewBag.Clase.Titulo · 
+                        <span class="badge bg-primary">@totalRecursos recursos</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <div class="btn-group">
+                <a asp-action="Create" asp-route-claseId="@ViewBag.Clase.Id" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-2"></i>Agregar Recurso
+                </a>
+                <a asp-controller="Clases" asp-action="Details" asp-route-id="@ViewBag.Clase.Id" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>Volver a la Clase
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alertas -->
+    <div class="alert-container mb-4">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <div>@TempData["Success"]</div>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
             </div>
         }
     </div>
 
-    @if (!Model.Any())
-    {
-        <div class="alert alert-info">
-            No hay recursos compartidos en esta clase.
+    <!-- Estadísticas Rápidas -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card summary-card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="summary-icon bg-primary text-white rounded-circle flex-shrink-0">
+                            <i class="bi bi-folder2-open"></i>
+                        </div>
+                        <div class="ms-3 flex-grow-1">
+                            <h6 class="card-title text-muted mb-1">Total Recursos</h6>
+                            <h2 class="mb-0">@totalRecursos</h2>
+                            <small class="text-muted">En esta clase</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    }
-</div>
-<script src="~/js/views/Recursos.Index.js" asp-append-version="true"></script>
+        
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card summary-card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="summary-icon bg-success text-white rounded-circle flex-shrink-0">
+                            <i class="bi bi-file-earmark"></i>
+                        </div>
+                        <div class="ms-3 flex-grow-1">
+                            <h6 class="card-title text-muted mb-1">Archivos</h6>
+                            <h2 class="mb-0">@recursosArchivos</h2>
+                            <small class="text-muted">Documentos subidos</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card summary-card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="summary-icon bg-info text-white rounded-circle flex-shrink-0">
+                            <i class="bi bi-link-45deg"></i>
+                        </div>
+                        <div class="ms-3 flex-grow-1">
+                            <h6 class="card-title text-muted mb-1">Enlaces</h6>
+                            <h2 class="mb-0">@recursosEnlaces</h2>
+                            <small class="text-muted">Recursos externos</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card summary-card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="summary-icon bg-warning text-white rounded-circle flex-shrink-0">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+                        <div class="ms-3 flex-grow-1">
+                            <h6 class="card-title text-muted mb-1">Última Actividad</h6>
+                            <h2 class="mb-0">
+                                @if (Model.Any())
+                                {
+                                    @Model.Max(r => r.FechaSubida).ToString("dd/MM")
+                                }
+                                else
+                                {
+                                    <text>--</text>
+                                }
+                            </h2>
+                            <small class="text-muted">Actualización</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Panel Principal -->
+        <div class="col-lg-8">
+            <!-- Barra de Herramientas -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                        <div class="mb-3 mb-md-0">
+                            <h5 class="mb-0">
+                                <i class="bi bi-collection me-2"></i>
+                                Todos los Recursos
+                            </h5>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2">
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" 
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-funnel me-1"></i>Filtrar
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item active" href="#" data-filter="all">Todos los recursos</a></li>
+                                    <li><a class="dropdown-item" href="#" data-filter="archivo">Solo archivos</a></li>
+                                    <li><a class="dropdown-item" href="#" data-filter="enlace">Solo enlaces</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" 
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-sort-down me-1"></i>Ordenar
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item active" href="#" data-sort="newest">Más recientes primero</a></li>
+                                    <li><a class="dropdown-item" href="#" data-sort="oldest">Más antiguos primero</a></li>
+                                    <li><a class="dropdown-item" href="#" data-sort="title">Por título (A-Z)</a></li>
+                                </ul>
+                            </div>
+                            <div class="input-group input-group-sm" style="width: 200px;">
+                                <input type="text" class="form-control" placeholder="Buscar recurso..." id="searchInput">
+                                <button class="btn btn-outline-secondary" type="button" id="searchBtn">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de Recursos -->
+            <div class="recursos-container">
+                @if (Model.Any())
+                {
+                    <div class="row" id="recursosGrid">
+                        @foreach (var recurso in Model)
+                        {
+                            var isOwner = sessionUserId.HasValue && recurso.UsuarioId == sessionUserId.Value;
+                            var puedeEliminar = esProfesor || isOwner;
+                            
+                            <div class="col-12 mb-4 recurso-item" 
+                                 data-tipo="@recurso.Tipo.ToLower()" 
+                                 data-titulo="@recurso.Titulo.ToLower()"
+                                 data-fecha="@recurso.FechaSubida.Ticks">
+                                <div class="card recurso-card border-0 shadow-sm h-100">
+                                    <div class="card-body">
+                                        <!-- Header del Recurso -->
+                                        <div class="d-flex align-items-start mb-3">
+                                            <div class="recurso-icon @(recurso.Tipo == "Archivo" ? "bg-primary" : "bg-success") text-white rounded-circle flex-shrink-0 me-3">
+                                                <i class="bi bi-@(recurso.Tipo == "Archivo" ? "file-earmark" : "link-45deg")"></i>
+                                            </div>
+                                            <div class="flex-grow-1 me-3">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div>
+                                                        <h5 class="card-title mb-1">@recurso.Titulo</h5>
+                                                        <div class="d-flex align-items-center flex-wrap">
+                                                            <span class="badge @(recurso.Tipo == "Archivo" ? "bg-primary" : "bg-success") me-2">
+                                                                @recurso.Tipo
+                                                            </span>
+                                                            <small class="text-muted">
+                                                                <i class="bi bi-person me-1"></i>@recurso.Usuario.Nombre
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                    @if (puedeEliminar)
+                                                    {
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-sm btn-outline-secondary border-0" 
+                                                                    type="button" data-bs-toggle="dropdown">
+                                                                <i class="bi bi-three-dots"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <li>
+                                                                    <form asp-action="Delete" method="post" class="d-inline">
+                                                                        <input type="hidden" name="id" value="@recurso.Id" />
+                                                                        <button type="submit" class="dropdown-item text-danger" 
+                                                                                onclick="return confirm('¿Estás seguro de eliminar este recurso?')">
+                                                                            <i class="bi bi-trash me-2"></i>Eliminar
+                                                                        </button>
+                                                                    </form>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Descripción -->
+                                        @if (!string.IsNullOrEmpty(recurso.Descripcion))
+                                        {
+                                            <div class="recurso-descripcion mb-3">
+                                                <p class="text-muted mb-0">@recurso.Descripcion</p>
+                                            </div>
+                                        }
+
+                                        <!-- Metadatos y Acciones -->
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="recurso-metadata">
+                                                <small class="text-muted">
+                                                    <i class="bi bi-calendar me-1"></i>
+                                                    @recurso.FechaSubida.ToString("dd/MM/yyyy 'a las' HH:mm")
+                                                </small>
+                                            </div>
+                                            <div class="recurso-actions">
+                                                @if (recurso.Tipo == "Archivo")
+                                                {
+                                                    <a asp-action="Descargar" asp-route-id="@recurso.Id" 
+                                                       class="btn btn-sm btn-success" title="Descargar archivo">
+                                                        <i class="bi bi-download me-1"></i>Descargar
+                                                    </a>
+                                                }
+                                                else if (recurso.Tipo == "Enlace")
+                                                {
+                                                    <a href="@recurso.Url" target="_blank" 
+                                                       class="btn btn-sm btn-info" title="Abrir enlace externo">
+                                                        <i class="bi bi-box-arrow-up-right me-1"></i>Abrir Enlace
+                                                    </a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <!-- Estado Vacío -->
+                    <div class="card border-0 shadow-sm text-center py-5">
+                        <div class="card-body">
+                            <div class="empty-state-icon mb-4">
+                                <i class="bi bi-folder2-open text-muted" style="font-size: 4rem;"></i>
+                            </div>
+                            <h4 class="text-muted mb-3">No hay recursos compartidos</h4>
+                            <p class="text-muted mb-4">
+                                Esta clase aún no tiene recursos compartidos. Sé el primero en agregar material educativo.
+                            </p>
+                            <a asp-action="Create" asp-route-claseId="@ViewBag.Clase.Id" class="btn btn-primary">
+                                <i class="bi bi-plus-circle me-2"></i>Agregar Primer Recurso
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="sticky-top" style="top: 100px;">
+                <!-- Información de la Clase -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0">
+                            <i class="bi bi-info-circle text-primary me-2"></i>
+                            Información de la Clase
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <h6 class="text-primary mb-2">@ViewBag.Clase.Titulo</h6>
+                            <p class="text-muted small mb-0">Recursos educativos compartidos para esta clase.</p>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between align-items-center small text-muted mb-2">
+                            <span>Total de recursos:</span>
+                            <span class="fw-semibold">@totalRecursos</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center small text-muted mb-2">
+                            <span>Archivos:</span>
+                            <span class="fw-semibold text-primary">@recursosArchivos</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center small text-muted">
+                            <span>Enlaces:</span>
+                            <span class="fw-semibold text-success">@recursosEnlaces</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acciones Rápidas -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0">
+                            <i class="bi bi-lightning text-warning me-2"></i>
+                            Acciones Rápidas
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a asp-action="Create" asp-route-claseId="@ViewBag.Clase.Id" class="btn btn-outline-primary btn-sm text-start">
+                                <i class="bi bi-plus-circle me-2"></i>Agregar Nuevo Recurso
+                            </a>
+                            <a asp-controller="Clases" asp-action="Details" asp-route-id="@ViewBag.Clase.Id" class="btn btn-outline-secondary btn-sm text-start">
+                                <i class="bi bi-arrow-left me-2"></i>Volver a la Clase
+                            </a>
+                            <button class="btn btn-outline-info btn-sm text-start" id="refreshRecursos">
+                                <i class="bi bi-arrow-clockwise me-2"></i>Actualizar Lista
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tipos de Recursos -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0">
+                            <i class="bi bi-collection text-success me-2"></i>
+                            Tipos de Recursos
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="resource-types">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="type-indicator bg-primary rounded-circle me-2"></div>
+                                <div class="flex-grow-1">
+                                    <small class="text-muted d-block">Archivos</small>
+                                    <strong>Documentos, PDFs, Presentaciones</strong>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="type-indicator bg-success rounded-circle me-2"></div>
+                                <div class="flex-grow-1">
+                                    <small class="text-muted d-block">Enlaces</small>
+                                    <strong>Sitios web, Videos, Recursos online</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <link rel="stylesheet" href="~/css/views/Recursos.Index.css" asp-append-version="true" />
 
-<script src="~/js/views/Recursos.Index.js" asp-append-version="true"></script>
-
+@section Scripts {
+    <script src="~/js/views/Recursos.Index.js" asp-append-version="true"></script>
+}

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using StudyHub.Data;
 using StudyHub.Models;
 using StudyHub.Filters;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using StudyHub.Services;
 
 namespace StudyHub.Controllers
 {
@@ -11,15 +11,38 @@ namespace StudyHub.Controllers
     public class CursosController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly InvitacionServicio _invitaciones;
 
-        public CursosController(ApplicationDbContext context)
+        public CursosController(ApplicationDbContext context, InvitacionServicio invitaciones)
         {
             _context = context;
+            _invitaciones = invitaciones;
         }
 
         public async Task<IActionResult> Index()
         {
-            var cursos = await _context.Cursos.OrderBy(c => c.Nombre).ToListAsync();
+            var usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+            var usuarioRol = HttpContext.Session.GetString("UsuarioRol");
+
+            IQueryable<Curso> query = _context.Cursos
+                .Include(c => c.Profesor)
+                .Include(c => c.Clases)
+                    .ThenInclude(cl => cl.Sesiones)
+                .Include(c => c.UsuarioCursos);
+            if (usuarioRol == "Profesor")
+            {
+                query = query.Where(c => c.ProfesorId == usuarioId);
+            }
+            else
+            {
+                var cursoIds = await _context.UsuarioCursos
+                    .Where(uc => uc.UsuarioId == usuarioId && uc.Estado == "Aceptado")
+                    .Select(uc => uc.CursoId)
+                    .ToListAsync();
+                query = query.Where(c => cursoIds.Contains(c.Id));
+            }
+
+            var cursos = await query.OrderBy(c => c.Nombre).ToListAsync();
             return View(cursos);
         }
 
@@ -31,7 +54,11 @@ namespace StudyHub.Controllers
         [RolFilter("Profesor")]
         public async Task<IActionResult> Create(Curso curso)
         {
+            // Evitar validación del nav property no enlazado
+            ModelState.Remove(nameof(Curso.Profesor));
             if (!ModelState.IsValid) return View(curso);
+            var usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+            curso.ProfesorId = usuarioId!.Value;
             _context.Cursos.Add(curso);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -40,10 +67,41 @@ namespace StudyHub.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var curso = await _context.Cursos
+                .Include(c => c.Profesor)
+                .Include(c => c.UsuarioCursos)
                 .Include(c => c.Clases)
+                    .ThenInclude(cl => cl.Sesiones)
                 .FirstOrDefaultAsync(c => c.Id == id);
             if (curso == null) return NotFound();
             return View(curso);
+        }
+
+        // Calendario por curso
+        [AutorizacionFilter]
+        public async Task<IActionResult> Calendario(int id)
+        {
+            var usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+            var usuarioRol = HttpContext.Session.GetString("UsuarioRol");
+
+            var curso = await _context.Cursos.FirstOrDefaultAsync(c => c.Id == id);
+            if (curso == null) return NotFound();
+
+            // Seguridad: profesor propietario o estudiante inscrito en el curso
+            var autorizado = usuarioRol == "Profesor"
+                ? curso.ProfesorId == usuarioId
+                : await _context.UsuarioCursos.AnyAsync(uc => uc.CursoId == id && uc.UsuarioId == usuarioId && uc.Estado == "Aceptado");
+
+            if (!autorizado)
+                return RedirectToAction("AccesoDenegado", "Home");
+
+            var sesiones = await _context.Sesiones
+                .Include(s => s.Clase)
+                .Where(s => s.Clase.CursoId == id)
+                .OrderBy(s => s.FechaHora)
+                .ToListAsync();
+
+            ViewBag.Curso = curso;
+            return View(sesiones);
         }
 
         [RolFilter("Profesor")]
@@ -60,13 +118,16 @@ namespace StudyHub.Controllers
         public async Task<IActionResult> Edit(int id, Curso curso)
         {
             if (id != curso.Id) return NotFound();
+            ModelState.Remove(nameof(Curso.Profesor));
             if (!ModelState.IsValid) return View(curso);
+            var current = await _context.Cursos.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+            if (current == null) return NotFound();
+            curso.ProfesorId = current.ProfesorId;
             _context.Update(curso);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        // DELETE
         [RolFilter("Profesor")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -87,44 +148,91 @@ namespace StudyHub.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Gestión de alumnos por curso (agrega a una clase del curso)
+        // Explorar cursos disponibles (estudiante)
+        public async Task<IActionResult> Explorar()
+        {
+            var usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+            if (usuarioId == null) return RedirectToAction("Login", "Auth");
+            var cursos = await _invitaciones.ObtenerCursosDisponibles(usuarioId.Value);
+            return View(cursos);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SolicitarUnirse(int cursoId)
+        {
+            var usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+            if (usuarioId == null) return RedirectToAction("Login", "Auth");
+            var ok = await _invitaciones.SolicitarUnirseACurso(cursoId, usuarioId.Value);
+            TempData[ok ? "Success" : "Error"] = ok ? "Solicitud enviada." : "Ya existe una solicitud o pertenencia.";
+            return RedirectToAction(nameof(Explorar));
+        }
+
+        // Invitaciones del estudiante
+        public async Task<IActionResult> Invitaciones()
+        {
+            var usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+            if (usuarioId == null) return RedirectToAction("Login", "Auth");
+            var items = await _invitaciones.ObtenerInvitacionesPendientes(usuarioId.Value);
+            return View(items);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AceptarMiInvitacion(int usuarioCursoId)
+        {
+            var usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+            if (usuarioId == null) return RedirectToAction("Login", "Auth");
+            var ok = await _invitaciones.EstudianteAceptar(usuarioCursoId, usuarioId.Value);
+            TempData[ok ? "Success" : "Error"] = ok ? "Invitación aceptada." : "No se pudo aceptar la invitación.";
+            return RedirectToAction(nameof(Invitaciones));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RechazarMiInvitacion(int usuarioCursoId)
+        {
+            var usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+            if (usuarioId == null) return RedirectToAction("Login", "Auth");
+            var ok = await _invitaciones.EstudianteRechazar(usuarioCursoId, usuarioId.Value);
+            TempData[ok ? "Success" : "Error"] = ok ? "Invitación rechazada." : "No se pudo rechazar la invitación.";
+            return RedirectToAction(nameof(Invitaciones));
+        }
+
+        // Gestión de estudiantes por curso
         [RolFilter("Profesor")]
         public async Task<IActionResult> Alumnos(int id)
         {
             var curso = await _context.Cursos.Include(c => c.Clases).FirstOrDefaultAsync(c => c.Id == id);
             if (curso == null) return NotFound();
 
-            var claseIds = curso.Clases.Select(c => c.Id).ToList();
-            var alumnos = await _context.UsuarioClases
-                .Where(uc => claseIds.Contains(uc.ClaseId))
+            var alumnos = await _context.UsuarioCursos
+                .Where(uc => uc.CursoId == id)
                 .Include(uc => uc.Usuario)
-                .Include(uc => uc.Clase)
-                .OrderBy(uc => uc.Clase!.Titulo).ThenBy(uc => uc.Usuario!.Nombre)
+                .OrderBy(uc => uc.Usuario!.Nombre)
                 .ToListAsync();
 
             ViewBag.Curso = curso;
-            ViewBag.Clases = new SelectList(curso.Clases.OrderBy(c => c.Titulo), nameof(Clase.Id), nameof(Clase.Titulo));
             return View(alumnos);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RolFilter("Profesor")]
-        public async Task<IActionResult> InvitarAlumno(int cursoId, int claseId, string email, string rol = "Estudiante")
+        public async Task<IActionResult> InvitarAlumno(int cursoId, string email, string rol = "Estudiante")
         {
-            var curso = await _context.Cursos.Include(c => c.Clases).FirstOrDefaultAsync(c => c.Id == cursoId);
+            var curso = await _context.Cursos.FirstOrDefaultAsync(c => c.Id == cursoId);
             if (curso == null) return NotFound();
-            if (!curso.Clases.Any(c => c.Id == claseId)) { TempData["Error"] = "Clase inválida."; return RedirectToAction(nameof(Alumnos), new { id = cursoId }); }
 
             var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
             if (usuario == null) { TempData["Error"] = "Usuario no encontrado."; return RedirectToAction(nameof(Alumnos), new { id = cursoId }); }
 
-            var ya = await _context.UsuarioClases.AnyAsync(uc => uc.ClaseId == claseId && uc.UsuarioId == usuario.Id);
-            if (ya) { TempData["Error"] = "El usuario ya pertenece a la clase."; return RedirectToAction(nameof(Alumnos), new { id = cursoId }); }
+            var ya = await _context.UsuarioCursos.AnyAsync(uc => uc.CursoId == cursoId && uc.UsuarioId == usuario.Id);
+            if (ya) { TempData["Error"] = "El usuario ya pertenece al curso."; return RedirectToAction(nameof(Alumnos), new { id = cursoId }); }
 
-            _context.UsuarioClases.Add(new UsuarioClase
+            _context.UsuarioCursos.Add(new UsuarioCurso
             {
-                ClaseId = claseId,
+                CursoId = cursoId,
                 UsuarioId = usuario.Id,
                 Rol = string.IsNullOrWhiteSpace(rol) ? "Estudiante" : rol,
                 Estado = "Invitado",
@@ -138,25 +246,25 @@ namespace StudyHub.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RolFilter("Profesor")]
-        public async Task<IActionResult> Aceptar(int usuarioClaseId)
+        public async Task<IActionResult> Aceptar(int usuarioCursoId)
         {
-            var uc = await _context.UsuarioClases.Include(x => x.Clase).ThenInclude(c=>c.Curso).FirstOrDefaultAsync(x => x.Id == usuarioClaseId);
+            var uc = await _context.UsuarioCursos.Include(x => x.Curso).FirstOrDefaultAsync(x => x.Id == usuarioCursoId);
             if (uc == null) return NotFound();
             uc.Estado = "Aceptado";
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Alumnos), new { id = uc.Clase!.CursoId });
+            return RedirectToAction(nameof(Alumnos), new { id = uc.CursoId });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RolFilter("Profesor")]
-        public async Task<IActionResult> Rechazar(int usuarioClaseId)
+        public async Task<IActionResult> Rechazar(int usuarioCursoId)
         {
-            var uc = await _context.UsuarioClases.Include(x => x.Clase).ThenInclude(c=>c.Curso).FirstOrDefaultAsync(x => x.Id == usuarioClaseId);
+            var uc = await _context.UsuarioCursos.Include(x => x.Curso).FirstOrDefaultAsync(x => x.Id == usuarioCursoId);
             if (uc == null) return NotFound();
             uc.Estado = "Rechazado";
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Alumnos), new { id = uc.Clase!.CursoId });
+            return RedirectToAction(nameof(Alumnos), new { id = uc.CursoId });
         }
     }
 }

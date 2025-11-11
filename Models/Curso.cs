@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace StudyHub.Models
 {
@@ -19,7 +20,12 @@ namespace StudyHub.Models
 
         public bool Activo { get; set; } = true;
 
+        // Propietario del curso (Docente)
+        public int ProfesorId { get; set; }
+        [ValidateNever]
+        public virtual Usuario Profesor { get; set; } = null!;
+
         public virtual ICollection<Clase> Clases { get; set; } = new List<Clase>();
+        public virtual ICollection<UsuarioCurso> UsuarioCursos { get; set; } = new List<UsuarioCurso>();
     }
 }
-

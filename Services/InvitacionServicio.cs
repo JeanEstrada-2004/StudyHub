@@ -13,16 +13,16 @@ namespace StudyHub.Services
             _context = context;
         }
 
-        // Profesor invita a alumno a una clase
-        public async Task<bool> InvitarEstudiante(int claseId, string email, string rol = "Estudiante")
+        // Profesor invita a estudiante a un curso
+        public async Task<bool> InvitarEstudianteACurso(int cursoId, string email, string rol = "Estudiante")
         {
             var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
             if (usuario == null) return false;
-            var exists = await _context.UsuarioClases.AnyAsync(uc => uc.ClaseId == claseId && uc.UsuarioId == usuario.Id);
+            var exists = await _context.UsuarioCursos.AnyAsync(uc => uc.CursoId == cursoId && uc.UsuarioId == usuario.Id);
             if (exists) return false;
-            _context.UsuarioClases.Add(new UsuarioClase
+            _context.UsuarioCursos.Add(new UsuarioCurso
             {
-                ClaseId = claseId,
+                CursoId = cursoId,
                 UsuarioId = usuario.Id,
                 Rol = string.IsNullOrWhiteSpace(rol) ? "Estudiante" : rol,
                 Estado = "Invitado",
@@ -32,19 +32,19 @@ namespace StudyHub.Services
             return true;
         }
 
-        // Estudiante solicita unirse a una clase pública
-        public async Task<bool> SolicitarUnirse(int claseId, int usuarioId)
+        // Estudiante solicita unirse a un curso
+        public async Task<bool> SolicitarUnirseACurso(int cursoId, int usuarioId)
         {
-            var exists = await _context.UsuarioClases.FirstOrDefaultAsync(uc => uc.ClaseId == claseId && uc.UsuarioId == usuarioId);
+            var exists = await _context.UsuarioCursos.FirstOrDefaultAsync(uc => uc.CursoId == cursoId && uc.UsuarioId == usuarioId);
             if (exists != null)
             {
                 if (exists.Estado == "Rechazado") exists.Estado = "Solicitado"; else return false;
             }
             else
             {
-                _context.UsuarioClases.Add(new UsuarioClase
+                _context.UsuarioCursos.Add(new UsuarioCurso
                 {
-                    ClaseId = claseId,
+                    CursoId = cursoId,
                     UsuarioId = usuarioId,
                     Rol = "Estudiante",
                     Estado = "Solicitado",
@@ -56,18 +56,18 @@ namespace StudyHub.Services
         }
 
         // Profesor acepta/rechaza
-        public async Task<bool> AceptarInvitacion(int usuarioClaseId)
+        public async Task<bool> AceptarInvitacion(int usuarioCursoId)
         {
-            var uc = await _context.UsuarioClases.FindAsync(usuarioClaseId);
+            var uc = await _context.UsuarioCursos.FindAsync(usuarioCursoId);
             if (uc == null) return false;
             uc.Estado = "Aceptado";
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> RechazarInvitacion(int usuarioClaseId)
+        public async Task<bool> RechazarInvitacion(int usuarioCursoId)
         {
-            var uc = await _context.UsuarioClases.FindAsync(usuarioClaseId);
+            var uc = await _context.UsuarioCursos.FindAsync(usuarioCursoId);
             if (uc == null) return false;
             uc.Estado = "Rechazado";
             await _context.SaveChangesAsync();
@@ -75,46 +75,54 @@ namespace StudyHub.Services
         }
 
         // Estudiante acepta/rechaza su invitación
-        public async Task<bool> EstudianteAceptar(int usuarioClaseId, int usuarioId)
+        public async Task<bool> EstudianteAceptar(int usuarioCursoId, int usuarioId)
         {
-            var uc = await _context.UsuarioClases.FirstOrDefaultAsync(x => x.Id == usuarioClaseId && x.UsuarioId == usuarioId);
+            var uc = await _context.UsuarioCursos.FirstOrDefaultAsync(x => x.Id == usuarioCursoId && x.UsuarioId == usuarioId);
             if (uc == null || uc.Estado != "Invitado") return false;
             uc.Estado = "Aceptado";
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> EstudianteRechazar(int usuarioClaseId, int usuarioId)
+        public async Task<bool> EstudianteRechazar(int usuarioCursoId, int usuarioId)
         {
-            var uc = await _context.UsuarioClases.FirstOrDefaultAsync(x => x.Id == usuarioClaseId && x.UsuarioId == usuarioId);
+            var uc = await _context.UsuarioCursos.FirstOrDefaultAsync(x => x.Id == usuarioCursoId && x.UsuarioId == usuarioId);
             if (uc == null || uc.Estado != "Invitado") return false;
             uc.Estado = "Rechazado";
             await _context.SaveChangesAsync();
             return true;
         }
 
-        // Clases disponibles para estudiante (públicas, donde no está ya inscrito o pendiente)
-        public async Task<List<Clase>> ObtenerClasesDisponibles(int usuarioId)
+        // Cursos disponibles para estudiante
+        public async Task<List<Curso>> ObtenerCursosDisponibles(int usuarioId)
         {
-            var misClasesIds = await _context.UsuarioClases
+            var misCursosIds = await _context.UsuarioCursos
                 .Where(uc => uc.UsuarioId == usuarioId)
-                .Select(uc => uc.ClaseId)
+                .Select(uc => uc.CursoId)
                 .ToListAsync();
 
-            return await _context.Clases
-                .Where(c => c.EsPublica && !misClasesIds.Contains(c.Id))
-                .OrderByDescending(c => c.FechaCreacion)
+            return await _context.Cursos
+                .Where(c => c.Activo && !misCursosIds.Contains(c.Id))
+                .Include(c => c.Profesor)
+                .Include(c => c.UsuarioCursos)
+                .Include(c => c.Clases)!
+                    .ThenInclude(cl => cl.Sesiones)
+                .OrderBy(c => c.Nombre)
                 .ToListAsync();
         }
 
-        public async Task<List<UsuarioClase>> ObtenerInvitacionesPendientes(int usuarioId)
+        public async Task<List<UsuarioCurso>> ObtenerInvitacionesPendientes(int usuarioId)
         {
-            return await _context.UsuarioClases
-                .Include(uc => uc.Clase)
+            return await _context.UsuarioCursos
+                .Include(uc => uc.Curso)!
+                    .ThenInclude(c => c.Clases)
+                .Include(uc => uc.Curso)!
+                    .ThenInclude(c => c.UsuarioCursos)
+                .Include(uc => uc.Curso)!
+                    .ThenInclude(c => c.Profesor)
                 .Where(uc => uc.UsuarioId == usuarioId && uc.Estado == "Invitado")
                 .OrderByDescending(uc => uc.FechaUnion)
                 .ToListAsync();
         }
     }
 }
-

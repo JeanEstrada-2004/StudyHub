@@ -25,7 +25,7 @@ namespace StudyHub.Models
         public bool EsPublica { get; set; } = true;
 
         [Range(1, 100, ErrorMessage = "El número máximo de estudiantes debe estar entre 1 y 100")]
-        public int MaxEstudiantes { get; set; } = 20;
+        public int? MaxEstudiantes { get; set; } = 20;
 
         // Claves foráneas
         public int ProfesorId { get; set; }
@@ -34,9 +34,6 @@ namespace StudyHub.Models
         public virtual Usuario Profesor { get; set; } = null!;
 
         // Navegación
-        [ValidateNever]
-        public virtual ICollection<UsuarioClase> UsuarioClases { get; set; } = new List<UsuarioClase>();
-        
         [ValidateNever]
         public virtual ICollection<Sesion> Sesiones { get; set; } = new List<Sesion>();
         
@@ -47,4 +44,3 @@ namespace StudyHub.Models
         public virtual ICollection<Mensaje> Mensajes { get; set; } = new List<Mensaje>();
     }
 }
-

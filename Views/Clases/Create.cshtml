@@ -1,89 +1,230 @@
 ﻿@model StudyHub.Models.Clase
 @{
-    ViewData["Title"] = "Nueva Clase";
+    ViewData["Title"] = "Nueva Clase - StudyHub";
 }
 
-<div class="container">
-    <h1>Nueva Clase</h1>
+<div class="create-class-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="create-class-card">
+                    <!-- Header -->
+                    <div class="create-class-header">
+                        <div class="header-icon">
+                            <i class="bi bi-plus-circle"></i>
+                        </div>
+                        <div class="header-content">
+                            <h1 class="create-class-title">Crear Nueva Clase</h1>
+                            <p class="create-class-subtitle">Agrega una nueva clase a tu curso en StudyHub</p>
+                        </div>
+                    </div>
 
-    <!-- Mostrar errores de validación -->
-    @if (!ViewData.ModelState.IsValid)
-    {
-        <div class="alert alert-danger">
-            <h5>Errores de validación:</h5>
-            <ul>
-                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    <li>@error.ErrorMessage</li>
-                }
-            </ul>
-        </div>
-    }
+                    <!-- Alertas -->
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <strong>Errores de validación:</strong>
+                            <ul class="mb-0 mt-2">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
 
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="bi bi-exclamation-triangle-fill"></i> @TempData["Error"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i> 
+                            @TempData["Error"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
 
-    <form asp-action="Create" method="post">
-        @Html.AntiForgeryToken()
-        
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label asp-for="Titulo" class="form-label">Título de la Clase *</label>
-                    <input asp-for="Titulo" class="form-control" required />
-                    <span asp-validation-for="Titulo" class="text-danger"></span>
-                </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Curso *</label>
-                    <select asp-for="CursoId" class="form-select" asp-items="ViewBag.Cursos"></select>
-                    <span asp-validation-for="CursoId" class="text-danger"></span>
-                </div>
-                
-                <div class="mb-3">
-                    <label asp-for="MaxEstudiantes" class="form-label">Máximo de Estudiantes</label>
-                    <input asp-for="MaxEstudiantes" type="number" class="form-control" min="1" max="100" value="20" />
-                    <span asp-validation-for="MaxEstudiantes" class="text-danger"></span>
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="bi bi-check-circle-fill me-2"></i> 
+                            @TempData["Success"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <!-- Formulario -->
+                    <form asp-action="Create" method="post" class="create-class-form" id="createClassForm">
+                        @Html.AntiForgeryToken()
+                        
+                        <div class="row">
+                            <!-- Columna Izquierda -->
+                            <div class="col-md-6">
+                                <!-- Información Básica -->
+                                <div class="form-section">
+                                    <h3 class="section-title">
+                                        <i class="bi bi-info-circle me-2"></i>Información Básica
+                                    </h3>
+                                    
+                                    <div class="form-group">
+                                        <label asp-for="Titulo" class="form-label">Título de la Clase *</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-journal-text"></i>
+                                            </span>
+                                            <input asp-for="Titulo" class="form-control" 
+                                                   placeholder="Ej: Introducción a la Programación" required />
+                                        </div>
+                                        <span asp-validation-for="Titulo" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">Curso *</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-journal-bookmark"></i>
+                                            </span>
+                                            <select asp-for="CursoId" class="form-select" asp-items="ViewBag.Cursos">
+                                                <option value="">Selecciona un curso</option>
+                                            </select>
+                                        </div>
+                                        <span asp-validation-for="CursoId" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label asp-for="MaxEstudiantes" class="form-label">Límite de Estudiantes</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-people"></i>
+                                            </span>
+                                            <input asp-for="MaxEstudiantes" type="number" class="form-control" 
+                                                   min="1" max="100" value="20" />
+                                            <span class="input-group-text">estudiantes</span>
+                                        </div>
+                                        <small class="form-text text-muted">Dejar en blanco para límite ilimitado</small>
+                                        <span asp-validation-for="MaxEstudiantes" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Columna Derecha -->
+                            <div class="col-md-6">
+                                <!-- Configuración Adicional -->
+                                <div class="form-section">
+                                    <h3 class="section-title">
+                                        <i class="bi bi-gear me-2"></i>Configuración
+                                    </h3>
+
+                                    <div class="form-group">
+                                        <label asp-for="Descripcion" class="form-label">Descripción</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-text-paragraph"></i>
+                                            </span>
+                                            <textarea asp-for="Descripcion" class="form-control" 
+                                                      rows="4" placeholder="Describe los objetivos y contenido de esta clase..."></textarea>
+                                        </div>
+                                        <span asp-validation-for="Descripcion" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="form-check form-switch setting-option">
+                                            <input asp-for="EsPublica" class="form-check-input" type="checkbox" checked id="esPublica" />
+                                            <label class="form-check-label" for="esPublica">
+                                                <div class="setting-content">
+                                                    <strong>Clase Pública</strong>
+                                                    <small>Los estudiantes pueden unirse sin aprobación del profesor</small>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <small class="form-text text-muted d-block mt-1">
+                                            <i class="bi bi-info-circle me-1"></i>
+                                            Las clases públicas son visibles para todos los estudiantes del curso
+                                        </small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="form-check form-switch setting-option">
+                                            <input class="form-check-input" type="checkbox" id="agregarRecordatorio" />
+                                            <label class="form-check-label" for="agregarRecordatorio">
+                                                <div class="setting-content">
+                                                    <strong>Agregar al Calendario</strong>
+                                                    <small>Crear evento en el calendario del curso</small>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sección de Fecha y Hora (Opcional) -->
+                                <div class="form-section mt-4">
+                                    <h3 class="section-title">
+                                        <i class="bi bi-calendar-event me-2"></i>Fecha y Hora
+                                    </h3>
+                                    
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label class="form-label">Fecha</label>
+                                                <input type="date" class="form-control" id="fechaClase" />
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label class="form-label">Hora</label>
+                                                <input type="time" class="form-control" id="horaClase" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        Opcional: Puedes programar la clase para una fecha y hora específicas
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="form-actions mt-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a asp-action="Index" class="btn btn-outline-secondary btn-back">
+                                    <i class="bi bi-arrow-left me-2"></i>Volver a Mis Clases
+                                </a>
+                                
+                                <button type="submit" class="btn btn-primary btn-create" id="createButton">
+                                    <span class="btn-text">
+                                        <i class="bi bi-plus-circle me-2"></i>Crear Clase
+                                    </span>
+                                    <div class="btn-loading d-none">
+                                        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                        Creando clase...
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-            
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label asp-for="Descripcion" class="form-label">Descripción</label>
-                    <textarea asp-for="Descripcion" class="form-control" rows="4"></textarea>
-                    <span asp-validation-for="Descripcion" class="text-danger"></span>
-                </div>
-                
-                <div class="mb-3 form-check form-switch">
-                    <input asp-for="EsPublica" class="form-check-input" type="checkbox" checked />
-                    <label asp-for="EsPublica" class="form-check-label">Clase Pública</label>
-                    <small class="form-text text-muted d-block">Los estudiantes podrán unirse sin aprobación</small>
-                </div>
-            </div>
         </div>
-
-        <div class="mt-4">
-            <button type="submit" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Crear Clase
-            </button>
-            <a asp-action="Index" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Volver a Mis Clases
-            </a>
-        </div>
-    </form>
+    </div>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
-<script src="~/js/views/Clases.Create.js" asp-append-version="true"></script>
-
+<!-- Toast para mensajes -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="createClassToast" class="toast" role="alert">
+        <div class="toast-header">
+            <i class="bi bi-info-circle text-primary me-2"></i>
+            <strong class="me-auto">StudyHub</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body" id="toastMessage">
+            <!-- Mensaje dinámico -->
+        </div>
+    </div>
+</div>
 
 <link rel="stylesheet" href="~/css/views/Clases.Create.css" asp-append-version="true" />
 
-<script src="~/js/views/Clases.Create.js" asp-append-version="true"></script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/views/Clases.Create.js" asp-append-version="true"></script>
+}

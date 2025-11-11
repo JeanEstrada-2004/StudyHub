@@ -1,57 +1,128 @@
-﻿@model StudyHub.Models.Sesion
+﻿<!-- EditarSesion.cshtml -->
+@model StudyHub.Models.Sesion
 @{
-    ViewData["Title"] = "Editar SesiÃ³n";
+    ViewData["Title"] = "Editar Sesión";
 }
 
-<div asp-validation-summary="All" class="text-danger"></div>\n<h1>@ViewData["Title"]</h1>
+<div class="container-fluid">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Cursos")">Cursos</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Details", "Cursos", new { id = ViewBag.CursoId })">@ViewBag.CursoNombre</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Details", "Clases", new { id = Model.ClaseId })">Clase</a></li>
+            <li class="breadcrumb-item active">Editar Sesión</li>
+        </ol>
+    </nav>
 
-<form asp-action="Edit">
-    <input type="hidden" asp-for="Id" />
-    <div class="form-group">
-        <label asp-for="Titulo" class="control-label"></label>
-        <input asp-for="Titulo" class="form-control" />
-        <span asp-validation-for="Titulo" class="text-danger"></span>
+    <!-- Header de página -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">@ViewData["Title"]</h1>
+            <p class="text-muted mb-0">Actualiza los detalles de la sesión para la clase</p>
+        </div>
+        <a href="@Url.Action("Calendario")" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Volver al Calendario
+        </a>
     </div>
-    <div class="form-group">
-        <label asp-for="Descripcion" class="control-label"></label>
-        <textarea asp-for="Descripcion" class="form-control"></textarea>
-        <span asp-validation-for="Descripcion" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="FechaHora" class="control-label"></label>
-        <input asp-for="FechaHora" type="datetime-local" class="form-control" />
-        <span asp-validation-for="FechaHora" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="DuracionMinutos" class="control-label"></label>
-        <input asp-for="DuracionMinutos" class="form-control" />
-        <span asp-validation-for="DuracionMinutos" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Ubicacion" class="control-label"></label>
-        <input asp-for="Ubicacion" class="form-control" placeholder="Presencial o virtual" />
-        <span asp-validation-for="Ubicacion" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="EnlaceReunion" class="control-label"></label>
-        <input asp-for="EnlaceReunion" class="form-control" placeholder="https://meet.google.com/..." />
-        <span asp-validation-for="EnlaceReunion" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ClaseId" class="control-label">Clase</label>
-        <select asp-for="ClaseId" class="form-control" asp-items="ViewBag.Clases"></select>
-        <span asp-validation-for="ClaseId" class="text-danger"></span>
-    </div>
-    <div class="form-group mt-3">
-        <input type="submit" value="Guardar" class="btn btn-primary" />
-        <a asp-action="Calendario" class="btn btn-secondary">Cancelar</a>
-    </div>
-</form>
-<script src="~/js/views/Sesiones.Edit.js" asp-append-version="true"></script>
 
+    <!-- Formulario principal -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-calendar-event me-2"></i>Información de la Sesión
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <!-- Mensajes de validación -->
+                    <div asp-validation-summary="All" class="alert alert-danger d-none" id="validation-summary"></div>
+
+                    <form asp-action="Edit" id="sesion-form">
+                        <input type="hidden" asp-for="Id" />
+                        
+                        <div class="row">
+                            <!-- Columna izquierda -->
+                            <div class="col-md-6">
+                                <!-- Título -->
+                                <div class="mb-3">
+                                    <label asp-for="Titulo" class="form-label fw-semibold">Título de la Sesión</label>
+                                    <input asp-for="Titulo" class="form-control" placeholder="Ingresa el título de la sesión" />
+                                    <div class="form-text">Ej: Introducción a la programación, Repaso de matemáticas, etc.</div>
+                                    <span asp-validation-for="Titulo" class="text-danger validation-message"></span>
+                                </div>
+
+                                <!-- Fecha y Hora -->
+                                <div class="mb-3">
+                                    <label asp-for="FechaHora" class="form-label fw-semibold">Fecha y Hora</label>
+                                    <input asp-for="FechaHora" type="datetime-local" class="form-control" />
+                                    <span asp-validation-for="FechaHora" class="text-danger validation-message"></span>
+                                </div>
+
+                                <!-- Duración -->
+                                <div class="mb-3">
+                                    <label asp-for="DuracionMinutos" class="form-label fw-semibold">Duración (minutos)</label>
+                                    <input asp-for="DuracionMinutos" class="form-control" placeholder="60" />
+                                    <div class="form-text">Duración estimada de la sesión en minutos</div>
+                                    <span asp-validation-for="DuracionMinutos" class="text-danger validation-message"></span>
+                                </div>
+                            </div>
+
+                            <!-- Columna derecha -->
+                            <div class="col-md-6">
+                                <!-- Descripción -->
+                                <div class="mb-3">
+                                    <label asp-for="Descripcion" class="form-label fw-semibold">Descripción</label>
+                                    <textarea asp-for="Descripcion" class="form-control" rows="3" placeholder="Describe los objetivos y contenido de esta sesión..."></textarea>
+                                    <span asp-validation-for="Descripcion" class="text-danger validation-message"></span>
+                                </div>
+
+                                <!-- Ubicación -->
+                                <div class="mb-3">
+                                    <label asp-for="Ubicacion" class="form-label fw-semibold">Ubicación</label>
+                                    <input asp-for="Ubicacion" class="form-control" placeholder="Aula 101, Virtual, Laboratorio, etc." />
+                                    <div class="form-text">Especifica si es presencial o virtual</div>
+                                    <span asp-validation-for="Ubicacion" class="text-danger validation-message"></span>
+                                </div>
+
+                                <!-- Enlace Reunión -->
+                                <div class="mb-3">
+                                    <label asp-for="EnlaceReunion" class="form-label fw-semibold">Enlace de Reunión</label>
+                                    <input asp-for="EnlaceReunion" class="form-control" placeholder="https://meet.google.com/..." />
+                                    <div class="form-text">Solo para sesiones virtuales</div>
+                                    <span asp-validation-for="EnlaceReunion" class="text-danger validation-message"></span>
+                                </div>
+
+                                <!-- Clase -->
+                                <div class="mb-3">
+                                    <label asp-for="ClaseId" class="form-label fw-semibold">Clase Asociada</label>
+                                    <select asp-for="ClaseId" class="form-select" asp-items="ViewBag.Clases">
+                                        <option value="">Selecciona una clase</option>
+                                    </select>
+                                    <span asp-validation-for="ClaseId" class="text-danger validation-message"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones de acción -->
+                        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                            <a href="@Url.Action("Calendario")" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle me-2"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary" id="btn-guardar">
+                                <i class="bi bi-check-circle me-2"></i>Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <link rel="stylesheet" href="~/css/views/Sesiones.Edit.css" asp-append-version="true" />
 
-<script src="~/js/views/Sesiones.Edit.js" asp-append-version="true"></script>
-
-
+@section Scripts {
+    <script src="~/js/views/Sesiones.Edit.js" asp-append-version="true"></script>
+}

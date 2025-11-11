@@ -1,1 +1,257 @@
 /* View-specific styles for Home/Privacy */
+/* Estilos específicos para la Política de Privacidad de StudyHub */
+
+/* Variables de colores StudyHub */
+:root {
+    --studyhub-primary: #0d6efd;
+    --studyhub-primary-light: #e8f1ff;
+    --studyhub-success: #198754;
+    --studyhub-success-light: #e8f5ee;
+    --studyhub-info: #0dcaf0;
+    --studyhub-info-light: #e8f9fd;
+    --studyhub-warning: #ffc107;
+    --studyhub-warning-light: #fff9e6;
+    --studyhub-danger: #dc3545;
+    --studyhub-danger-light: #fde8ea;
+    --studyhub-border-radius: 8px;
+    --studyhub-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    --studyhub-transition: all 0.3s ease;
+}
+
+/* Icono principal */
+.privacy-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--studyhub-primary), #0b5ed7);
+    font-size: 1.75rem;
+}
+
+/* Iconos de sección */
+.section-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+/* Cards y contenedores */
+.card {
+    border-radius: var(--studyhub-border-radius);
+    transition: var(--studyhub-transition);
+}
+
+.card:hover {
+    box-shadow: var(--studyhub-shadow) !important;
+}
+
+/* List groups personalizados */
+.list-group-item {
+    padding: 1rem 1.25rem;
+    border-color: #f1f3f4;
+    transition: var(--studyhub-transition);
+}
+
+.list-group-item:hover {
+    background-color: var(--studyhub-primary-light);
+    border-color: var(--studyhub-primary);
+    transform: translateX(5px);
+}
+
+.list-group-item.active {
+    background-color: var(--studyhub-primary);
+    border-color: var(--studyhub-primary);
+}
+
+/* Tablas */
+.table {
+    border-radius: var(--studyhub-border-radius);
+    overflow: hidden;
+}
+
+.table th {
+    background-color: var(--studyhub-primary-light);
+    border-color: #dee2e6;
+    font-weight: 600;
+    color: var(--studyhub-primary);
+}
+
+/* Alertas personalizadas */
+.alert-light {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+}
+
+/* Efectos hover para elementos interactivos */
+.btn {
+    border-radius: 6px;
+    transition: var(--studyhub-transition);
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+/* Navegación sticky */
+.sticky-top {
+    z-index: 1020;
+}
+
+/* Mejoras de tipografía */
+h1, h2, h3, h4, h5, h6 {
+    color: #2c3e50;
+}
+
+.text-muted {
+    color: #6c757d !important;
+    line-height: 1.6;
+}
+
+/* Breadcrumb personalizado */
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+}
+
+.breadcrumb-item a {
+    color: var(--studyhub-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.breadcrumb-item a:hover {
+    color: #0b5ed7;
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .privacy-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .section-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .card-body {
+        padding: 1.5rem !important;
+    }
+    
+    .sticky-top {
+        position: relative !important;
+        top: 0 !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .d-flex.align-items-start {
+        flex-direction: column;
+    }
+    
+    .section-icon {
+        margin-bottom: 1rem;
+        margin-right: 0 !important;
+    }
+    
+    h1.h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Animaciones suaves */
+.fade-in {
+    animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Scroll suave para anclas */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Estados de focus para accesibilidad */
+.list-group-item:focus,
+.btn:focus {
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+    outline: none;
+}
+
+/* Mejoras para listas */
+ul {
+    padding-left: 1.5rem;
+}
+
+ul li {
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+/* Custom scrollbar para navegación */
+.list-group-flush {
+    scrollbar-width: thin;
+    scrollbar-color: #dee2e6 transparent;
+}
+
+.list-group-flush::-webkit-scrollbar {
+    width: 4px;
+}
+
+.list-group-flush::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.list-group-flush::-webkit-scrollbar-thumb {
+    background-color: #dee2e6;
+    border-radius: 2px;
+}
+
+/* Efectos de hover para cards internas */
+.card.bg-light:hover {
+    background-color: white !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Transiciones globales */
+.transition-all {
+    transition: var(--studyhub-transition);
+}
+
+/* Estados de carga (si se necesitan) */
+.loading-state {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Mejoras de accesibilidad para reducir movimiento */
+@media (prefers-reduced-motion: reduce) {
+    .card,
+    .list-group-item,
+    .btn {
+        transition: none;
+    }
+    
+    html {
+        scroll-behavior: auto;
+    }
+}

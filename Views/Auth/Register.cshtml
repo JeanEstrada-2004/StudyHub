@@ -1,65 +1,209 @@
 ﻿@model StudyHub.Models.Usuario
 @{
-    ViewData["Title"] = "Registro";
+    ViewData["Title"] = "Registro - StudyHub";
 }
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h1 class="text-center">Registro</h1>
-
-            @if (ViewBag.Error != null)
-            {
-                <div class="alert alert-danger">@ViewBag.Error</div>
-            }
-
-            <form asp-action="Register" method="post">
-                <div class="form-group mb-3">
-                    <label asp-for="Nombre" class="control-label">Nombre Completo</label>
-                    <input asp-for="Nombre" class="form-control" required />
-                    <span asp-validation-for="Nombre" class="text-danger"></span>
+<div class="register-container">
+    <div class="row justify-content-center align-items-center min-vh-80">
+        <div class="col-md-6 col-lg-5">
+            <div class="register-card">
+                <div class="register-header">
+                    <div class="register-icon">
+                        <i class="bi bi-person-plus"></i>
+                    </div>
+                    <h1 class="register-title">Crear Cuenta</h1>
+                    <p class="register-subtitle">Únete a la comunidad educativa de StudyHub</p>
                 </div>
 
-                <div class="form-group mb-3">
-                    <label asp-for="Email" class="control-label">Email</label>
-                    <input asp-for="Email" type="email" class="form-control" required />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        @ViewBag.Error
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
 
-                <div class="form-group mb-3">
-                    <label for="password" class="control-label">ContraseÃ±a</label>
-                    <input type="password" name="password" class="form-control" required minlength="6" />
-                </div>
+                <form asp-action="Register" method="post" class="register-form" id="registerForm">
+                    <div class="form-group">
+                        <label asp-for="Nombre" class="form-label">Nombre Completo</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-person"></i>
+                            </span>
+                            <input asp-for="Nombre" class="form-control" 
+                                   placeholder="Ingresa tu nombre completo" required />
+                        </div>
+                        <span asp-validation-for="Nombre" class="text-danger small"></span>
+                    </div>
 
-                <div class="form-group mb-3">
-                    <label asp-for="Rol" class="control-label">Rol</label>
-                    <select asp-for="Rol" class="form-control">
-                        <option value="Estudiante">Estudiante</option>
-                        <option value="Profesor">Profesor</option>
-                    </select>
-                    <span asp-validation-for="Rol" class="text-danger"></span>
-                </div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="form-label">Correo Electrónico</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-envelope"></i>
+                            </span>
+                            <input asp-for="Email" type="email" class="form-control" 
+                                   placeholder="tu@email.com" required />
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
 
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary w-100">Registrarse</button>
-                </div>
-            </form>
+                    <div class="form-group">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-lock"></i>
+                            </span>
+                            <input type="password" name="password" id="password" class="form-control" 
+                                   placeholder="Crea una contraseña segura" required minlength="6" />
+                            <button type="button" class="input-group-text toggle-password">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength mt-2">
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar" id="passwordStrength" role="progressbar"></div>
+                            </div>
+                            <small class="text-muted" id="passwordFeedback">La contraseña debe tener al menos 6 caracteres</small>
+                        </div>
+                    </div>
 
-            <div class="text-center mt-3">
-                <a asp-action="Login">Â¿Ya tienes cuenta? Inicia sesiÃ³n</a>
+                    <div class="form-group">
+                        <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-lock-fill"></i>
+                            </span>
+                            <input type="password" id="confirmPassword" class="form-control" 
+                                   placeholder="Repite tu contraseña" />
+                        </div>
+                        <small class="text-danger small" id="confirmPasswordError"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Rol" class="form-label">¿Cuál será tu rol?</label>
+                        <div class="role-selection">
+                            <div class="form-check form-check-inline role-option">
+                                <input class="form-check-input" type="radio" asp-for="Rol" value="Estudiante" id="rolEstudiante" checked>
+                                <label class="form-check-label role-card" for="rolEstudiante">
+                                    <div class="role-icon">
+                                        <i class="bi bi-mortarboard"></i>
+                                    </div>
+                                    <div class="role-info">
+                                        <strong>Estudiante</strong>
+                                        <small>Accede a clases y recursos</small>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline role-option">
+                                <input class="form-check-input" type="radio" asp-for="Rol" value="Profesor" id="rolProfesor">
+                                <label class="form-check-label role-card" for="rolProfesor">
+                                    <div class="role-icon">
+                                        <i class="bi bi-person-badge"></i>
+                                    </div>
+                                    <div class="role-info">
+                                        <strong>Profesor</strong>
+                                        <small>Crea y gestiona clases</small>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <span asp-validation-for="Rol" class="text-danger small"></span>
+                    </div>
+
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="termsAgreement" required>
+                        <label class="form-check-label" for="termsAgreement">
+                            Acepto los <a href="#" class="text-decoration-none">términos de servicio</a> y la <a href="#" class="text-decoration-none">política de privacidad</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 register-btn" id="registerButton">
+                        <span class="btn-text">Crear Cuenta</span>
+                        <div class="btn-loading d-none">
+                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                            Creando cuenta...
+                        </div>
+                    </button>
+                </form>
+
+                <div class="register-footer">
+                    <p class="text-center mb-3">¿Ya tienes una cuenta?</p>
+                    <a asp-controller="Auth" asp-action="Login" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+                    </a>
+                    <div class="text-center mt-3">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-link">
+                            <i class="bi bi-arrow-left me-1"></i>Volver al inicio
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-5 d-none d-md-block">
+            <div class="register-hero">
+                <div class="hero-content">
+                    <div class="hero-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <h2>Comienza tu Viaje Educativo</h2>
+                    <p class="hero-text">
+                        Únete a miles de educadores y estudiantes que están transformando 
+                        la manera de enseñar y aprender.
+                    </p>
+                    <div class="hero-features">
+                        <div class="feature-item">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span>Acceso a recursos educativos exclusivos</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span>Comunidad de aprendizaje colaborativo</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span>Herramientas de gestión educativa</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span>Soporte técnico dedicado</span>
+                        </div>
+                    </div>
+                    <div class="hero-stats mt-4">
+                        <div class="stat-item">
+                            <div class="stat-number">2,000+</div>
+                            <div class="stat-label">Usuarios Activos</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">500+</div>
+                            <div class="stat-label">Clases Creadas</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
-<div class='mt-3'><a asp-controller='Auth' asp-action='Login' class='btn btn-link'>Ya tengo cuenta</a> | <a asp-controller='Home' asp-action='Index' class='btn btn-link'>Volver al inicio</a></div>
-<script src="~/js/views/Auth.Register.js" asp-append-version="true"></script>
-
+<!-- Toast para mensajes -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="registerToast" class="toast" role="alert">
+        <div class="toast-header">
+            <i class="bi bi-info-circle text-primary me-2"></i>
+            <strong class="me-auto">StudyHub</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body" id="toastMessage">
+            <!-- Mensaje dinámico -->
+        </div>
+    </div>
+</div>
 
 <link rel="stylesheet" href="~/css/views/Auth.Register.css" asp-append-version="true" />
 
-<script src="~/js/views/Auth.Register.js" asp-append-version="true"></script>
-
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/views/Auth.Register.js" asp-append-version="true"></script>
+}

@@ -26,11 +26,22 @@ document.addEventListener('DOMContentLoaded', function() {
     forms.forEach(form => {
         form.addEventListener('submit', function() {
             const submitBtn = this.querySelector('button[type="submit"], input[type="submit"]');
-            if (submitBtn) {
+            if (!submitBtn) return;
+
+            // If button has custom loading UI (.btn-text/.btn-loading), do not replace its HTML
+            const hasCustomLoading = submitBtn.tagName === 'BUTTON' &&
+                submitBtn.querySelector('.btn-text') && submitBtn.querySelector('.btn-loading');
+
+            if (hasCustomLoading) {
+                // Only disable to avoid double submit; view-specific script handles UI
                 submitBtn.disabled = true;
-                if (submitBtn.tagName === 'BUTTON') {
-                    submitBtn.innerHTML = '<span class="loading-spinner"></span> Procesando...';
-                }
+                return;
+            }
+
+            // Generic fallback for other forms
+            submitBtn.disabled = true;
+            if (submitBtn.tagName === 'BUTTON') {
+                submitBtn.innerHTML = '<span class="loading-spinner"></span> Procesando...';
             }
         });
     });

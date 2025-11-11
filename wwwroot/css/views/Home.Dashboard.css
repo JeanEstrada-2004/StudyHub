@@ -1,1 +1,245 @@
 /* View-specific styles for Home/Dashboard */
+/* Estilos específicos para el Dashboard de StudyHub */
+
+/* Variables de colores StudyHub */
+:root {
+    --studyhub-primary: #0d6efd;
+    --studyhub-primary-light: #e8f1ff;
+    --studyhub-success: #198754;
+    --studyhub-success-light: #e8f5ee;
+    --studyhub-info: #0dcaf0;
+    --studyhub-info-light: #e8f9fd;
+    --studyhub-warning: #ffc107;
+    --studyhub-warning-light: #fff9e6;
+    --studyhub-border-radius: 8px;
+    --studyhub-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    --studyhub-transition: all 0.3s ease;
+}
+
+/* Avatar del dashboard */
+.dashboard-avatar {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--studyhub-primary), #0b5ed7);
+}
+
+/* Tarjetas de resumen */
+.summary-card {
+    border-radius: var(--studyhub-border-radius);
+    transition: var(--studyhub-transition);
+    overflow: hidden;
+}
+
+.summary-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--studyhub-shadow) !important;
+}
+
+.summary-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.summary-cursos {
+    border-left: 4px solid var(--studyhub-primary);
+}
+
+.summary-sesiones {
+    border-left: 4px solid var(--studyhub-success);
+}
+
+.summary-actividad {
+    border-left: 4px solid var(--studyhub-info);
+}
+
+.summary-perfil {
+    border-left: 4px solid var(--studyhub-warning);
+}
+
+/* Accesos rápidos */
+.quick-access-card .card {
+    border-radius: var(--studyhub-border-radius);
+    transition: var(--studyhub-transition);
+    border: 1px solid #f1f3f4;
+}
+
+.quick-access-card:hover .card {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(13, 110, 253, 0.15);
+    border-color: var(--studyhub-primary);
+}
+
+.quick-access-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: var(--studyhub-transition);
+}
+
+.quick-access-card:hover .quick-access-icon {
+    transform: scale(1.1);
+}
+
+/* Elementos de listas */
+.curso-avatar {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.bg-light-primary {
+    background-color: var(--studyhub-primary-light) !important;
+}
+
+.sesion-indicator {
+    width: 8px;
+    height: 8px;
+    margin-top: 8px;
+}
+
+/* Estados vacíos */
+.empty-state-icon {
+    opacity: 0.6;
+}
+
+/* Transiciones globales */
+.transition-all {
+    transition: var(--studyhub-transition);
+}
+
+/* Efectos hover para botones */
+.btn {
+    border-radius: 6px;
+    transition: var(--studyhub-transition);
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    background-color: var(--studyhub-primary);
+    border-color: var(--studyhub-primary);
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
+
+/* Breadcrumb personalizado */
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+}
+
+.breadcrumb-item.active {
+    color: #6c757d;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-avatar {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .summary-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .quick-access-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .quick-access-card .card-body {
+        padding: 1rem 0.5rem;
+    }
+    
+    h1.h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Estados de carga */
+.loading-state {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.loading-state::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    .summary-card,
+    .quick-access-card .card,
+    .btn {
+        transition: none;
+    }
+}
+
+/* Estados focus para mejor accesibilidad */
+.btn:focus,
+.quick-access-card:focus {
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+    outline: none;
+}
+
+/* Scroll suave para listas largas */
+.card-body {
+    scrollbar-width: thin;
+    scrollbar-color: #dee2e6 transparent;
+}
+
+.card-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.card-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.card-body::-webkit-scrollbar-thumb {
+    background-color: #dee2e6;
+    border-radius: 3px;
+}

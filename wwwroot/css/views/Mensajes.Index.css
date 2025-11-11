@@ -1,1 +1,342 @@
 /* View-specific styles for Mensajes/Index */
+/* Estilos específicos para el Foro de Mensajes - StudyHub */
+
+/* Variables de colores StudyHub */
+:root {
+    --studyhub-primary: #0d6efd;
+    --studyhub-primary-light: #e8f1ff;
+    --studyhub-success: #198754;
+    --studyhub-success-light: #e8f5ee;
+    --studyhub-warning: #ffc107;
+    --studyhub-warning-light: #fff9e6;
+    --studyhub-danger: #dc3545;
+    --studyhub-danger-light: #fde8ea;
+    --studyhub-border-radius: 8px;
+    --studyhub-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    --studyhub-transition: all 0.3s ease;
+}
+
+/* Icono principal del foro */
+.foro-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--studyhub-primary), #0b5ed7);
+    font-size: 1.5rem;
+}
+
+/* Avatar de mensaje */
+.mensaje-avatar {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    background: linear-gradient(135deg, var(--studyhub-primary), #0b5ed7) !important;
+}
+
+/* Cards de mensaje */
+.mensaje-card {
+    border-radius: var(--studyhub-border-radius);
+    border-left: 4px solid transparent;
+    transition: var(--studyhub-transition);
+}
+
+.mensaje-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--studyhub-shadow) !important;
+    border-left-color: var(--studyhub-primary);
+}
+
+/* Estados de mensaje propios */
+.mensaje-card[data-es-propio="true"] {
+    border-left-color: var(--studyhub-primary);
+    background-color: var(--studyhub-primary-light);
+}
+
+/* Contenido del mensaje */
+.mensaje-contenido {
+    line-height: 1.6;
+    word-wrap: break-word;
+}
+
+.mensaje-contenido p:last-child {
+    margin-bottom: 0;
+}
+
+/* Acciones de mensaje */
+.mensaje-acciones .btn {
+    border-radius: 6px;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    transition: var(--studyhub-transition);
+}
+
+.mensaje-acciones .btn:hover {
+    transform: translateY(-1px);
+}
+
+.like-btn.active {
+    background-color: var(--studyhub-primary);
+    color: white;
+    border-color: var(--studyhub-primary);
+}
+
+/* Estados vacíos */
+.empty-state-icon {
+    opacity: 0.7;
+}
+
+/* Formulario de mensaje */
+#mensajeForm textarea {
+    border-radius: var(--studyhub-border-radius);
+    border: 1px solid #dee2e6;
+    transition: var(--studyhub-transition);
+    resize: vertical;
+}
+
+#mensajeForm textarea:focus {
+    border-color: var(--studyhub-primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Contador de caracteres */
+#charCount {
+    font-weight: 600;
+}
+
+#charCount.warning {
+    color: var(--studyhub-warning);
+}
+
+#charCount.danger {
+    color: var(--studyhub-danger);
+}
+
+/* Alertas personalizadas */
+.alert {
+    border-radius: var(--studyhub-border-radius);
+    border: none;
+}
+
+.alert-success {
+    background-color: var(--studyhub-success-light);
+    color: var(--studyhub-success);
+}
+
+.alert-danger {
+    background-color: var(--studyhub-danger-light);
+    color: var(--studyhub-danger);
+}
+
+/* Breadcrumb personalizado */
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+}
+
+.breadcrumb-item a {
+    color: var(--studyhub-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.breadcrumb-item a:hover {
+    color: #0b5ed7;
+    text-decoration: underline;
+}
+
+/* Botones personalizados */
+.btn-primary {
+    background-color: var(--studyhub-primary);
+    border-color: var(--studyhub-primary);
+    border-radius: 6px;
+    transition: var(--studyhub-transition);
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
+
+.btn-outline-secondary {
+    border-radius: 6px;
+    transition: var(--studyhub-transition);
+}
+
+.btn-outline-secondary:hover {
+    transform: translateY(-1px);
+}
+
+/* Dropdown personalizado */
+.dropdown-menu {
+    border-radius: var(--studyhub-border-radius);
+    border: 1px solid #e9ecef;
+    box-shadow: var(--studyhub-shadow);
+}
+
+.dropdown-item {
+    border-radius: 4px;
+    margin: 0.125rem 0.5rem;
+    width: auto;
+}
+
+.dropdown-item.active {
+    background-color: var(--studyhub-primary);
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+    border-radius: 4px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .foro-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    .mensaje-avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 0.8rem;
+    }
+    
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .sticky-top {
+        position: relative !important;
+        top: 0 !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .mensaje-card .card-body {
+        padding: 1rem;
+    }
+    
+    .mensaje-acciones .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    h1.h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mensaje-card {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* Scroll suave */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Estados de carga */
+.loading-state {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading-state::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    .mensaje-card,
+    .btn,
+    #mensajeForm textarea {
+        transition: none;
+    }
+    
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+/* Estados focus para mejor accesibilidad */
+.btn:focus,
+#mensajeForm textarea:focus,
+.dropdown-item:focus {
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+    outline: none;
+}
+
+/* Custom scrollbar para lista de mensajes */
+.mensajes-list {
+    scrollbar-width: thin;
+    scrollbar-color: #dee2e6 transparent;
+}
+
+.mensajes-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.mensajes-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.mensajes-list::-webkit-scrollbar-thumb {
+    background-color: #dee2e6;
+    border-radius: 3px;
+}
+
+/* Efectos hover para elementos interactivos */
+.mensaje-acciones .btn:hover {
+    background-color: #f8f9fa;
+}
+
+.like-btn:hover {
+    background-color: var(--studyhub-primary-light) !important;
+    color: var(--studyhub-primary) !important;
+}
+
+.reply-btn:hover {
+    background-color: var(--studyhub-success-light) !important;
+    color: var(--studyhub-success) !important;
+}
+
+.report-btn:hover {
+    background-color: var(--studyhub-danger-light) !important;
+    color: var(--studyhub-danger) !important;
+}

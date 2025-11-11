@@ -35,10 +35,36 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Clases" asp-action="Index">
-                                    <i class="bi bi-mortarboard"></i> Mis Clases
+                                <a class="nav-link" asp-controller="Cursos" asp-action="Index">
+                                    <i class="bi bi-journal-bookmark"></i> Mis Cursos
                                 </a>
                             </li>
+                            @if (Context.Session.GetString("UsuarioRol") == "Profesor")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Clases" asp-action="Index">
+                                        <i class="bi bi-mortarboard"></i> Mis Clases
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Clases" asp-action="Index">
+                                        <i class="bi bi-mortarboard"></i> Mis Clases
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Cursos" asp-action="Explorar">
+                                        <i class="bi bi-compass"></i> Explorar
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Cursos" asp-action="Invitaciones">
+                                        <i class="bi bi-envelope"></i> Invitaciones
+                                    </a>
+                                </li>
+                            }
                         }
                     </ul>
                     <ul class="navbar-nav">
@@ -104,6 +130,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/layout.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

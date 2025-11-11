@@ -47,9 +47,10 @@ namespace StudyHub.Controllers
             if (usuarioId == null) return RedirectToAction("Login", "Auth");
 
             var usuarioRol = HttpContext.Session.GetString("UsuarioRol");
+            var clase = await _context.Clases.FindAsync(claseId);
             var perteneceAClase = usuarioRol == "Profesor"
-                ? await _context.Clases.AnyAsync(c => c.Id == claseId && c.ProfesorId == usuarioId)
-                : await _context.UsuarioClases.AnyAsync(uc => uc.UsuarioId == usuarioId && uc.ClaseId == claseId);
+                ? clase != null && clase.ProfesorId == usuarioId
+                : await _context.UsuarioCursos.AnyAsync(uc => uc.UsuarioId == usuarioId && uc.CursoId == clase!.CursoId && uc.Estado == "Aceptado");
 
             if (!perteneceAClase)
             {

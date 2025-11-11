@@ -46,6 +46,11 @@ namespace StudyHub.Controllers
 
             if (usuarioRol == "Profesor")
             {
+                viewModel.MisCursos = await _context.Cursos
+                    .Where(c => c.ProfesorId == usuarioId)
+                    .OrderBy(c => c.Nombre)
+                    .ToListAsync();
+
                 viewModel.MisClases = await _context.Clases
                     .Where(c => c.ProfesorId == usuarioId)
                     .ToListAsync();
@@ -59,15 +64,22 @@ namespace StudyHub.Controllers
             }
             else
             {
-                viewModel.MisClases = await _context.UsuarioClases
-                    .Where(uc => uc.UsuarioId == usuarioId)
-                    .Include(uc => uc.Clase)
-                    .Select(uc => uc.Clase)
+                var cursoIds = await _context.UsuarioCursos
+                    .Where(uc => uc.UsuarioId == usuarioId && uc.Estado == "Aceptado")
+                    .Select(uc => uc.CursoId)
                     .ToListAsync();
 
-                var claseIds = viewModel.MisClases.Select(c => c.Id);
+                viewModel.MisCursos = await _context.Cursos
+                    .Where(c => cursoIds.Contains(c.Id))
+                    .OrderBy(c => c.Nombre)
+                    .ToListAsync();
+
+                viewModel.MisClases = await _context.Clases
+                    .Where(c => cursoIds.Contains(c.CursoId))
+                    .ToListAsync();
+
                 viewModel.ProximasSesiones = await _context.Sesiones
-                    .Where(s => claseIds.Contains(s.ClaseId) && s.FechaHora > DateTime.UtcNow)
+                    .Where(s => cursoIds.Contains(s.Clase.CursoId) && s.FechaHora > DateTime.UtcNow)
                     .OrderBy(s => s.FechaHora)
                     .Take(5)
                     .Include(s => s.Clase)
