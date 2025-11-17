@@ -217,7 +217,7 @@
                                             <div class="col-4">
                                                 <div class="meta-item">
                                                     <i class="bi bi-person-badge text-warning"></i>
-                                                    <small>@curso.UsuarioCursos.Count(uc => uc.Rol == "Ayudante") ayudantes</small>
+                                                    <small>@curso.UsuarioCursos.Count(uc => uc.Rol == "Delegado") Delegados</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -274,7 +274,7 @@
                                         <small class="text-muted">
                                             <i class="bi bi-journals me-1"></i>@curso.Clases.Count clases |
                                             <i class="bi bi-people me-1 ms-2"></i>@curso.UsuarioCursos.Count(uc => uc.Rol == "Estudiante") estudiantes |
-                                            <i class="bi bi-person-badge me-1 ms-2"></i>@curso.UsuarioCursos.Count(uc => uc.Rol == "Ayudante") ayudantes
+                                            <i class="bi bi-person-badge me-1 ms-2"></i>@curso.UsuarioCursos.Count(uc => uc.Rol == "Delegado") Delegados
                                         </small>
                                     </div>
                                 </div>

@@ -1,4 +1,4 @@
-﻿<!-- Home.Index.cshtml -->
+<!-- Home.Index.cshtml -->
 @{
     ViewData["Title"] = "StudyHub - Plataforma Educativa";
 }
@@ -159,20 +159,34 @@
     </div>
 </div>
 
-<!-- Toast de Bienvenida -->
-<div class="toast-container position-fixed top-0 end-0 p-3">
-    <div id="welcomeToast" class="toast" role="alert">
-        <div class="toast-header">
-            <i class="bi bi-emoji-smile text-primary me-2"></i>
-            <strong class="me-auto">Bienvenido a StudyHub</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
-        </div>
-        <div class="toast-body">
-            ¡Descubre una nueva forma de enseñar y aprender!
+<!-- Toast de Bienvenida rediseñado -->
+<div class="welcome-toast-container">
+    <div id="welcomeToast" class="welcome-toast card shadow-sm border-0" role="alert">
+        <div class="card-body d-flex align-items-start">
+            <div class="welcome-toast-icon me-3">
+                <i class="bi bi-emoji-smile"></i>
+            </div>
+            <div class="flex-grow-1">
+                <h6 class="mb-1 fw-semibold">Bienvenido a StudyHub</h6>
+                <p class="mb-0 small text-muted">
+                    Descubre una nueva forma de enseñar y aprender con nuestra plataforma colaborativa.
+                </p>
+            </div>
+            <button type="button" class="btn-close ms-3" data-bs-dismiss="toast"></button>
         </div>
     </div>
 </div>
 
 @section Scripts {
     <script src="~/js/views/Home.Index.js" asp-append-version="true"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var toastElement = document.getElementById('welcomeToast');
+            if (toastElement && bootstrap && bootstrap.Toast) {
+                var toast = new bootstrap.Toast(toastElement, { delay: 6000 });
+                toast.show();
+            }
+        });
+    </script>
 }
+

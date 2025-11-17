@@ -1,11 +1,14 @@
 // Funcionalidad específica para la vista de Estudiantes del Curso - StudyHub
 class GestionEstudiantes {
     constructor() {
+        this.inviteInput = null;
+        this.inviteSuggestions = null;
         this.init();
     }
     
     init() {
         this.setupEventListeners();
+        this.setupInviteSuggestions();
         this.checkEmptyState();
         this.setupFilters();
     }
@@ -17,14 +20,85 @@ class GestionEstudiantes {
             invitacionForm.addEventListener('submit', this.handleInvitacion.bind(this));
         }
         
-        // Búsqueda en tiempo real
+        // Búsqueda en tiempo real (por nombre o email)
         const inputBusqueda = document.getElementById('inputBusqueda');
         if (inputBusqueda) {
             inputBusqueda.addEventListener('input', this.handleBusqueda.bind(this));
         }
         
-        // Confirmación para acciones de aceptar/rechazar
+        // Confirmación para acciones (aceptar, rechazar, eliminar)
         this.setupConfirmaciones();
+    }
+
+    setupInviteSuggestions() {
+        this.inviteInput = document.getElementById('terminoInvitacion');
+        this.inviteSuggestions = document.getElementById('inviteSuggestions');
+
+        if (!this.inviteInput || !this.inviteSuggestions) return;
+
+        const items = Array.from(this.inviteSuggestions.querySelectorAll('.invite-suggestion-item'));
+
+        const filterSuggestions = () => {
+            const term = this.inviteInput.value.trim().toLowerCase();
+
+            // Solo mostrar sugerencias cuando se busca por nombre (sin @)
+            if (!term || term.includes('@')) {
+                this.hideInviteSuggestions();
+                return;
+            }
+
+            let anyVisible = false;
+            items.forEach(item => {
+                const nombre = (item.dataset.nombre || '').toLowerCase();
+                if (nombre.includes(term)) {
+                    item.classList.remove('d-none');
+                    anyVisible = true;
+                } else {
+                    item.classList.add('d-none');
+                }
+            });
+
+            if (anyVisible) {
+                this.inviteSuggestions.classList.remove('d-none');
+            } else {
+                this.hideInviteSuggestions();
+            }
+        };
+
+        this.inviteInput.addEventListener('input', filterSuggestions);
+        this.inviteInput.addEventListener('focus', filterSuggestions);
+
+        // Seleccionar sugerencia
+        this.inviteSuggestions.addEventListener('click', (e) => {
+            const item = e.target.closest('.invite-suggestion-item');
+            if (!item) return;
+
+            // Al seleccionar, usar el correo en el campo para asegurar coincidencia exacta
+            const email = item.dataset.email || '';
+            this.inviteInput.value = email || item.dataset.nombre || '';
+            this.hideInviteSuggestions();
+            this.inviteInput.focus();
+        });
+
+        // Ocultar al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            if (!this.inviteInput.contains(e.target) && !this.inviteSuggestions.contains(e.target)) {
+                this.hideInviteSuggestions();
+            }
+        });
+
+        // Ocultar con Escape
+        this.inviteInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.hideInviteSuggestions();
+            }
+        });
+    }
+
+    hideInviteSuggestions() {
+        if (this.inviteSuggestions) {
+            this.inviteSuggestions.classList.add('d-none');
+        }
     }
     
     setupFilters() {
@@ -36,6 +110,8 @@ class GestionEstudiantes {
     
     handleInvitacion(e) {
         const btn = document.getElementById('btnInvitar');
+        if (!btn) return;
+
         const originalText = btn.innerHTML;
         
         // Mostrar estado de carga
@@ -50,13 +126,21 @@ class GestionEstudiantes {
     }
     
     handleBusqueda(e) {
-        const termino = e.target.value.toLowerCase();
+        const termino = e.target.value.toLowerCase().trim();
         const filas = document.querySelectorAll('#tablaEstudiantes tbody tr');
         let resultadosVisibles = 0;
         
         filas.forEach(fila => {
-            const textoFila = fila.textContent.toLowerCase();
-            if (textoFila.includes(termino)) {
+            if (!termino) {
+                fila.style.display = '';
+                resultadosVisibles++;
+                return;
+            }
+
+            const nombre = (fila.dataset.nombre || '').toLowerCase();
+            const email = (fila.dataset.email || '').toLowerCase();
+
+            if (nombre.includes(termino) || email.includes(termino)) {
                 fila.style.display = '';
                 resultadosVisibles++;
             } else {
@@ -71,6 +155,8 @@ class GestionEstudiantes {
         const emptyState = document.getElementById('emptyState');
         const tableContainer = document.getElementById('tableContainer');
         
+        if (!emptyState || !tableContainer) return;
+
         if (resultados === 0) {
             emptyState.classList.remove('d-none');
             emptyState.innerHTML = `
@@ -91,13 +177,20 @@ class GestionEstudiantes {
     }
     
     setupConfirmaciones() {
-        const forms = document.querySelectorAll('form[action*="Aceptar"], form[action*="Rechazar"]');
+        const forms = document.querySelectorAll(
+            'form[action*="Aceptar"], form[action*="Rechazar"], form[action*="EliminarAlumno"]'
+        );
+
         forms.forEach(form => {
             form.addEventListener('submit', (e) => {
-                const accion = form.action.includes('Aceptar') ? 'aceptar' : 'rechazar';
-                const mensaje = accion === 'aceptar' 
-                    ? '¿Estás seguro de que quieres aceptar a este estudiante?' 
-                    : '¿Estás seguro de que quieres rechazar a este estudiante?';
+                let mensaje;
+                if (form.action.includes('Aceptar')) {
+                    mensaje = '¿Estás seguro de que quieres aceptar a este estudiante?';
+                } else if (form.action.includes('Rechazar')) {
+                    mensaje = '¿Estás seguro de que quieres rechazar a este estudiante?';
+                } else {
+                    mensaje = '¿Estás seguro de que quieres eliminar a este estudiante del curso? Esta acción no se puede deshacer.';
+                }
                 
                 if (!confirm(mensaje)) {
                     e.preventDefault();
@@ -111,6 +204,8 @@ class GestionEstudiantes {
         const emptyState = document.getElementById('emptyState');
         const tableContainer = document.getElementById('tableContainer');
         
+        if (!emptyState || !tableContainer) return;
+
         if (filas.length === 0) {
             emptyState.classList.remove('d-none');
             tableContainer.classList.add('d-none');
@@ -167,3 +262,4 @@ document.addEventListener('DOMContentLoaded', function() {
 window.addEventListener('error', function(e) {
     console.error('Error en la vista de gestión de estudiantes:', e.error);
 });
+

@@ -155,7 +155,13 @@ class CalendarioSesionesStudyHub {
         if (sesionesProximas.length === 0) return;
 
         const primeraSesion = sesionesProximas[0];
-        const fechaSesion = new Date(parseInt(primeraSesion.dataset.fecha));
+        const rawFecha = primeraSesion.dataset.fecha;
+        const epochMs = parseInt(rawFecha, 10);
+        if (isNaN(epochMs)) {
+            console.warn('Valor de fecha inválido en data-fecha:', rawFecha);
+            return;
+        }
+        const fechaSesion = new Date(epochMs);
         
         this.proximaSesion = {
             element: primeraSesion,
@@ -362,8 +368,8 @@ class CalendarioSesionesStudyHub {
         const sesiones = Array.from(container.querySelectorAll('.sesion-card:not(.hidden)'));
 
         sesiones.sort((a, b) => {
-            const aFecha = parseInt(a.dataset.fecha);
-            const bFecha = parseInt(b.dataset.fecha);
+            const aFecha = parseInt(a.dataset.fecha, 10);
+            const bFecha = parseInt(b.dataset.fecha, 10);
             const aTitulo = a.dataset.titulo;
             const bTitulo = b.dataset.titulo;
             const aCurso = a.dataset.curso;

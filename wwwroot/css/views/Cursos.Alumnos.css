@@ -36,6 +36,63 @@
     background-color: #f8f9fa;
 }
 
+/* Dropdown de cambio de rol dentro de la tabla */
+#tableContainer {
+    overflow: visible !important;
+}
+
+#tableContainer .dropdown-menu {
+    z-index: 1100;
+}
+
+/* Sugerencias visuales para invitación de estudiantes */
+.invite-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 4px;
+    background-color: #ffffff;
+    border-radius: 0 0 10px 10px;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    max-height: 260px;
+    overflow-y: auto;
+    z-index: 1050;
+}
+
+.invite-suggestion-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0.4rem 0.75rem;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.invite-suggestion-item:hover {
+    background-color: #f8f9fa;
+}
+
+.invite-suggestion-name {
+    font-weight: 600;
+}
+
+.invite-suggestion-email {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+/* Dropdown de cambio de rol dentro de la tabla */
+#tableContainer {
+    overflow: visible !important;
+}
+
+#tableContainer .dropdown-menu {
+    z-index: 1100;
+}
+
 /* Badges personalizados */
 .badge {
     font-size: 0.75rem;

@@ -33,6 +33,17 @@ body {
     font-size: 1.5rem;
 }
 
+/* Navbar - mejorar contraste de enlaces y usuario */
+.navbar.navbar-dark.bg-primary .navbar-nav .nav-link,
+.navbar.navbar-dark.bg-primary .navbar-brand {
+    color: #ffffff !important;
+}
+
+.navbar.navbar-dark.bg-primary .navbar-nav .nav-link:hover,
+.navbar.navbar-dark.bg-primary .navbar-nav .nav-link:focus {
+    color: #e2e6ea !important;
+}
+
 .alert {
     border-radius: 8px;
     border: none;

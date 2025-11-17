@@ -218,7 +218,7 @@
                                     </div>
                                     <div class="invitacion-info-adicional mt-3">
                                         <small class="text-muted">
-                                            <i class="bi bi-person me-1"></i>Profesor: @invitacion.Curso?.Profesor?.Nombre ?? "—"
+                                            <i class="bi bi-person me-1"></i>Profesor: @invitacion.Curso?.Profesor?.Nombre ?? "ï¿½"
                                         </small>
                                         <br>
                                         <small class="text-muted">
@@ -317,7 +317,7 @@
                                             @invitacion.Rol
                                         </span>
                                         <span class="badge bg-light text-dark">
-                                            <i class="bi bi-person-fill me-1"></i>@invitacion.Curso?.Profesor?.Nombre ?? "—"
+                                            <i class="bi bi-person-fill me-1"></i>@invitacion.Curso?.Profesor?.Nombre ?? "ï¿½"
                                         </span>
                                     </div>
                                 </div>
@@ -445,7 +445,7 @@
         return rol switch
         {
             "Estudiante" => "bg-primary",
-            "Ayudante" => "bg-info",
+            "Delegado" => "bg-info",
             "Profesor" => "bg-dark",
             _ => "bg-secondary"
         };

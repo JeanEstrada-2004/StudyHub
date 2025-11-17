@@ -233,6 +233,11 @@
     box-shadow: var(--studyhub-shadow);
 }
 
+/* Asegurar que los dropdowns se muestren por encima de las tarjetas */
+.sesiones-toolbar .dropdown-menu {
+    z-index: 1100;
+}
+
 .dropdown-item {
     border-radius: 4px;
     margin: 0.125rem 0.5rem;

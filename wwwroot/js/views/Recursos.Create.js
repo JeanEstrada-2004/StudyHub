@@ -260,6 +260,15 @@ class CrearRecursoStudyHub {
     handleFileSelect(file) {
         if (!file) return;
 
+        // Sincronizar con el input de archivo real para que el servidor reciba el archivo,
+        // incluso cuando se usa drag & drop.
+        const fileInput = document.getElementById('fileInput');
+        if (fileInput && window.DataTransfer) {
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            fileInput.files = dataTransfer.files;
+        }
+
         // Validar tamaño (50MB máximo)
         const maxSize = 50 * 1024 * 1024; // 50MB en bytes
         if (file.size > maxSize) {

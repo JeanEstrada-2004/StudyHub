@@ -71,6 +71,28 @@ namespace StudyHub.Controllers
         [RolFilter("Profesor")]
         public async Task<IActionResult> Create([Bind("Titulo,Descripcion,FechaHora,DuracionMinutos,Ubicacion,EnlaceReunion,ClaseId")] Sesion sesion)
         {
+            // Validación según tipo de sesión (virtual / presencial)
+            var tipoSesion = Request.Form["TipoSesion"].ToString();
+            if (string.Equals(tipoSesion, "Virtual", StringComparison.OrdinalIgnoreCase))
+            {
+                if (string.IsNullOrWhiteSpace(sesion.EnlaceReunion))
+                {
+                    ModelState.AddModelError(nameof(Sesion.EnlaceReunion), "Para sesiones virtuales debes ingresar el enlace de reunión.");
+                }
+            }
+            else // Presencial por defecto
+            {
+                if (string.IsNullOrWhiteSpace(sesion.Ubicacion))
+                {
+                    ModelState.AddModelError(nameof(Sesion.Ubicacion), "Para sesiones presenciales debes indicar la ubicación.");
+                }
+
+                if (string.IsNullOrWhiteSpace(sesion.EnlaceReunion))
+                {
+                    sesion.EnlaceReunion = null;
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -167,6 +189,28 @@ namespace StudyHub.Controllers
             if (id != sesion.Id)
             {
                 return NotFound();
+            }
+
+            // Validación según tipo de sesión (virtual / presencial)
+            var tipoSesion = Request.Form["TipoSesion"].ToString();
+            if (string.Equals(tipoSesion, "Virtual", StringComparison.OrdinalIgnoreCase))
+            {
+                if (string.IsNullOrWhiteSpace(sesion.EnlaceReunion))
+                {
+                    ModelState.AddModelError(nameof(Sesion.EnlaceReunion), "Para sesiones virtuales debes ingresar el enlace de reunión.");
+                }
+            }
+            else // Presencial por defecto
+            {
+                if (string.IsNullOrWhiteSpace(sesion.Ubicacion))
+                {
+                    ModelState.AddModelError(nameof(Sesion.Ubicacion), "Para sesiones presenciales debes indicar la ubicación.");
+                }
+
+                if (string.IsNullOrWhiteSpace(sesion.EnlaceReunion))
+                {
+                    sesion.EnlaceReunion = null;
+                }
             }
 
             if (ModelState.IsValid)

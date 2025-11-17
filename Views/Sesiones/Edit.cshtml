@@ -1,7 +1,7 @@
-﻿<!-- EditarSesion.cshtml -->
 @model StudyHub.Models.Sesion
 @{
     ViewData["Title"] = "Editar Sesión";
+    var esVirtual = !string.IsNullOrEmpty(Model.EnlaceReunion);
 }
 
 <div class="container-fluid">
@@ -41,7 +41,7 @@
 
                     <form asp-action="Edit" id="sesion-form">
                         <input type="hidden" asp-for="Id" />
-                        
+
                         <div class="row">
                             <!-- Columna izquierda -->
                             <div class="col-md-6">
@@ -64,7 +64,7 @@
                                 <div class="mb-3">
                                     <label asp-for="DuracionMinutos" class="form-label fw-semibold">Duración (minutos)</label>
                                     <input asp-for="DuracionMinutos" class="form-control" placeholder="60" />
-                                    <div class="form-text">Duración estimada de la sesión en minutos</div>
+                                    <div class="form-text">Duración estimada de la sesión en minutos.</div>
                                     <span asp-validation-for="DuracionMinutos" class="text-danger validation-message"></span>
                                 </div>
                             </div>
@@ -78,19 +78,43 @@
                                     <span asp-validation-for="Descripcion" class="text-danger validation-message"></span>
                                 </div>
 
-                                <!-- Ubicación -->
+                                <!-- Tipo de sesión -->
                                 <div class="mb-3">
+                                    <label class="form-label fw-semibold">Tipo de Sesión</label>
+                                    <div class="d-flex gap-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="TipoSesion"
+                                                   id="tipoPresencialEdit" value="Presencial" @(esVirtual ? "" : "checked")>
+                                            <label class="form-check-label" for="tipoPresencialEdit">
+                                                Presencial
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="TipoSesion"
+                                                   id="tipoVirtualEdit" value="Virtual" @(esVirtual ? "checked" : "")>
+                                            <label class="form-check-label" for="tipoVirtualEdit">
+                                                Virtual
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-text">
+                                        Para sesiones virtuales se solicitará el enlace de reunión; para presenciales, la ubicación.
+                                    </div>
+                                </div>
+
+                                <!-- Ubicación -->
+                                <div class="mb-3" id="grupoUbicacion">
                                     <label asp-for="Ubicacion" class="form-label fw-semibold">Ubicación</label>
-                                    <input asp-for="Ubicacion" class="form-control" placeholder="Aula 101, Virtual, Laboratorio, etc." />
-                                    <div class="form-text">Especifica si es presencial o virtual</div>
+                                    <input asp-for="Ubicacion" class="form-control" placeholder="Aula 101, Laboratorio, etc." />
+                                    <div class="form-text">Solo para sesiones presenciales.</div>
                                     <span asp-validation-for="Ubicacion" class="text-danger validation-message"></span>
                                 </div>
 
                                 <!-- Enlace Reunión -->
-                                <div class="mb-3">
+                                <div class="mb-3" id="grupoEnlace">
                                     <label asp-for="EnlaceReunion" class="form-label fw-semibold">Enlace de Reunión</label>
                                     <input asp-for="EnlaceReunion" class="form-control" placeholder="https://meet.google.com/..." />
-                                    <div class="form-text">Solo para sesiones virtuales</div>
+                                    <div class="form-text">Solo para sesiones virtuales.</div>
                                     <span asp-validation-for="EnlaceReunion" class="text-danger validation-message"></span>
                                 </div>
 
@@ -126,3 +150,4 @@
 @section Scripts {
     <script src="~/js/views/Sesiones.Edit.js" asp-append-version="true"></script>
 }
+

@@ -4,7 +4,7 @@
     var usuarioRol = Context.Session.GetString("UsuarioRol");
     var esProfesor = usuarioRol == "Profesor";
     var cantidadEstudiantes = Model.UsuarioCursos?.Count(uc => uc.Rol == "Estudiante" && uc.Estado == "Aceptado") ?? 0;
-    var cantidadAyudantes = Model.UsuarioCursos?.Count(uc => uc.Rol == "Ayudante" && uc.Estado == "Aceptado") ?? 0;
+    var cantidadDelegados = Model.UsuarioCursos?.Count(uc => uc.Rol == "Delegado" && uc.Estado == "Aceptado") ?? 0;
     var cantidadClases = Model.Clases?.Count ?? 0;
     var proximaSesion = Model.Clases?
         .SelectMany(c => c.Sesiones ?? new List<StudyHub.Models.Sesion>())
@@ -107,8 +107,8 @@
                     <div class="stat-icon text-warning">
                         <i class="bi bi-person-badge"></i>
                     </div>
-                    <div class="stat-number">@cantidadAyudantes</div>
-                    <div class="stat-label">Ayudantes</div>
+                    <div class="stat-number">@cantidadDelegados</div>
+                    <div class="stat-label">Delegados</div>
                 </div>
             </div>
         </div>
@@ -380,8 +380,8 @@
                         <dt class="col-sm-5">Estudiantes:</dt>
                         <dd class="col-sm-7">@cantidadEstudiantes</dd>
 
-                        <dt class="col-sm-5">Ayudantes:</dt>
-                        <dd class="col-sm-7">@cantidadAyudantes</dd>
+                        <dt class="col-sm-5">Delegados:</dt>
+                        <dd class="col-sm-7">@cantidadDelegados</dd>
 
                         @if (Model.Clases.Any())
                         {

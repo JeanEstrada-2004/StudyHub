@@ -146,7 +146,7 @@ class DetalleCurso {
                     if (link) window.location.href = link.href;
                 }
                 break;
-            case 'Ayudantes':
+            case 'Delegados':
                 if (this.esProfesor) {
                     const link = document.querySelector('a[asp-action="Alumnos"]');
                     if (link) window.location.href = link.href;

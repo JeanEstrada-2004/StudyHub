@@ -159,8 +159,8 @@
                                 <i class="bi bi-list-ul me-2"></i>
                                 Todas las Sesiones
                             </h5>
-                        </div>
-                        <div class="d-flex flex-wrap gap-2">
+                          </div>
+                          <div class="d-flex flex-wrap gap-2 sesiones-toolbar">
                             <div class="dropdown">
                                 <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" 
                                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -280,12 +280,13 @@
                         @foreach (var sesion in Model)
                         {
                             var esPasada = sesion.FechaHora <= ahora;
-                            var esProxima = !esPasada;
-                            var tiempoRestante = esProxima ? (sesion.FechaHora - ahora) : TimeSpan.Zero;
-                            
+                              var esProxima = !esPasada;
+                              var tiempoRestante = esProxima ? (sesion.FechaHora - ahora) : TimeSpan.Zero;
+                              var epochMs = new DateTimeOffset(sesion.FechaHora).ToUnixTimeMilliseconds();
+                              
                             <div class="card sesion-card border-0 shadow-sm mb-3" 
-                                 data-sesion-id="@sesion.Id"
-                                 data-fecha="@sesion.FechaHora.Ticks"
+                                   data-sesion-id="@sesion.Id"
+                                   data-fecha="@epochMs"
                                  data-titulo="@sesion.Titulo.ToLower()"
                                  data-curso="@sesion.Clase.Titulo.ToLower()"
                                  data-estado="@(esPasada ? "past" : "upcoming")"

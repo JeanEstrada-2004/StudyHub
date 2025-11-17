@@ -32,6 +32,11 @@ namespace StudyHub.Controllers
                 .ToListAsync();
 
             var clase = await _context.Clases.FindAsync(claseId);
+            if (clase == null)
+            {
+                return NotFound();
+            }
+
             ViewBag.Clase = clase;
 
             return View(recursos);

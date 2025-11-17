@@ -232,8 +232,8 @@
                             <div class="stat-label">Estudiantes Activos</div>
                         </div>
                         <div class="col-md-4 impact-stat">
-                            <div class="stat-number text-info">@Model.UsuarioCursos.Count(uc => uc.Rol == "Ayudante" && uc.Estado == "Activo")</div>
-                            <div class="stat-label">Ayudantes</div>
+                            <div class="stat-number text-info">@Model.UsuarioCursos.Count(uc => uc.Rol == "Delegado" && uc.Estado == "Activo")</div>
+                            <div class="stat-label">Delegados</div>
                         </div>
                     </div>
                     <p class="text-center text-muted mt-3 mb-0">

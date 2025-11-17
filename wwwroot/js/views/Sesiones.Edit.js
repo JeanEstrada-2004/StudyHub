@@ -1,42 +1,51 @@
 // View-specific scripts for Sesiones/Edit
 // wwwroot/js/views/Sesiones.Edit.js
+
 class SesionesEdit {
     constructor() {
         this.form = document.getElementById('sesion-form');
         this.btnGuardar = document.getElementById('btn-guardar');
         this.validationSummary = document.getElementById('validation-summary');
-        
+        this.tipoSesionRadios = document.querySelectorAll('input[name="TipoSesion"]');
+        this.grupoUbicacion = document.getElementById('grupoUbicacion');
+        this.grupoEnlace = document.getElementById('grupoEnlace');
+
         this.init();
     }
 
     init() {
+        if (!this.form) return;
+
         this.setupEventListeners();
         this.setupRealTimeValidation();
-        this.setupFormSubmission();
+        this.actualizarCamposSegunTipo();
     }
 
     setupEventListeners() {
         // Validación en tiempo real para campos críticos
         const criticalFields = ['Titulo', 'FechaHora', 'ClaseId'];
         criticalFields.forEach(fieldName => {
-            const field = document.querySelector(`[name="${fieldName}"]`);
+            const field = this.form.querySelector(`[name="${fieldName}"]`);
             if (field) {
                 field.addEventListener('blur', () => this.validateField(field));
             }
         });
 
-        // Manejar cambios en ubicación para mostrar/ocultar enlace de reunión
-        const ubicacionField = document.querySelector('[name="Ubicacion"]');
-        if (ubicacionField) {
-            ubicacionField.addEventListener('input', () => this.toggleEnlaceReunion(ubicacionField.value));
+        // Cambio de tipo de sesión
+        if (this.tipoSesionRadios && this.tipoSesionRadios.length > 0) {
+            this.tipoSesionRadios.forEach(radio => {
+                radio.addEventListener('change', () => this.actualizarCamposSegunTipo());
+            });
         }
 
-        // Validar formulario antes de enviar
-        this.form.addEventListener('submit', (e) => this.handleFormSubmit(e));
+        // Manejar el envío del formulario (AJAX)
+        this.form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.submitForm();
+        });
     }
 
     setupRealTimeValidation() {
-        // Validación automática para todos los campos con atributos de validación
         const fields = this.form.querySelectorAll('input, select, textarea');
         fields.forEach(field => {
             field.addEventListener('blur', () => this.validateField(field));
@@ -44,24 +53,44 @@ class SesionesEdit {
         });
     }
 
-    setupFormSubmission() {
-        // Manejar el envío del formulario
-        this.form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            await this.submitForm();
-        });
+    obtenerTipoSesionActual() {
+        if (!this.tipoSesionRadios || this.tipoSesionRadios.length === 0) {
+            return 'Presencial';
+        }
+        const seleccionado = Array.from(this.tipoSesionRadios).find(r => r.checked);
+        return seleccionado ? seleccionado.value : 'Presencial';
+    }
+
+    actualizarCamposSegunTipo() {
+        const tipo = this.obtenerTipoSesionActual();
+        const campoUbicacion = this.form.querySelector('[name="Ubicacion"]');
+        const campoEnlace = this.form.querySelector('[name="EnlaceReunion"]');
+
+        const esVirtual = tipo === 'Virtual';
+
+        if (this.grupoUbicacion) {
+            this.grupoUbicacion.style.display = esVirtual ? 'none' : '';
+        }
+        if (this.grupoEnlace) {
+            this.grupoEnlace.style.display = esVirtual ? '' : 'none';
+        }
+
+        if (campoUbicacion) {
+            campoUbicacion.required = !esVirtual;
+        }
+        if (campoEnlace) {
+            campoEnlace.required = esVirtual;
+        }
     }
 
     validateField(field) {
-        const value = field.value.trim();
+        const value = (field.value || '').trim();
         const fieldName = field.getAttribute('name');
         const validationMessage = field.parentElement.querySelector('.validation-message');
 
-        // Limpiar estado anterior
         field.classList.remove('is-valid', 'is-invalid');
         if (validationMessage) validationMessage.textContent = '';
 
-        // Validaciones específicas por campo
         switch (fieldName) {
             case 'Titulo':
                 if (!value) {
@@ -84,7 +113,7 @@ class SesionesEdit {
                 break;
 
             case 'DuracionMinutos':
-                if (!value || value <= 0) {
+                if (!value || parseInt(value, 10) <= 0) {
                     this.showFieldError(field, 'La duración debe ser mayor a 0');
                 } else {
                     this.showFieldSuccess(field);
@@ -104,7 +133,7 @@ class SesionesEdit {
     showFieldError(field, message) {
         field.classList.add('is-invalid');
         field.classList.remove('is-valid');
-        
+
         const validationMessage = field.parentElement.querySelector('.validation-message');
         if (validationMessage) {
             validationMessage.textContent = message;
@@ -114,7 +143,7 @@ class SesionesEdit {
     showFieldSuccess(field) {
         field.classList.add('is-valid');
         field.classList.remove('is-invalid');
-        
+
         const validationMessage = field.parentElement.querySelector('.validation-message');
         if (validationMessage) {
             validationMessage.textContent = '';
@@ -129,25 +158,7 @@ class SesionesEdit {
         }
     }
 
-    toggleEnlaceReunion(ubicacion) {
-        const enlaceField = document.querySelector('[name="EnlaceReunion"]');
-        const enlaceLabel = document.querySelector('label[for="EnlaceReunion"]');
-        
-        if (ubicacion && ubicacion.toLowerCase().includes('virtual')) {
-            enlaceField.required = true;
-            if (enlaceLabel) {
-                enlaceLabel.innerHTML = 'Enlace de Reunión <span class="text-danger">*</span>';
-            }
-        } else {
-            enlaceField.required = false;
-            if (enlaceLabel) {
-                enlaceLabel.innerHTML = 'Enlace de Reunión';
-            }
-        }
-    }
-
     async submitForm() {
-        // Validar todos los campos antes de enviar
         const fields = this.form.querySelectorAll('input, select, textarea');
         let isValid = true;
 
@@ -158,16 +169,28 @@ class SesionesEdit {
             }
         });
 
+        const tipo = this.obtenerTipoSesionActual();
+        const campoUbicacion = this.form.querySelector('[name="Ubicacion"]');
+        const campoEnlace = this.form.querySelector('[name="EnlaceReunion"]');
+
+        if (tipo === 'Virtual' && campoEnlace && !campoEnlace.value) {
+            this.showFieldError(campoEnlace, 'Para sesiones virtuales debes ingresar el enlace de reunión');
+            isValid = false;
+        }
+
+        if (tipo === 'Presencial' && campoUbicacion && !campoUbicacion.value) {
+            this.showFieldError(campoUbicacion, 'Para sesiones presenciales debes indicar la ubicación');
+            isValid = false;
+        }
+
         if (!isValid) {
             this.showToast('Por favor, corrige los errores en el formulario', 'error');
             return;
         }
 
-        // Mostrar estado de carga
         this.setLoadingState(true);
 
         try {
-            // Crear FormData para enviar
             const formData = new FormData(this.form);
 
             const response = await fetch(this.form.action, {
@@ -180,15 +203,12 @@ class SesionesEdit {
 
             if (response.ok) {
                 this.showToast('Sesión actualizada correctamente', 'success');
-                
-                // Redirigir después de un breve delay
                 setTimeout(() => {
-                    window.location.href = '@Url.Action("Calendario")';
+                    window.location.href = '/Sesiones/Calendario';
                 }, 1500);
             } else {
                 throw new Error('Error en la respuesta del servidor');
             }
-
         } catch (error) {
             console.error('Error al guardar la sesión:', error);
             this.showToast('Error al guardar la sesión. Inténtalo de nuevo.', 'error');
@@ -198,6 +218,8 @@ class SesionesEdit {
     }
 
     setLoadingState(loading) {
+        if (!this.btnGuardar) return;
+
         if (loading) {
             this.btnGuardar.classList.add('btn-loading');
             this.btnGuardar.disabled = true;
@@ -210,15 +232,17 @@ class SesionesEdit {
     }
 
     showToast(message, type = 'info') {
-        // Crear toast de Bootstrap
         const toastContainer = document.querySelector('.toast-container') || this.createToastContainer();
         const toast = document.createElement('div');
-        
-        toast.className = `toast align-items-center text-bg-${type === 'success' ? 'success' : 'danger'} border-0`;
+
+        const bgType = type === 'success' ? 'success' : 'danger';
+        const icon = type === 'success' ? 'bi-check-circle' : 'bi-exclamation-circle';
+
+        toast.className = `toast align-items-center text-bg-${bgType} border-0`;
         toast.innerHTML = `
             <div class="d-flex">
                 <div class="toast-body">
-                    <i class="bi ${type === 'success' ? 'bi-check-circle' : 'bi-exclamation-circle'} me-2"></i>
+                    <i class="bi ${icon} me-2"></i>
                     ${message}
                 </div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
@@ -226,11 +250,10 @@ class SesionesEdit {
         `;
 
         toastContainer.appendChild(toast);
-        
+
         const bsToast = new bootstrap.Toast(toast);
         bsToast.show();
 
-        // Remover el toast después de que se oculte
         toast.addEventListener('hidden.bs.toast', () => {
             toast.remove();
         });
@@ -243,21 +266,17 @@ class SesionesEdit {
         document.body.appendChild(container);
         return container;
     }
-
-    handleFormSubmit(e) {
-        e.preventDefault();
-        this.submitForm();
-    }
 }
 
-// Inicializar cuando el documento esté listo
-document.addEventListener('DOMContentLoaded', function() {
+// Inicializar cuando el documento está listo
+document.addEventListener('DOMContentLoaded', function () {
     new SesionesEdit();
 });
 
-// Manejar la tecla Enter en el formulario
-document.addEventListener('keydown', function(e) {
+// Prevenir Enter para enviar el formulario accidentalmente (excepto en textareas)
+document.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
         e.preventDefault();
     }
 });
+
