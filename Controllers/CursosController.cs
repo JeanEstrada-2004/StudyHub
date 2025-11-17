@@ -110,7 +110,11 @@ namespace StudyHub.Controllers
         [RolFilter("Profesor")]
         public async Task<IActionResult> Edit(int id)
         {
-            var curso = await _context.Cursos.FindAsync(id);
+            var curso = await _context.Cursos
+                .Include(c => c.Profesor)          // ← AÑADE ESTA LÍNEA
+                .Include(c => c.Clases)
+                .Include(c => c.UsuarioCursos)
+                .FirstOrDefaultAsync(c => c.Id == id);
             if (curso == null) return NotFound();
             return View(curso);
         }

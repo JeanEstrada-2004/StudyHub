@@ -1,6 +1,8 @@
-﻿@model StudyHub.Models.Clase
+@model StudyHub.Models.Clase
 @{
     ViewData["Title"] = "Detalle de Clase - StudyHub";
+    var usuarioRol = Context.Session.GetString("UsuarioRol");
+    var esProfesor = usuarioRol == "Profesor" && Context.Session.GetInt32("UsuarioId") == Model.ProfesorId;
 }
 
 <div class="class-details-container">
@@ -11,19 +13,29 @@
                 <div class="col-md-8">
                     <nav aria-label="breadcrumb" class="mb-3">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a asp-controller="Cursos" asp-action="Index">Mis Cursos</a></li>
-                            <li class="breadcrumb-item"><a asp-controller="Cursos" asp-action="Details" asp-route-id="@Model.CursoId">@Model.Curso?.Nombre</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">@Model.Titulo</li>
+                            <li class="breadcrumb-item">
+                                <a asp-controller="Cursos" asp-action="Index">Mis Cursos</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a asp-controller="Cursos" asp-action="Details" asp-route-id="@Model.CursoId">
+                                    @Model.Curso?.Nombre
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                @Model.Titulo
+                            </li>
                         </ol>
                     </nav>
-                    
+
                     <div class="d-flex align-items-center mb-3">
                         <div class="class-icon">
                             <i class="bi bi-journal-text"></i>
                         </div>
                         <div class="class-title-content">
                             <h1 class="class-title">@Model.Titulo</h1>
-                            <p class="class-subtitle">Clase del curso <strong>@Model.Curso?.Nombre</strong></p>
+                            <p class="class-subtitle">
+                                Clase del curso <strong>@Model.Curso?.Nombre</strong>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -50,7 +62,7 @@
                     <div class="card-body">
                         <div class="class-description">
                             <h4 class="section-label">Descripción</h4>
-                            @if (!string.IsNullOrEmpty(Model.Descripcion))
+                            @if (!string.IsNullOrWhiteSpace(Model.Descripcion))
                             {
                                 <p class="description-text">@Model.Descripcion</p>
                             }
@@ -60,7 +72,7 @@
                             }
                         </div>
 
-                        <div class="class-details-grid">
+                        <div class="class-details-grid mt-4">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="detail-item">
@@ -93,7 +105,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 mt-3">
                                     <div class="detail-item">
                                         <div class="detail-icon">
                                             <i class="bi bi-eye"></i>
@@ -101,30 +113,21 @@
                                         <div class="detail-content">
                                             <label class="detail-label">Visibilidad</label>
                                             <span class="detail-value">
-                                                @if (Model.EsPublica)
-                                                {
-                                                    <span class="badge bg-success">
-                                                        <i class="bi bi-globe me-1"></i>Pública
-                                                    </span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="badge bg-secondary">
-                                                        <i class="bi bi-lock me-1"></i>Privada
-                                                    </span>
-                                                }
+                                                @(Model.EsPublica ? "Pública" : "Privada")
                                             </span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 mt-3">
                                     <div class="detail-item">
                                         <div class="detail-icon">
-                                            <i class="bi bi-journal-bookmark"></i>
+                                            <i class="bi bi-calendar3"></i>
                                         </div>
                                         <div class="detail-content">
-                                            <label class="detail-label">Curso</label>
-                                            <span class="detail-value">@Model.Curso?.Nombre</span>
+                                            <label class="detail-label">Fecha de Creación</label>
+                                            <span class="detail-value">
+                                                @Model.FechaCreacion.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -134,7 +137,7 @@
                 </div>
 
                 <!-- Acciones Rápidas -->
-                <div class="quick-actions-card">
+                <div class="quick-actions-card mt-4">
                     <div class="card-header">
                         <h3 class="card-title">
                             <i class="bi bi-lightning me-2"></i>Acciones Rápidas
@@ -143,7 +146,10 @@
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <a class="btn btn-action-card w-100 h-100" asp-controller="Recursos" asp-action="Index" asp-route-claseId="@Model.Id">
+                                <a class="btn btn-action-card w-100 h-100"
+                                   asp-controller="Recursos"
+                                   asp-action="Index"
+                                   asp-route-claseId="@Model.Id">
                                     <div class="action-icon">
                                         <i class="bi bi-file-earmark-text"></i>
                                     </div>
@@ -154,7 +160,10 @@
                                 </a>
                             </div>
                             <div class="col-md-6">
-                                <a class="btn btn-action-card w-100 h-100" asp-controller="Mensajes" asp-action="Index" asp-route-claseId="@Model.Id">
+                                <a class="btn btn-action-card w-100 h-100"
+                                   asp-controller="Mensajes"
+                                   asp-action="Index"
+                                   asp-route-claseId="@Model.Id">
                                     <div class="action-icon">
                                         <i class="bi bi-chat-dots"></i>
                                     </div>
@@ -165,7 +174,9 @@
                                 </a>
                             </div>
                             <div class="col-md-6">
-                                <a class="btn btn-action-card w-100 h-100" asp-controller="Sesiones" asp-action="Calendario">
+                                <a class="btn btn-action-card w-100 h-100"
+                                   asp-controller="Sesiones"
+                                   asp-action="Calendario">
                                     <div class="action-icon">
                                         <i class="bi bi-calendar-event"></i>
                                     </div>
@@ -175,20 +186,6 @@
                                     </div>
                                 </a>
                             </div>
-                            @if (Context.Session.GetString("UsuarioRol") == "Profesor" && Context.Session.GetInt32("UsuarioId") == Model.ProfesorId)
-                            {
-                                <div class="col-md-6">
-                                    <a class="btn btn-action-card w-100 h-100" asp-action="Alumnos" asp-route-id="@Model.Id">
-                                        <div class="action-icon">
-                                            <i class="bi bi-people-fill"></i>
-                                        </div>
-                                        <div class="action-content">
-                                            <h4>Gestionar Estudiantes</h4>
-                                            <p>Administrar participantes</p>
-                                        </div>
-                                    </a>
-                                </div>
-                            }
                         </div>
                     </div>
                 </div>
@@ -219,7 +216,10 @@
                             </div>
                         </div>
                         <div class="text-center mt-3">
-                            <a asp-controller="Cursos" asp-action="Details" asp-route-id="@Model.CursoId" class="btn btn-outline-primary w-100">
+                            <a asp-controller="Cursos"
+                               asp-action="Details"
+                               asp-route-id="@Model.CursoId"
+                               class="btn btn-outline-primary w-100">
                                 <i class="bi bi-arrow-right me-2"></i>Ir al Curso
                             </a>
                         </div>
@@ -227,7 +227,7 @@
                 </div>
 
                 <!-- Estadísticas Rápidas -->
-                <div class="stats-card">
+                <div class="stats-card mt-4">
                     <div class="card-header">
                         <h3 class="card-title">
                             <i class="bi bi-graph-up me-2"></i>Estadísticas
@@ -252,9 +252,9 @@
                 </div>
 
                 <!-- Acciones del Profesor -->
-                @if (Context.Session.GetString("UsuarioRol") == "Profesor" && Context.Session.GetInt32("UsuarioId") == Model.ProfesorId)
+                @if (esProfesor)
                 {
-                    <div class="teacher-actions-card">
+                    <div class="teacher-actions-card mt-4">
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="bi bi-gear me-2"></i>Gestión de Clase
@@ -262,16 +262,20 @@
                         </div>
                         <div class="card-body">
                             <div class="d-grid gap-2">
-                                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">
+                                <a asp-action="Edit"
+                                   asp-route-id="@Model.Id"
+                                   class="btn btn-outline-primary">
                                     <i class="bi bi-pencil me-2"></i>Editar Clase
                                 </a>
-                                <a asp-action="Alumnos" asp-route-id="@Model.Id" class="btn btn-outline-success">
-                                    <i class="bi bi-people me-2"></i>Gestionar Estudiantes
-                                </a>
-                                <a asp-controller="Recursos" asp-action="Create" asp-route-claseId="@Model.Id" class="btn btn-outline-info">
+                                <a asp-controller="Recursos"
+                                   asp-action="Create"
+                                   asp-route-claseId="@Model.Id"
+                                   class="btn btn-outline-info">
                                     <i class="bi bi-plus-circle me-2"></i>Agregar Recurso
                                 </a>
-                                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">
+                                <a asp-action="Delete"
+                                   asp-route-id="@Model.Id"
+                                   class="btn btn-outline-danger">
                                     <i class="bi bi-trash me-2"></i>Eliminar Clase
                                 </a>
                             </div>

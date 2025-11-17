@@ -224,15 +224,15 @@
                 <div class="card-body">
                     <div class="row text-center">
                         <div class="col-md-4 impact-stat">
-                            <div class="stat-number text-primary">@Model.Clases.Count</div>
+                            <div class="stat-number text-primary">@((Model.Clases?.Count) ?? 0)</div>
                             <div class="stat-label">Clases</div>
                         </div>
                         <div class="col-md-4 impact-stat">
-                            <div class="stat-number text-success">@Model.UsuarioCursos.Count(uc => uc.Rol == "Estudiante" && uc.Estado == "Activo")</div>
+                            <div class="stat-number text-success">@((Model.UsuarioCursos?.Count(uc => uc.Rol == "Estudiante" && uc.Estado == "Activo")) ?? 0)</div>
                             <div class="stat-label">Estudiantes Activos</div>
                         </div>
                         <div class="col-md-4 impact-stat">
-                            <div class="stat-number text-info">@Model.UsuarioCursos.Count(uc => uc.Rol == "Delegado" && uc.Estado == "Activo")</div>
+                            <div class="stat-number text-info">@((Model.UsuarioCursos?.Count(uc => uc.Rol == "Delegado" && uc.Estado == "Activo")) ?? 0)</div>
                             <div class="stat-label">Delegados</div>
                         </div>
                     </div>
